@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "run_id": "20260505-184251",
+    "task_id": null,
+    "artifact_type": "backend_change",
+    "path": "src/services/duel.ts",
+    "content": null,
+    "label": "Added expireOld, getStats, getLeaderboard methods",
+    "created_at": "2026-05-05T18:45:03.652597+00:00"
+  },
+  {
+    "id": 2,
+    "run_id": "20260505-184251",
+    "task_id": null,
+    "artifact_type": "backend_change",
+    "path": "src/routes/duel-routes.ts",
+    "content": null,
+    "label": "Added /duels/expire, /players/me/duel-stats, /leaderboard/duels routes",
+    "created_at": "2026-05-05T18:45:03.652925+00:00"
+  },
+  {
+    "id": 3,
+    "run_id": "20260505-184251",
+    "task_id": null,
+    "artifact_type": "frontend_change",
+    "path": "src/pages/DuelPage.tsx",
+    "content": null,
+    "label": "Animated arena: status banner glow, player avatars with pulse, VS glow, slot reels with CSS spin, confetti on win",
+    "created_at": "2026-05-05T18:49:35.311819+00:00"
+  },
+  {
+    "id": 4,
+    "run_id": "20260505-184251",
+    "task_id": null,
+    "artifact_type": "frontend_change",
+    "path": "src/pages/DuelsPage.tsx",
+    "content": null,
+    "label": "Lobby redesign: bet presets, themed cards, tabs (Open/MyDuels/History), active duel counter",
+    "created_at": "2026-05-05T18:49:35.312043+00:00"
+  },
+  {
+    "id": 5,
+    "run_id": "20260505-184251",
+    "task_id": null,
+    "artifact_type": "frontend_change",
+    "path": "src/pages/PlayerPage.tsx",
+    "content": null,
+    "label": "New player profile: win/loss stats, win rate bar, biggest win, recent duels",
+    "created_at": "2026-05-05T18:49:35.312225+00:00"
+  },
+  {
+    "id": 6,
+    "run_id": "20260505-184251",
+    "task_id": null,
+    "artifact_type": "frontend_change",
+    "path": "src/App.tsx",
+    "content": null,
+    "label": "Added /player route",
+    "created_at": "2026-05-05T18:49:35.312395+00:00"
+  },
+  {
+    "id": 7,
+    "run_id": "20260505-184251",
+    "task_id": null,
+    "artifact_type": "styles_change",
+    "path": "src/styles.css",
+    "content": null,
+    "label": "Added PvP animations: glowPulse, glowGold, spinReel, slotLand, arena-card, arena-status, arena-avatar, confetti-container",
+    "created_at": "2026-05-05T18:49:35.312572+00:00"
+  }
+]

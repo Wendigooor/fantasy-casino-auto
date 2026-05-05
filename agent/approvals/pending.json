@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "action": "delete_deprecated_config",
+    "description": "Remove config/deprecated.py - no longer used by any module",
+    "task_id": 5,
+    "risk": "high",
+    "status": "approved",
+    "requested_at": "2026-04-30T08:06:31Z",
+    "expires_at": "2026-04-30T08:06:31.862408+00:00",
+    "extra_context": "This file was flagged in code review",
+    "approved_by": "alice",
+    "approved_at": "2026-04-30T08:06:31Z",
+    "rejection_reason": null
+  },
+  {
+    "id": 2,
+    "action": "modify_auth_module",
+    "description": "Change auth.py login flow",
+    "task_id": 6,
+    "risk": "critical",
+    "status": "rejected",
+    "requested_at": "2026-04-30T08:06:31Z",
+    "expires_at": "2026-04-30T08:06:31.864239+00:00",
+    "extra_context": null,
+    "approved_by": null,
+    "approved_at": "2026-04-30T08:06:31Z",
+    "rejection_reason": "Needs security review first"
+  }
+]

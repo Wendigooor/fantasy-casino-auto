@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metrics Dictionary — Fantasy iGaming Data Department</title>
+  <meta name="description" content="18 ключевых iGaming-метрик: формулы, SQL, бенчмарки, alert thresholds, подводные камни.">
+  <meta property="og:title" content="Metrics Dictionary — Fantasy iGaming Data Department">
+  <meta property="og:description" content="18 ключевых iGaming-метрик: формулы, SQL, бенчмарки, alert thresholds, подводные камни.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Metrics Dictionary</h1>
+          <p class="page-header-desc">18 ключевых метрик iGaming-бизнеса. Каждая метрика: определение, формула, SQL, бенчмарки, alert thresholds и типичные ошибки интерпретации.</p>
+        </div>
+
+        <div class="alert alert-info">
+          Метрики сгруппированы по категориям: Revenue, Unit Economics, Players, Marketing, Product. SQL-примеры используют mart-таблицы из <a href="data-model.html">Data Model</a>.
+        </div>
+
+        <div class="alert alert-info">
+          Здесь представлены 18 ключевых метрик (L1). Полный каталог (50+ метрик с бенчмарками и alert thresholds) доступен в репозитории проекта.
+        </div>
+
+        <!-- ============================================== -->
+        <!-- REVENUE -->
+        <!-- ============================================== -->
+        <section class="section">
+          <h2>Revenue</h2>
+
+          <!-- Turnover -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">Turnover / Handle</span>
+              <span class="badge badge-teal">revenue</span>
+            </div>
+            <p class="metric-card-def">Общая сумма всех ставок за период. Ключевой показатель объёма — не путать с выручкой.</p>
+            <div class="metric-card-formula">Turnover = SUM(bet_amount)</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    <span class="fn">toDate</span>(placed_at) <span class="kw">AS</span> dt,
+    <span class="fn">countIf</span>(product = <span class="str">'casino'</span>) <span class="kw">AS</span> casino_bets,
+    <span class="fn">countIf</span>(product = <span class="str">'sports'</span>) <span class="kw">AS</span> sports_bets,
+    <span class="fn">sum</span>(bet_amount) <span class="kw">AS</span> turnover
+<span class="kw">FROM</span> fct_bets
+<span class="kw">WHERE</span> placed_at >= <span class="fn">today</span>() - <span class="num">30</span>
+<span class="kw">GROUP BY</span> dt
+<span class="kw">ORDER BY</span> dt <span class="kw">DESC</span></code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> EU: $50-200M/мес, LatAm: $20-80M/мес, SEA: $30-120M/мес</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> &lt; 70% от avg за 4 недели &nbsp; <span class="badge badge-amber">yellow</span> &lt; 85%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Turnover ≠ revenue. Высокий turnover с низкой маржой — плохой знак. Бонусные ставки раздувают turnover без реальных денег. Сравнивайте только рассчитанные (won, lost) ставки.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Product &nbsp;|&nbsp; <strong>Depends on:</strong> — &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, product, channel</p>
+          </div>
+
+          <!-- GGR -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">GGR (Gross Gaming Revenue)</span>
+              <span class="badge badge-teal">revenue</span>
+            </div>
+            <p class="metric-card-def">Валовой игорный доход — разница между ставками и выплатами. То, что компания «выигрывает» у игроков до вычета расходов.</p>
+            <div class="metric-card-formula">GGR = SUM(bet_amount) - SUM(payout_amount)</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    <span class="fn">toDate</span>(placed_at) <span class="kw">AS</span> dt,
+    <span class="fn">sum</span>(bet_amount) - <span class="fn">sum</span>(payout_amount) <span class="kw">AS</span> ggr
+<span class="kw">FROM</span> int_bets_enriched
+<span class="kw">WHERE</span> status <span class="kw">IN</span> (<span class="str">'won'</span>, <span class="str">'lost'</span>)
+<span class="kw">GROUP BY</span> dt</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> EU: $3-15M/мес, LatAm: $1-5M/мес, SEA: $2-8M/мес</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> &lt; 60% от avg &nbsp; <span class="badge badge-amber">yellow</span> &lt; 80%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> GGR может быть отрицательным в отдельные дни (джекпот, крупный выигрыш). Не включает бонусные расходы — для реальной выручки смотрите NGR. Сезонность: крупные турниры (ЧМ, Евро) резко меняют GGR.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Finance &nbsp;|&nbsp; <strong>Depends on:</strong> Turnover &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, product, provider</p>
+          </div>
+
+          <!-- GGR Margin -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">GGR Margin</span>
+              <span class="badge badge-teal">revenue</span>
+            </div>
+            <p class="metric-card-def">Доля GGR от turnover. Показывает «hold» — сколько процентов ставок остаётся у компании.</p>
+            <div class="metric-card-formula">GGR Margin = GGR / Turnover × 100%</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    product,
+    <span class="fn">sum</span>(ggr) / <span class="fn">nullIf</span>(<span class="fn">sum</span>(turnover), <span class="num">0</span>) * <span class="num">100</span> <span class="kw">AS</span> ggr_margin_pct
+<span class="kw">FROM</span> mart_daily_kpi
+<span class="kw">WHERE</span> dt >= <span class="fn">today</span>() - <span class="num">30</span>
+<span class="kw">GROUP BY</span> product</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Casino: 3-5%, Sports pre-match: 7-10%, Sports live: 5-8%</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> Casino &lt; 2% &nbsp; <span class="badge badge-amber">yellow</span> Casino &lt; 3%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Casino margin стабильнее (определяется RTP), sports margin волатильнее (зависит от результатов). Низкая маржа при высоком обороте может быть ОК для привлечения. Бонусы искусственно снижают маржу.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Finance &nbsp;|&nbsp; <strong>Depends on:</strong> GGR, Turnover &nbsp;|&nbsp; <strong>Dimensions:</strong> product, provider, game_type</p>
+          </div>
+
+          <!-- NGR -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">NGR (Net Gaming Revenue)</span>
+              <span class="badge badge-teal">revenue</span>
+            </div>
+            <p class="metric-card-def">Чистый игорный доход — то, что бизнес реально зарабатывает после всех операционных расходов на уровне транзакции.</p>
+            <div class="metric-card-formula">NGR = GGR - Bonus Cost - Provider Fees - Payment Fees</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    dt,
+    ggr - <span class="fn">coalesce</span>(bonus_cost, <span class="num">0</span>)
+        - <span class="fn">coalesce</span>(provider_fees, <span class="num">0</span>)
+        - <span class="fn">coalesce</span>(payment_fees, <span class="num">0</span>) <span class="kw">AS</span> ngr
+<span class="kw">FROM</span> mart_daily_kpi
+<span class="kw">ORDER BY</span> dt <span class="kw">DESC</span></code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> ~$5M/мес для компании масштаба Fantasy iGaming</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> &lt; 50% от target &nbsp; <span class="badge badge-amber">yellow</span> &lt; 80%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> NGR — основная метрика для CEO, но не включает marketing spend и payroll. Bonus cost может составлять 30-50% GGR в агрессивной стратегии. Не путать с Net Revenue (который включает ещё и налоги).</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Finance &nbsp;|&nbsp; <strong>Depends on:</strong> GGR, Bonus Cost Ratio &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, product, segment</p>
+          </div>
+
+          <!-- NGR Margin -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">NGR Margin</span>
+              <span class="badge badge-teal">revenue</span>
+            </div>
+            <p class="metric-card-def">Доля NGR от GGR. Показывает, сколько из валового дохода остаётся после операционных расходов.</p>
+            <div class="metric-card-formula">NGR Margin = NGR / GGR × 100%</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    <span class="fn">toMonth</span>(dt) <span class="kw">AS</span> month,
+    <span class="fn">sum</span>(ngr) / <span class="fn">nullIf</span>(<span class="fn">sum</span>(ggr), <span class="num">0</span>) * <span class="num">100</span> <span class="kw">AS</span> ngr_margin_pct
+<span class="kw">FROM</span> mart_daily_kpi
+<span class="kw">GROUP BY</span> month</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Healthy: 55-75%, Aggressive promo: 40-55%</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> &lt; 40% &nbsp; <span class="badge badge-amber">yellow</span> &lt; 55%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Низкий NGR Margin — не всегда плохо (может быть инвестицией в рост через бонусы). Сравнивайте с LTV:CAC. Провайдерские комиссии фиксированы — при росте GGR margin растёт.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Finance &nbsp;|&nbsp; <strong>Depends on:</strong> NGR, GGR &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, product</p>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- UNIT ECONOMICS -->
+        <!-- ============================================== -->
+        <section class="section">
+          <h2>Unit Economics</h2>
+
+          <!-- LTV -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">LTV (Lifetime Value)</span>
+              <span class="badge badge-blue">unit economics</span>
+            </div>
+            <p class="metric-card-def">Прогнозируемый чистый доход с одного игрока за всё время. Основа для принятия решений о привлечении.</p>
+            <div class="metric-card-formula">LTV = Avg NGR per player per month × Avg lifetime (months)</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    acquisition_channel,
+    <span class="fn">avg</span>(lifetime_ngr) <span class="kw">AS</span> avg_ltv
+<span class="kw">FROM</span> mart_player_lifetime
+<span class="kw">WHERE</span> days_active > <span class="num">30</span>
+<span class="kw">GROUP BY</span> acquisition_channel</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> EU: $150-500, LatAm: $80-250, SEA: $50-200</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> LTV:CAC &lt; 1.5 &nbsp; <span class="badge badge-amber">yellow</span> LTV:CAC &lt; 3.0</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> LTV — прогноз, не факт. Чем моложе когорта, тем менее надёжен LTV. Whale-игроки резко завышают средний LTV — смотрите медиану. LTV должен считаться на базе NGR, не GGR.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Marketing &nbsp;|&nbsp; <strong>Depends on:</strong> NGR, Retention &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, channel, segment</p>
+          </div>
+
+          <!-- LTV:CAC -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">LTV:CAC Ratio</span>
+              <span class="badge badge-blue">unit economics</span>
+            </div>
+            <p class="metric-card-def">Отношение lifetime value к стоимости привлечения. Показывает рентабельность маркетинга.</p>
+            <div class="metric-card-formula">LTV:CAC = LTV / CAC</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    channel,
+    <span class="fn">avg</span>(ltv_cac_ratio) <span class="kw">AS</span> avg_ratio
+<span class="kw">FROM</span> mart_marketing_performance
+<span class="kw">WHERE</span> dt >= <span class="fn">today</span>() - <span class="num">90</span>
+<span class="kw">GROUP BY</span> channel</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Target: &gt; 3.0, Acceptable: 2.0-3.0, Danger: &lt; 1.5</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> LTV:CAC &gt; 5 может означать недостаточные инвестиции в рост. Для новых рынков допустим 1.5-2.0 на старте. Сравнивать по каналам — organic всегда искажает среднее.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Marketing &nbsp;|&nbsp; <strong>Depends on:</strong> LTV, CAC &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, channel</p>
+          </div>
+
+          <!-- CAC -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">CAC (Customer Acquisition Cost)</span>
+              <span class="badge badge-blue">unit economics</span>
+            </div>
+            <p class="metric-card-def">Стоимость привлечения одного депозитора. Считается по FTD (first time depositors), не по регистрациям.</p>
+            <div class="metric-card-formula">CAC = Marketing Spend / FTD Count</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    channel,
+    <span class="fn">sum</span>(spend) / <span class="fn">nullIf</span>(<span class="fn">sum</span>(ftd_count), <span class="num">0</span>) <span class="kw">AS</span> cac
+<span class="kw">FROM</span> mart_marketing_performance
+<span class="kw">WHERE</span> dt >= <span class="fn">today</span>() - <span class="num">30</span>
+<span class="kw">GROUP BY</span> channel</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> EU: $50-150, LatAm: $20-60, SEA: $15-50</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> &gt; LTV/1.5 &nbsp; <span class="badge badge-amber">yellow</span> &gt; LTV/3</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> CAC по регистрациям ≠ CAC по FTD. Конверсия Reg→FTD может быть 20-40%, поэтому CPA и CAC — разные метрики. Organic трафик снижает blended CAC, маскируя проблемы в paid.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Marketing &nbsp;|&nbsp; <strong>Depends on:</strong> FTD Count &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, channel, campaign</p>
+          </div>
+
+          <!-- Payback Period -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">Payback Period</span>
+              <span class="badge badge-blue">unit economics</span>
+            </div>
+            <p class="metric-card-def">Время, за которое NGR с игрока окупает его CAC. Чем короче — тем быстрее возврат инвестиций.</p>
+            <div class="metric-card-formula">Payback = CAC / Avg Monthly NGR per player</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    channel,
+    cac,
+    roas,
+    <span class="kw">CASE WHEN</span> roas > <span class="num">0</span> <span class="kw">THEN</span> <span class="fn">round</span>(<span class="num">1</span> / (roas / <span class="num">12</span>), <span class="num">1</span>) <span class="kw">ELSE NULL END</span> <span class="kw">AS</span> payback_months
+<span class="kw">FROM</span> mart_marketing_performance
+<span class="kw">WHERE</span> dt = (<span class="kw">SELECT</span> <span class="fn">max</span>(dt) <span class="kw">FROM</span> mart_marketing_performance)
+<span class="kw">ORDER BY</span> payback_months</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Target: &lt; 6 мес, Acceptable: 6-12 мес, Danger: &gt; 12 мес</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Зависит от retention — если churn высокий, payback может никогда не наступить. Для VIP-игроков payback часто 1-2 месяца, для casual — 8-12. Не путать с ROI.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Finance &nbsp;|&nbsp; <strong>Depends on:</strong> CAC, NGR &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, channel, segment</p>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- PLAYERS -->
+        <!-- ============================================== -->
+        <section class="section">
+          <h2>Players</h2>
+
+          <!-- Active Players -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">Active Players (DAU / WAU / MAU)</span>
+              <span class="badge badge-primary">players</span>
+            </div>
+            <p class="metric-card-def">Уникальные игроки, сделавшие хотя бы одну ставку за период. DAU — день, WAU — неделя, MAU — месяц.</p>
+            <div class="metric-card-formula">MAU = COUNT(DISTINCT player_id) WHERE placed_bet IN last 30 days</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    <span class="fn">count</span>(<span class="kw">DISTINCT</span> player_id) <span class="kw">AS</span> mau
+<span class="kw">FROM</span> int_bets_enriched
+<span class="kw">WHERE</span> placed_at >= <span class="fn">today</span>() - <span class="num">30</span></code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Fantasy iGaming: ~500K MAU, DAU/MAU (stickiness): 15-25%</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> DAU &lt; 70% от avg &nbsp; <span class="badge badge-amber">yellow</span> &lt; 85%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Определение «active» критично: ставка vs логин vs депозит. Мы считаем по ставкам. WAU/DAU перекрываются — не складывать. Сезонность: крупные турниры дают +30-50% DAU.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Product &nbsp;|&nbsp; <strong>Depends on:</strong> — &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, product, platform</p>
+          </div>
+
+          <!-- FTD Count -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">FTD Count</span>
+              <span class="badge badge-primary">players</span>
+            </div>
+            <p class="metric-card-def">Количество первых депозитов за период. Основной KPI привлечения — именно FTD, не регистрации.</p>
+            <div class="metric-card-formula">FTD Count = COUNT(*) WHERE is_first_deposit = true</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    <span class="fn">toDate</span>(created_at) <span class="kw">AS</span> dt,
+    <span class="fn">count</span>(*) <span class="kw">AS</span> ftd_count
+<span class="kw">FROM</span> fct_deposits
+<span class="kw">WHERE</span> is_first_deposit = <span class="num">1</span>
+  <span class="kw">AND</span> status = <span class="str">'completed'</span>
+<span class="kw">GROUP BY</span> dt</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> 5K-20K FTD/мес для компании масштаба Fantasy iGaming</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> &lt; 60% от target &nbsp; <span class="badge badge-amber">yellow</span> &lt; 80%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> FTD ≠ регистрация. Конверсия Reg→FTD обычно 25-40%. Фрод может раздувать FTD (мульти-аккаунты). Не все FTD одинаковы — смотрите средний размер первого депозита.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Marketing &nbsp;|&nbsp; <strong>Depends on:</strong> — &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, channel, campaign</p>
+          </div>
+
+          <!-- Retention -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">Retention D1 / D7 / D30</span>
+              <span class="badge badge-primary">players</span>
+            </div>
+            <p class="metric-card-def">Доля игроков, вернувшихся на день 1/7/30 после первой ставки. Показывает «липкость» продукта.</p>
+            <div class="metric-card-formula">Retention Dn = Players active on Day n / Cohort size × 100%</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    cohort_month,
+    period_number,
+    retention_rate
+<span class="kw">FROM</span> mart_cohort_analysis
+<span class="kw">WHERE</span> period_number <span class="kw">IN</span> (<span class="num">1</span>, <span class="num">7</span>, <span class="num">30</span>)
+<span class="kw">ORDER BY</span> cohort_month, period_number</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> D1: 30-45%, D7: 15-25%, D30: 8-15%</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> D7 &lt; 10% &nbsp; <span class="badge badge-amber">yellow</span> D7 &lt; 15%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Welcome bonus искусственно завышает D1-D7. Настоящий retention видно после D30+. Retention по ставкам ≠ retention по логинам. Sports retention привязан к расписанию матчей.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Product &nbsp;|&nbsp; <strong>Depends on:</strong> Active Players &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, product, channel, segment</p>
+          </div>
+
+          <!-- Churn Rate -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">Churn Rate</span>
+              <span class="badge badge-primary">players</span>
+            </div>
+            <p class="metric-card-def">Доля игроков, прекративших активность. Определение: нет ставок 30+ дней. Обратная сторона retention.</p>
+            <div class="metric-card-formula">Churn Rate = Churned players / Active players at period start × 100%</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    <span class="fn">countIf</span>(last_activity_at &lt; <span class="fn">today</span>() - <span class="num">30</span>)
+    / <span class="fn">count</span>(*) * <span class="num">100</span> <span class="kw">AS</span> churn_rate_pct
+<span class="kw">FROM</span> mart_player_lifetime
+<span class="kw">WHERE</span> lifetime_turnover > <span class="num">0</span></code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Monthly churn: 5-10% (EU), 8-15% (LatAm)</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> &gt; 15% monthly &nbsp; <span class="badge badge-amber">yellow</span> &gt; 10%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> 30 дней — условный порог, для sports можно использовать 45 (межсезонье). Неактивный ≠ ушедший — часть игроков возвращается. Churn VIP-игроков критичнее по влиянию на revenue.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Product &nbsp;|&nbsp; <strong>Depends on:</strong> Active Players, Retention &nbsp;|&nbsp; <strong>Dimensions:</strong> geo, segment, vip_tier</p>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- MARKETING -->
+        <!-- ============================================== -->
+        <section class="section">
+          <h2>Marketing</h2>
+
+          <!-- CPA/CPD -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">CPA / CPD</span>
+              <span class="badge badge-coral">marketing</span>
+            </div>
+            <p class="metric-card-def">CPA — стоимость привлечения регистрации. CPD — стоимость привлечения депозитора. В iGaming CPD (= CAC) важнее CPA.</p>
+            <div class="metric-card-formula">CPA = Spend / Registrations &nbsp;&nbsp;|&nbsp;&nbsp; CPD = Spend / FTD</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    channel,
+    <span class="fn">sum</span>(spend) / <span class="fn">nullIf</span>(<span class="fn">sum</span>(registrations), <span class="num">0</span>) <span class="kw">AS</span> cpa,
+    <span class="fn">sum</span>(spend) / <span class="fn">nullIf</span>(<span class="fn">sum</span>(ftd_count), <span class="num">0</span>) <span class="kw">AS</span> cpd
+<span class="kw">FROM</span> mart_marketing_performance
+<span class="kw">WHERE</span> dt >= <span class="fn">today</span>() - <span class="num">30</span>
+<span class="kw">GROUP BY</span> channel</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> CPA: $10-40, CPD: $30-100 (EU)</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> CPA без конверсии в FTD бессмыслен. Affiliate CPA кажется дешевле, но качество трафика ниже. Фрод раздувает количество регистраций.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Marketing &nbsp;|&nbsp; <strong>Depends on:</strong> FTD Count &nbsp;|&nbsp; <strong>Dimensions:</strong> channel, campaign, geo</p>
+          </div>
+
+          <!-- ROAS -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">ROAS</span>
+              <span class="badge badge-coral">marketing</span>
+            </div>
+            <p class="metric-card-def">Return on Ad Spend — сколько NGR приносит каждый доллар маркетинговых расходов.</p>
+            <div class="metric-card-formula">ROAS = NGR from acquired players / Marketing Spend</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    channel,
+    roas
+<span class="kw">FROM</span> mart_marketing_performance
+<span class="kw">WHERE</span> dt >= <span class="fn">today</span>() - <span class="num">30</span>
+<span class="kw">ORDER BY</span> roas <span class="kw">DESC</span></code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Target: &gt; 3.0x, Break-even: 1.0x</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> ROAS зависит от окна атрибуции (7 дней vs lifetime). Краткосрочный ROAS может быть низким, но lifetime ROAS — высоким. Органика каннибализирует paid — смотрите инкрементальность.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Marketing &nbsp;|&nbsp; <strong>Depends on:</strong> NGR, CAC &nbsp;|&nbsp; <strong>Dimensions:</strong> channel, campaign, geo</p>
+          </div>
+
+          <!-- Conversion Funnel -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">Conversion Funnel (Visit → Reg → FTD)</span>
+              <span class="badge badge-coral">marketing</span>
+            </div>
+            <p class="metric-card-def">Воронка конверсии: от визита до первого депозита. Каждый этап — точка потери.</p>
+            <div class="metric-card-formula">Visit→Reg: 5-15% | Reg→FTD: 25-40% | Visit→FTD: 2-5%</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    channel,
+    registrations / <span class="fn">nullIf</span>(visits, <span class="num">0</span>) * <span class="num">100</span> <span class="kw">AS</span> visit_to_reg_pct,
+    ftd_count / <span class="fn">nullIf</span>(registrations, <span class="num">0</span>) * <span class="num">100</span> <span class="kw">AS</span> reg_to_ftd_pct
+<span class="kw">FROM</span> mart_marketing_performance
+<span class="kw">WHERE</span> dt >= <span class="fn">today</span>() - <span class="num">30</span></code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Visit→Reg: 8-12%, Reg→FTD: 30-40%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Конверсия сильно зависит от гео и канала. Affiliate трафик может иметь высокий Reg% но низкий FTD%. Welcome bonus поднимает Reg→FTD, но может привлекать бонус-хантеров.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Marketing &nbsp;|&nbsp; <strong>Depends on:</strong> FTD Count &nbsp;|&nbsp; <strong>Dimensions:</strong> channel, geo, platform</p>
+          </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- PRODUCT -->
+        <!-- ============================================== -->
+        <section class="section">
+          <h2>Product</h2>
+
+          <!-- Revenue Concentration -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">Revenue Concentration</span>
+              <span class="badge badge-amber">product</span>
+            </div>
+            <p class="metric-card-def">Доля GGR от top-N% игроков. Высокая концентрация = зависимость от whale-игроков = risk.</p>
+            <div class="metric-card-formula">Top 1% GGR Share = GGR from top 1% players / Total GGR × 100%</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    <span class="fn">sum</span>(<span class="kw">IF</span>(rn &lt;= total * <span class="num">0.01</span>, lifetime_ggr, <span class="num">0</span>))
+    / <span class="fn">sum</span>(lifetime_ggr) * <span class="num">100</span> <span class="kw">AS</span> top1_pct_share
+<span class="kw">FROM</span> (
+    <span class="kw">SELECT</span> lifetime_ggr,
+        <span class="fn">row_number</span>() <span class="kw">OVER</span>(<span class="kw">ORDER BY</span> lifetime_ggr <span class="kw">DESC</span>) <span class="kw">AS</span> rn,
+        <span class="fn">count</span>(*) <span class="kw">OVER</span>() <span class="kw">AS</span> total
+    <span class="kw">FROM</span> mart_player_lifetime
+    <span class="kw">WHERE</span> lifetime_ggr > <span class="num">0</span>
+)</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Top 1% = 20-40% GGR, Top 10% = 60-80% GGR</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> Top 1% &gt; 50% &nbsp; <span class="badge badge-amber">yellow</span> Top 1% &gt; 35%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Высокая концентрация — нормально для iGaming, но &gt; 50% от одного сегмента — red flag. Уход одного whale-игрока = заметное падение revenue. Ответственный гейминг: whale может быть проблемным игроком.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Product &nbsp;|&nbsp; <strong>Depends on:</strong> GGR, Active Players &nbsp;|&nbsp; <strong>Dimensions:</strong> product, segment, vip_tier</p>
+          </div>
+
+          <!-- Bonus Cost Ratio -->
+          <div class="metric-card">
+            <div class="metric-card-header">
+              <span class="metric-card-name">Bonus Cost Ratio</span>
+              <span class="badge badge-amber">product</span>
+            </div>
+            <p class="metric-card-def">Доля GGR, потраченная на бонусы. Показывает стоимость маркетингового инструмента №1 в iGaming.</p>
+            <div class="metric-card-formula">Bonus Cost Ratio = Total Bonus Cost / GGR × 100%</div>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="kw">SELECT</span>
+    <span class="fn">toMonth</span>(dt) <span class="kw">AS</span> month,
+    <span class="fn">sum</span>(bonus_cost) / <span class="fn">nullIf</span>(<span class="fn">sum</span>(ggr), <span class="num">0</span>) * <span class="num">100</span>
+      <span class="kw">AS</span> bonus_cost_ratio_pct
+<span class="kw">FROM</span> mart_daily_kpi
+<span class="kw">GROUP BY</span> month</code></pre>
+            </div>
+            <div class="metric-card-benchmarks"><strong>Benchmarks:</strong> Healthy: 10-20%, Aggressive: 25-40%, Mature market: 8-15%</div>
+            <div class="metric-card-benchmarks"><strong>Alerts:</strong> <span class="badge badge-red">red</span> &gt; 40% &nbsp; <span class="badge badge-amber">yellow</span> &gt; 25%</div>
+            <p class="metric-card-pitfalls"><strong>Подводные камни:</strong> Высокий ratio — не всегда плохо (новый рынок, агрессивный рост). Но если ratio растёт, а retention не улучшается — бонусы неэффективны. Бонус-абьюзеры раздувают ratio без отдачи.</p>
+            <p class="text-secondary" style="font-size: var(--fs-small)"><strong>Owner:</strong> Product &nbsp;|&nbsp; <strong>Depends on:</strong> GGR, NGR &nbsp;|&nbsp; <strong>Dimensions:</strong> bonus_type, product, segment</p>
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

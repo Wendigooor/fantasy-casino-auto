@@ -1,0 +1,12 @@
+{
+  "name": "casino_domain",
+  "trigger_condition": "Task involves auth, wallet, game, bonus, kyc, risk, or compliance",
+  "description": "Casino domain knowledge: user authentication (JWT, sessions), wallet management (balance, transactions), game logic (RNG, rounds), bonus engine (wagering, promotions), KYC (identity verification), risk management (fraud, responsible gaming), compliance (licensing, audits).",
+  "required_tools": "write_file, read_file, run_command, quarantine",
+  "expected_output": "Domain-accurate code following casino business rules",
+  "known_limitations": "Requires research documents for regulatory requirements; money-related changes need approval gate",
+  "review_status": "approved",
+  "version": "1",
+  "created_at": "2026-04-30T10:49:09Z",
+  "approved_at": "2026-04-30T10:49:09Z"
+}

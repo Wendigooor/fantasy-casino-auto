@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Annual Roadmap — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Годовой план data-функции по кварталам: от стабилизации до масштабирования.">
+  <meta property="og:title" content="Annual Roadmap — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Годовой план data-функции по кварталам: от стабилизации до масштабирования.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Annual Roadmap</h1>
+          <p class="page-header-desc">Годовой план data-функции Fantasy iGaming на 2026 год. 4 квартала: от стабилизации основ до масштабирования и real-time аналитики.</p>
+        </div>
+
+        <div class="alert alert-info">
+          Roadmap — живой документ. Пересматривается каждый квартал на Governance Council. Приоритеты могут сдвигаться в зависимости от бизнес-потребностей.
+        </div>
+
+        <!-- ================================ -->
+        <!-- Visual Timeline -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Timeline</h2>
+
+          <div class="roadmap-timeline">
+            <div class="roadmap-quarter roadmap-q1">
+              <div class="roadmap-quarter-header">
+                <span class="badge badge-blue">Q1</span>
+                <span class="roadmap-quarter-title">Stabilize</span>
+              </div>
+              <div class="roadmap-quarter-subtitle">Январь — Март</div>
+              <ul class="roadmap-milestones">
+                <li class="roadmap-milestone done">DQ framework live</li>
+                <li class="roadmap-milestone done">SLA defined & tracked</li>
+                <li class="roadmap-milestone done">Data Dictionary v1</li>
+                <li class="roadmap-milestone done">Governance roles assigned</li>
+                <li class="roadmap-milestone done">On-call rotation launched</li>
+              </ul>
+            </div>
+
+            <div class="roadmap-quarter roadmap-q2">
+              <div class="roadmap-quarter-header">
+                <span class="badge badge-teal">Q2</span>
+                <span class="roadmap-quarter-title">Self-service</span>
+              </div>
+              <div class="roadmap-quarter-subtitle">Апрель — Июнь</div>
+              <ul class="roadmap-milestones">
+                <li class="roadmap-milestone in-progress">Semantic layer (Metabase)</li>
+                <li class="roadmap-milestone in-progress">Metabase rollout (all teams)</li>
+                <li class="roadmap-milestone in-progress">Data literacy workshops (3 sessions)</li>
+                <li class="roadmap-milestone planned">80% ad-hoc via self-service</li>
+                <li class="roadmap-milestone planned">Dashboard templates library</li>
+              </ul>
+            </div>
+
+            <div class="roadmap-quarter roadmap-q3">
+              <div class="roadmap-quarter-header">
+                <span class="badge badge-pink">Q3</span>
+                <span class="roadmap-quarter-title">ML to Prod</span>
+              </div>
+              <div class="roadmap-quarter-subtitle">Июль — Сентябрь</div>
+              <ul class="roadmap-milestones">
+                <li class="roadmap-milestone planned">Recommendation engine MVP</li>
+                <li class="roadmap-milestone planned">Fraud model v2 (enhanced features)</li>
+                <li class="roadmap-milestone planned">Churn model optimization (precision +10%)</li>
+                <li class="roadmap-milestone planned">Feature Store live</li>
+                <li class="roadmap-milestone planned">A/B testing framework operational</li>
+              </ul>
+            </div>
+
+            <div class="roadmap-quarter roadmap-q4">
+              <div class="roadmap-quarter-header">
+                <span class="badge badge-amber">Q4</span>
+                <span class="roadmap-quarter-title">Scale</span>
+              </div>
+              <div class="roadmap-quarter-subtitle">Октябрь — Декабрь</div>
+              <ul class="roadmap-milestones">
+                <li class="roadmap-milestone planned">Real-time analytics (streaming marts)</li>
+                <li class="roadmap-milestone planned">Reverse ETL → CRM (Census)</li>
+                <li class="roadmap-milestone planned">Fraud model v2 → real-time deployment</li>
+                <li class="roadmap-milestone planned">Platform cost optimization (-20%)</li>
+                <li class="roadmap-milestone planned">Data mesh evaluation</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Q1 Detail -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Q1 — Stabilize</h2>
+
+          <p>Фундамент. Без стабильной базы всё остальное — карточный домик. Фокус на качество данных, процессы и ownership.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">DQ Framework</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Deliverable</th><th>Owner</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>dbt tests на все critical marts (>50 тестов)</td><td>Analytics Engineer</td><td><span class="badge badge-teal">done</span></td></tr>
+                    <tr><td>Great Expectations suites для cross-table validation</td><td>DE Lead</td><td><span class="badge badge-teal">done</span></td></tr>
+                    <tr><td>DQ dashboard в Grafana (freshness, completeness, accuracy)</td><td>Platform DE</td><td><span class="badge badge-teal">done</span></td></tr>
+                    <tr><td>Alerting: Slack #data-alerts + PagerDuty для P1</td><td>Platform DE</td><td><span class="badge badge-teal">done</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Подробнее: <a href="data-governance.html">Data Governance</a> (DQ framework).</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">SLA & On-call</span>
+            </div>
+            <div class="accordion-body">
+              <ul class="list">
+                <li><strong>SLA matrix</strong> — определены targets для всех пар provider → consumer. <a href="sla.html">SLA</a></li>
+                <li><strong>On-call rotation</strong> — DE ротация по неделям, runbook для типовых инцидентов. <a href="dataops.html">DataOps</a></li>
+                <li><strong>Incident process</strong> — severity levels, response protocol, post-mortem template. <a href="incident-response.html">Incident Response</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Governance & Dictionary</span>
+            </div>
+            <div class="accordion-body">
+              <ul class="list">
+                <li><strong>Data Owners</strong> назначены по 4 доменам (Product, Finance, Marketing, Compliance)</li>
+                <li><strong>Data Dictionary v1</strong> — 50+ стандартных определений утверждены на Governance Council</li>
+                <li><strong>DataHub</strong> — каталог данных с lineage, описаниями, ownership</li>
+                <li><strong>RBAC</strong> — матрица доступов настроена, PII masked для non-compliance ролей</li>
+              </ul>
+              <p>Подробнее: <a href="data-governance.html">Data Governance</a>.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Q2 Detail -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Q2 — Self-service</h2>
+
+          <p>Масштабирование через self-service. Цель: бизнес-пользователи сами отвечают на 80% вопросов, аналитики фокусируются на research.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Semantic Layer & Metabase Rollout</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Deliverable</th><th>Owner</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>Semantic layer: стандартные metrics и dimensions в Metabase</td><td>BI Lead</td><td><span class="badge badge-amber">in progress</span></td></tr>
+                    <tr><td>Dashboard templates: CEO, Marketing, Product, Finance</td><td>BI Developer</td><td><span class="badge badge-amber">in progress</span></td></tr>
+                    <tr><td>Metabase training для Product и Marketing teams</td><td>Data Literacy Specialist</td><td><span class="badge badge-amber">in progress</span></td></tr>
+                    <tr><td>Self-service metrics: 80% ad-hoc через Metabase</td><td>BI Lead</td><td><span class="badge badge-gray">planned</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Data Literacy Program</span>
+            </div>
+            <div class="accordion-body">
+              <p>3 воркшопа для бизнес-пользователей:</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>#</th><th>Тема</th><th>Аудитория</th><th>Формат</th></tr></thead>
+                  <tbody>
+                    <tr><td>1</td><td>Metabase basics: фильтры, questions, dashboards</td><td>All business users</td><td>Workshop 2h + practice</td></tr>
+                    <tr><td>2</td><td>Metrics that matter: NGR, LTV, Retention — что значат и как читать</td><td>Product + Marketing</td><td>Lecture 1.5h + Q&A</td></tr>
+                    <tr><td>3</td><td>SQL basics: SELECT, WHERE, GROUP BY для ad-hoc</td><td>Power users (optional)</td><td>Workshop 3h + homework</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Подробнее: <a href="dashboards.html">Dashboards</a>, <a href="metrics.html">Metrics Dictionary</a>.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Q3 Detail -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Q3 — ML to Prod</h2>
+
+          <p>LTV и Churn модели уже в production (деплой в Q2). Q3 — оптимизация существующих моделей, новые use cases (recommendations, fraud v2), Feature Store и A/B testing framework.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Models in Production</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Модель</th><th>Task</th><th>Target Metric</th><th>Timeline</th><th>Dependencies</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Recommendation Engine</strong></td>
+                      <td>Персонализированные рекомендации игр</td>
+                      <td>CTR +15% vs random</td>
+                      <td>July — MVP</td>
+                      <td>Feature Store, fct_bets, fct_sessions</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Fraud Model v2</strong></td>
+                      <td>Enhanced features: device fingerprint, velocity</td>
+                      <td>FPR &lt; 2% (was 3.2%)</td>
+                      <td>Aug — deployed</td>
+                      <td>Feature Store, real-time pipeline</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Churn Optimization</strong></td>
+                      <td>Precision +10% для high-LTV сегмента</td>
+                      <td>Precision &gt; 0.75</td>
+                      <td>Aug — deployed</td>
+                      <td>LTV model (segments), Feature Store</td>
+                    </tr>
+                    <tr>
+                      <td><strong>A/B Testing</strong></td>
+                      <td>Framework: sample size, analysis, reporting</td>
+                      <td>3 tests/quarter</td>
+                      <td>Sep — operational</td>
+                      <td>Metrics Dictionary, Product buy-in</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Model details: <a href="mlops.html">MLOps</a>. A/B framework: <a href="ab-testing.html">A/B Testing</a>.</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Feature Store & MLOps</span>
+            </div>
+            <div class="accordion-body">
+              <ul class="list">
+                <li><strong>Feast deployment</strong> — 30+ features (player behavior, deposit patterns, game preferences)</li>
+                <li><strong>MLflow registry</strong> — versioning, staging → production promotion</li>
+                <li><strong>Model monitoring</strong> — PSI drift detection, performance degradation alerts</li>
+                <li><strong>Retraining pipeline</strong> — monthly automated retraining with Airflow</li>
+              </ul>
+              <p>Подробнее: <a href="mlops.html">MLOps</a> (Feature Store, monitoring).</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Q4 Detail -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Q4 — Scale</h2>
+
+          <p>Масштабирование: real-time, Reverse ETL, fraud v2, оптимизация затрат. Подготовка фундамента на 2027.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Real-time Analytics</span>
+            </div>
+            <div class="accordion-body">
+              <p>Переход от batch (daily) к near-real-time для критичных метрик:</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Метрика</th><th>Сейчас</th><th>Цель</th><th>Как</th></tr></thead>
+                  <tbody>
+                    <tr><td>NGR</td><td>Daily (07:00)</td><td>15 min lag</td><td>Kafka → ClickHouse materialized view</td></tr>
+                    <tr><td>Active Players</td><td>Daily</td><td>Real-time</td><td>Kafka Streams counter</td></tr>
+                    <tr><td>Fraud Score</td><td>&lt;100ms (already)</td><td>Maintain</td><td>Model v2 with more features</td></tr>
+                    <tr><td>Deposit monitoring</td><td>Hourly</td><td>5 min</td><td>ClickHouse streaming insert</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="alert alert-warning">
+                Real-time ≠ всё real-time. Только метрики, где latency напрямую влияет на решения (fraud, live ops). Для финансовой отчётности daily batch остаётся gold standard.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Reverse ETL & Closed Loop</span>
+            </div>
+            <div class="accordion-body">
+              <p>Замыкаем цикл: данные → модель → действие → результат → данные.</p>
+              <ul class="list">
+                <li><strong>Churn → CRM:</strong> churn_score &gt; 0.7 → CRM segment «At Risk» → персонализированный бонус</li>
+                <li><strong>LTV → Ad Platforms:</strong> LTV segments → Facebook/Google Ads → bid optimization</li>
+                <li><strong>Recommendations → Product:</strong> game recommendations → in-app placement → engagement uplift</li>
+              </ul>
+              <p>Инструмент: Census (DWH → CRM, Ad platforms). Подробнее: <a href="data-architecture.html">Data Architecture</a> (Reverse ETL).</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Cost Optimization (-20%)</span>
+            </div>
+            <div class="accordion-body">
+              <p>Цель Q4: снизить infrastructure cost на 20% ($3.6K/мес от $18K/мес infrastructure, не от total budget) при росте данных 2x:</p>
+              <ul class="list">
+                <li>ClickHouse cold storage migration (TTL policies)</li>
+                <li>Reserved instances для стабильных workloads</li>
+                <li>ML training на spot instances</li>
+                <li>Quarterly query review — оптимизация top-20 heavy queries</li>
+                <li>Unused resource cleanup</li>
+              </ul>
+              <p>Подробнее: <a href="finops.html">FinOps</a>.</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Data Mesh Evaluation</span>
+            </div>
+            <div class="accordion-body">
+              <p>Evaluation (не migration) — готовность к data mesh при дальнейшем масштабировании:</p>
+              <ul class="list">
+                <li><strong>Вопрос:</strong> при 50+ человек в data — нужна ли децентрализация?</li>
+                <li><strong>Оценить:</strong> domain ownership maturity, self-serve platform readiness, team autonomy</li>
+                <li><strong>Deliverable:</strong> Recommendation document для C-level (stay centralized / hybrid / start mesh transition)</li>
+              </ul>
+              <div class="alert alert-tip">
+                Data mesh — не цель, а средство. При 20 людях централизованная модель работает отлично. Evaluation нужен, чтобы быть готовым к росту, а не чтобы модно выглядеть.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Dependencies -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Зависимости между кварталами</h2>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Deliverable</th><th>Зависит от</th><th>Блокирует</th></tr></thead>
+              <tbody>
+                <tr><td>DQ Framework (Q1)</td><td>—</td><td>Self-service (Q2), ML models (Q3)</td></tr>
+                <tr><td>Data Dictionary (Q1)</td><td>—</td><td>Semantic layer (Q2), Metrics in models (Q3)</td></tr>
+                <tr><td>Semantic Layer (Q2)</td><td>Data Dictionary (Q1)</td><td>Self-service 80% (Q2)</td></tr>
+                <tr><td>Feature Store (Q3)</td><td>DQ Framework (Q1), mart tables</td><td>Recommendation engine (Q3), Fraud v2 (Q3)</td></tr>
+                <tr><td>Recommendation Engine (Q3)</td><td>Feature Store (Q3)</td><td>Reverse ETL → Product (Q4)</td></tr>
+                <tr><td>Fraud v2 (Q3)</td><td>Feature Store (Q3), real-time pipeline</td><td>Real-time analytics (Q4)</td></tr>
+                <tr><td>Real-time (Q4)</td><td>Stable batch pipelines (Q1-Q3)</td><td>—</td></tr>
+                <tr><td>Cost optimization (Q4)</td><td>Full platform deployed (Q1-Q3)</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-warning">
+            Главный риск: Feature Store задержка → сдвигает Recommendation engine и Fraud v2 в Q3 → каскад на Reverse ETL Q4. Митигация: начать Feature Store в конце Q2.
+          </div>
+        </section>
+
+        <!-- Cross-links -->
+        <div class="alert alert-info">
+          <strong>Связанные разделы:</strong>
+          <a href="data-architecture.html">Data Architecture</a> ·
+          <a href="data-governance.html">Data Governance</a> ·
+          <a href="mlops.html">MLOps</a> ·
+          <a href="ab-testing.html">A/B Testing</a> ·
+          <a href="dashboards.html">Dashboards</a> ·
+          <a href="finops.html">FinOps</a>
+        </div>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

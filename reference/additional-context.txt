@@ -1,0 +1,55 @@
+1. Now conduct an analysis of technical tools for this implementation — the exact list of everything needed to run it fast, efficiently, and securely.
+2. For example, Obscura: The open-source headless browser purpose-built for AI agents and scrapers at scale.
+3. Chrome vs Obscura:
+4. - Memory: 200MB+ → 30MB
+5. - Binary: 300MB+ → 70MB
+6. - Page load: 500ms → 85ms
+7. - Startup: 2s → Instant
+8. I'll need to use auto-QA tests, preferably without stressing the system.
+9. Maybe I should use Hermes agents? Or just constantly query via cron somehow.
+10. Also work out LLM observability.
+11. Data schema (What exactly to log)
+12. For a mega-report, a simple pair of "input/output" won't be enough. You need an SQLite or PostgreSQL database with the following table (called inference_logs):
+13. Session metadata: session_id, agent_role (who requested: coder, reviewer, planner), timestamp.
+14. Tokenomics: prompt_tokens, completion_tokens, total_tokens.
+15. Caching (Critical!): cached_tokens (how many tokens were taken from KV-cache without recomputation). This shows how effectively agents reuse context (e.g., system prompt or project tree).
+16. Hardware performance: time_to_first_token_ms (TTFT), generation_time_ms, tokens_per_second (TPS).
+17. Virtual cost: equivalent_cost_usd (calculated on the fly, see below).
+18. Payload: Prompt hash and response hash (so you can later find duplicate agent requests where they go in circles).
+19. You lack initiative from me — think about what I might be missing, roast the plan, ask questions.
+20.
+
+Excellent plan, but since you asked for roasting and initiative — let's look the truth in the face. 48 GB of unified memory on Apple Silicon is impressive, but a dense Qwen 27B model in 4-bit quantization will take about 16-18 GB for weights alone. You'll have about 20-25 GB left for KV-cache (context), OS, Docker sandboxes (sbx), databases, and browsers. If an agent starts inflating context uncontrollably or running heavy tests, the system will choke on the memory bandwidth wall.
+
+Here's a manic resource economy stack and architectural analysis for your task:
+
+1. Browser and scraping: Obscura
+Using standard Chrome via Puppeteer or Playwright will kill your memory (200+ MB per instance, 2-second load time).
+Solution: Obscura. It's a Rust-based headless browser built specifically for AI agents. It consumes only 30 MB of memory, weighs 70 MB, loads pages in 85ms, and starts instantly. It supports Chrome DevTools Protocol and easily replaces Playwright, which is critical for saving RAM for LLM KV-cache.
+
+2. AutoQA and testing: pytest-testmon
+For self-developing code, you must constantly run tests, but running the entire test suite after every agent edit will destroy performance.
+Solution: pytest-testmon + pytest-watch. testmon analyzes AST and runs only the tests affected by changes in specific files. Agent changed one function in a parsing script — only one millisecond test runs. This won't stress the system and will let the agent get instant feedback.
+
+3. Orchestration: Hermes Agent vs Cron + Python
+Roast: Simple cron + python is the cheapest in tokens since you control every byte of prompt. But it won't give you a self-evolving architecture.
+Solution: Hermes Agent. This is the only agent with a built-in "closed learning loop". When it solves a complex task, it automatically crystallizes the successful path into a new skill, updates persistent memory, and uses the built-in task scheduler (cron) for background work.
+Risk: Hermes aggressively pulls past memories and skills into the system prompt, quickly burning tokens and KV-cache space. You'll need to strictly limit the number of memories retrieved per turn.
+
+4. LLM Observability and data schema (SQLite/Postgres)
+Standard logging is insufficient. For local architecture, cache reuse (prefix caching) is a matter of survival. A metrics database will help identify "hallucinatory cycles" where the agent gets stuck on the same error.
+
+For the inference_logs table, add these architectural metrics:
+   * session_id, agent_role, timestamp.
+   * prompt_tokens, completion_tokens, total_tokens.
+   * cached_tokens: Critical! Computing new tokens is expensive, using cached tokens is nearly free. If this metric drops, it means agent prompts are changing structure (e.g., inserting unique timestamps at the beginning), breaking prefix-cache. Consider using oMLX server that can save KV-cache pages to fast SSD on Mac.
+   * time_to_first_token_ms (TTFT), generation_time_ms, tokens_per_second (TPS).
+   * prompt_hash / response_hash: Mandatory. Helps catch moments when the agent 50 times in a row generates the same erroneous code snippet.
+   * tool_call_errors: Counter of how many times the Docker sandbox (sbx) or script returned stderr to the agent instead of stdout.
+
+Initiative: What you're missing and open questions
+   1. Execution isolation (Blast Radius): You mention Docker, but standard Docker shares the kernel with the host. The agent needs a YOLO mode for autonomy. Use Docker Sandboxes (sbx) — micro-VMs that give each agent an isolated Linux kernel, its own network stack, and mount only the allowed work folder.
+   2. How exactly to implement "Never delete files"? A system prompt ban doesn't work during hallucinations. Either replace the rm alias with a move command (e.g., mv "$@" ~/.trash_archive), or use specialized filesystems like YoloFS that save all changes to a staging zone until you approve in Telegram.
+   3. Missing target repository: The cosmiksoul.github.io/fantasy-igaming-data-department/ repository is currently unavailable or empty. Will the agent generate synthetic casino datasets (players, RTP metrics, match logs) from scratch in PostgreSQL, or will we provide a local dump?
+   4. Secret management for Telegram: If API keys are stored in a .env file, the agent might accidentally leak them in logs or send them out. Will you integrate Infisical Agent Vault to proxy the bot's requests to Telegram API without giving it the keys themselves?
+   21.

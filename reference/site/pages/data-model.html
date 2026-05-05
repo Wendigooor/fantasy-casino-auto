@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Model — Fantasy iGaming Data Department</title>
+  <meta name="description" content="ERD, 9 core entities, слои dbt (staging → intermediate → marts), описания mart-таблиц.">
+  <meta property="og:title" content="Data Model — Fantasy iGaming Data Department">
+  <meta property="og:description" content="ERD, 9 core entities, слои dbt (staging → intermediate → marts), описания mart-таблиц.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Data Model</h1>
+          <p class="page-header-desc">Модель данных Fantasy iGaming: 9 core entities, связи, слои dbt и готовые marts для BI и DS.</p>
+        </div>
+
+        <!-- ================================ -->
+        <!-- ERD Diagram -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>ERD — Entity Relationship Diagram</h2>
+          <p>Основные сущности DWH и связи между ними. Dimensions (dim_) — справочники, Facts (fct_) — транзакционные данные.</p>
+
+          <div class="mermaid-block">
+            <pre class="mermaid">
+erDiagram
+    dim_players ||--o{ fct_bets : "places"
+    dim_players ||--o{ fct_deposits : "makes"
+    dim_players ||--o{ fct_withdrawals : "requests"
+    dim_players ||--o{ fct_sessions : "has"
+    dim_players ||--o{ fct_bonuses : "receives"
+    dim_players ||--o{ fct_events_raw : "generates"
+    dim_games ||--o{ fct_bets : "played_in"
+    dim_sports_events ||--o{ fct_bets : "bet_on"
+    fct_bonuses ||--o{ fct_bets : "used_in"
+    fct_sessions ||--o{ fct_events_raw : "contains"
+
+    dim_players {
+        String player_id PK
+        DateTime registered_at
+        String geo
+        String acquisition_channel
+        String platform
+        String kyc_status
+        String vip_tier
+        String segment
+        Boolean is_self_excluded
+    }
+
+    dim_games {
+        String game_id PK
+        String provider
+        String game_name
+        String game_type
+        Float rtp_theoretical
+        Boolean is_active
+    }
+
+    dim_sports_events {
+        String event_id PK
+        String sport
+        String league
+        String home_team
+        String away_team
+        DateTime start_time
+        String status
+    }
+
+    fct_bets {
+        String bet_id PK
+        String player_id FK
+        String product
+        Decimal bet_amount
+        Decimal payout_amount
+        String bet_type
+        Float odds
+        DateTime placed_at
+        String status
+    }
+
+    fct_deposits {
+        String deposit_id PK
+        String player_id FK
+        Decimal amount
+        String currency
+        String payment_method
+        Boolean is_first_deposit
+    }
+
+    fct_withdrawals {
+        String withdrawal_id PK
+        String player_id FK
+        Decimal amount
+        String status
+        Float processing_time_hours
+    }
+
+    fct_sessions {
+        String session_id PK
+        String player_id FK
+        DateTime started_at
+        DateTime ended_at
+        Int duration_sec
+        String platform
+    }
+
+    fct_bonuses {
+        String bonus_id PK
+        String player_id FK
+        String bonus_type
+        Decimal amount
+        Float wagering_requirement
+        String status
+    }
+
+    fct_events_raw {
+        String event_id PK
+        String player_id FK
+        String event_name
+        JSON event_params
+        DateTime timestamp
+        String session_id FK
+    }
+            </pre>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Entity Descriptions -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Сущности</h2>
+          <p>Кликните на таблицу для просмотра полей и описаний.</p>
+
+          <!-- dim_players -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">dim_players</span>
+              <span class="badge badge-primary">dimension</span>
+            </div>
+            <div class="accordion-body">
+              <p>Справочник игроков. Одна строка = один зарегистрированный игрок. Обновляется через CDC при изменении профиля.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>player_id</code></td><td>String PK</td><td>Уникальный ID игрока</td></tr>
+                    <tr><td><code>registered_at</code></td><td>DateTime</td><td>Дата и время регистрации</td></tr>
+                    <tr><td><code>geo</code></td><td>String</td><td>Страна (ISO 3166-1 alpha-2)</td></tr>
+                    <tr><td><code>acquisition_channel</code></td><td>String</td><td>Канал привлечения: organic, paid_search, affiliate, social</td></tr>
+                    <tr><td><code>acquisition_campaign</code></td><td>String</td><td>UTM campaign, nullable</td></tr>
+                    <tr><td><code>device</code></td><td>String</td><td>Устройство при регистрации</td></tr>
+                    <tr><td><code>platform</code></td><td>String</td><td>web / ios / android</td></tr>
+                    <tr><td><code>kyc_status</code></td><td>String</td><td>pending / verified / rejected</td></tr>
+                    <tr><td><code>kyc_verified_at</code></td><td>DateTime</td><td>Дата верификации KYC, nullable</td></tr>
+                    <tr><td><code>vip_tier</code></td><td>String</td><td>bronze / silver / gold / platinum</td></tr>
+                    <tr><td><code>segment</code></td><td>String</td><td>Бизнес-сегмент: casual, regular, vip, whale</td></tr>
+                    <tr><td><code>is_self_excluded</code></td><td>Boolean</td><td>Самоисключение (responsible gaming)</td></tr>
+                    <tr><td><code>created_at</code></td><td>DateTime</td><td>Дата создания записи</td></tr>
+                    <tr><td><code>updated_at</code></td><td>DateTime</td><td>Дата последнего обновления</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- dim_games -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">dim_games</span>
+              <span class="badge badge-primary">dimension</span>
+            </div>
+            <div class="accordion-body">
+              <p>Каталог казино-игр. Обновляется при подключении нового провайдера или игры.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>game_id</code></td><td>String PK</td><td>Уникальный ID игры</td></tr>
+                    <tr><td><code>provider</code></td><td>String</td><td>Провайдер: Pragmatic Play, Evolution, NetEnt</td></tr>
+                    <tr><td><code>game_name</code></td><td>String</td><td>Название игры</td></tr>
+                    <tr><td><code>game_type</code></td><td>String</td><td>slot / table / live / crash</td></tr>
+                    <tr><td><code>rtp_theoretical</code></td><td>Float</td><td>Теоретический RTP (0.90–0.99)</td></tr>
+                    <tr><td><code>category</code></td><td>String</td><td>Категория в лобби: popular, new, jackpot</td></tr>
+                    <tr><td><code>is_active</code></td><td>Boolean</td><td>Активна ли игра в лобби</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- dim_sports_events -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">dim_sports_events</span>
+              <span class="badge badge-primary">dimension</span>
+            </div>
+            <div class="accordion-body">
+              <p>Справочник спортивных событий. Обновляется через odds feed. Статус: pre → live → settled.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>event_id</code></td><td>String PK</td><td>Уникальный ID события</td></tr>
+                    <tr><td><code>sport</code></td><td>String</td><td>Вид спорта: football, basketball, tennis, esports</td></tr>
+                    <tr><td><code>league</code></td><td>String</td><td>Лига / турнир</td></tr>
+                    <tr><td><code>home_team</code></td><td>String</td><td>Домашняя команда</td></tr>
+                    <tr><td><code>away_team</code></td><td>String</td><td>Гостевая команда</td></tr>
+                    <tr><td><code>start_time</code></td><td>DateTime</td><td>Время начала</td></tr>
+                    <tr><td><code>status</code></td><td>String</td><td>pre / live / settled</td></tr>
+                    <tr><td><code>result</code></td><td>String</td><td>Результат (после settle), nullable</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- fct_bets -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">fct_bets</span>
+              <span class="badge badge-teal">fact</span>
+            </div>
+            <div class="accordion-body">
+              <p>Все ставки: казино и спорт. Основная транзакционная таблица. ~10M строк/месяц. Партиционирование по <code>placed_at</code> (month).</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>bet_id</code></td><td>String PK</td><td>Уникальный ID ставки</td></tr>
+                    <tr><td><code>player_id</code></td><td>String FK</td><td>→ dim_players</td></tr>
+                    <tr><td><code>product</code></td><td>String</td><td>casino / sports</td></tr>
+                    <tr><td><code>game_id</code></td><td>String FK</td><td>→ dim_games (casino), nullable</td></tr>
+                    <tr><td><code>event_id</code></td><td>String FK</td><td>→ dim_sports_events (sports), nullable</td></tr>
+                    <tr><td><code>bet_amount</code></td><td>Decimal(18,2)</td><td>Сумма ставки в USD</td></tr>
+                    <tr><td><code>payout_amount</code></td><td>Decimal(18,2)</td><td>Выплата (0 если проигрыш)</td></tr>
+                    <tr><td><code>bet_type</code></td><td>String</td><td>single / combo / system</td></tr>
+                    <tr><td><code>odds</code></td><td>Float</td><td>Коэффициент (для sports)</td></tr>
+                    <tr><td><code>placed_at</code></td><td>DateTime</td><td>Время размещения</td></tr>
+                    <tr><td><code>settled_at</code></td><td>DateTime</td><td>Время расчёта, nullable</td></tr>
+                    <tr><td><code>status</code></td><td>String</td><td>open / won / lost / void</td></tr>
+                    <tr><td><code>is_bonus_bet</code></td><td>Boolean</td><td>Ставка за счёт бонуса</td></tr>
+                    <tr><td><code>bonus_id</code></td><td>String FK</td><td>→ fct_bonuses, nullable</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- fct_deposits -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">fct_deposits</span>
+              <span class="badge badge-teal">fact</span>
+            </div>
+            <div class="accordion-body">
+              <p>Все депозиты. Критичная таблица для revenue-метрик. <code>is_first_deposit</code> — ключ для FTD-аналитики.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>deposit_id</code></td><td>String PK</td><td>Уникальный ID депозита</td></tr>
+                    <tr><td><code>player_id</code></td><td>String FK</td><td>→ dim_players</td></tr>
+                    <tr><td><code>amount</code></td><td>Decimal(18,2)</td><td>Сумма в оригинальной валюте</td></tr>
+                    <tr><td><code>currency</code></td><td>String</td><td>USD, EUR, BRL</td></tr>
+                    <tr><td><code>payment_method</code></td><td>String</td><td>card, crypto, e-wallet, bank_transfer</td></tr>
+                    <tr><td><code>status</code></td><td>String</td><td>pending / completed / failed</td></tr>
+                    <tr><td><code>is_first_deposit</code></td><td>Boolean</td><td>FTD — first time deposit</td></tr>
+                    <tr><td><code>fee_amount</code></td><td>Decimal(18,2)</td><td>Комиссия платёжной системы</td></tr>
+                    <tr><td><code>created_at</code></td><td>DateTime</td><td>Время создания</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- fct_withdrawals -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">fct_withdrawals</span>
+              <span class="badge badge-teal">fact</span>
+            </div>
+            <div class="accordion-body">
+              <p>Выводы средств. Время обработки — ключевая метрика для продукта и compliance.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>withdrawal_id</code></td><td>String PK</td><td>Уникальный ID вывода</td></tr>
+                    <tr><td><code>player_id</code></td><td>String FK</td><td>→ dim_players</td></tr>
+                    <tr><td><code>amount</code></td><td>Decimal(18,2)</td><td>Сумма вывода</td></tr>
+                    <tr><td><code>currency</code></td><td>String</td><td>Валюта</td></tr>
+                    <tr><td><code>payment_method</code></td><td>String</td><td>Метод вывода</td></tr>
+                    <tr><td><code>status</code></td><td>String</td><td>pending / approved / rejected / completed</td></tr>
+                    <tr><td><code>processing_time_hours</code></td><td>Float</td><td>Время обработки в часах</td></tr>
+                    <tr><td><code>created_at</code></td><td>DateTime</td><td>Время запроса</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- fct_sessions -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">fct_sessions</span>
+              <span class="badge badge-teal">fact</span>
+            </div>
+            <div class="accordion-body">
+              <p>Сессии пользователей. Engagement-метрики и поведенческий анализ.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>session_id</code></td><td>String PK</td><td>Уникальный ID сессии</td></tr>
+                    <tr><td><code>player_id</code></td><td>String FK</td><td>→ dim_players</td></tr>
+                    <tr><td><code>started_at</code></td><td>DateTime</td><td>Начало сессии</td></tr>
+                    <tr><td><code>ended_at</code></td><td>DateTime</td><td>Конец сессии</td></tr>
+                    <tr><td><code>duration_sec</code></td><td>Int</td><td>Длительность в секундах</td></tr>
+                    <tr><td><code>platform</code></td><td>String</td><td>web / ios / android</td></tr>
+                    <tr><td><code>device_type</code></td><td>String</td><td>mobile / tablet / desktop</td></tr>
+                    <tr><td><code>pages_viewed</code></td><td>Int</td><td>Количество просмотренных страниц</td></tr>
+                    <tr><td><code>geo_ip</code></td><td>String</td><td>Гео по IP</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- fct_bonuses -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">fct_bonuses</span>
+              <span class="badge badge-teal">fact</span>
+            </div>
+            <div class="accordion-body">
+              <p>Бонусы. Ключевая таблица для расчёта bonus cost (компонент NGR). Вейджер — сколько нужно проставить для вывода.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>bonus_id</code></td><td>String PK</td><td>Уникальный ID бонуса</td></tr>
+                    <tr><td><code>player_id</code></td><td>String FK</td><td>→ dim_players</td></tr>
+                    <tr><td><code>bonus_type</code></td><td>String</td><td>welcome / reload / cashback / freebet / freespin</td></tr>
+                    <tr><td><code>amount</code></td><td>Decimal(18,2)</td><td>Сумма бонуса</td></tr>
+                    <tr><td><code>wagering_requirement</code></td><td>Float</td><td>Множитель вейджера (напр. 30x)</td></tr>
+                    <tr><td><code>wagered_amount</code></td><td>Decimal(18,2)</td><td>Сколько проставлено</td></tr>
+                    <tr><td><code>status</code></td><td>String</td><td>active / completed / expired / cancelled</td></tr>
+                    <tr><td><code>issued_at</code></td><td>DateTime</td><td>Дата выдачи</td></tr>
+                    <tr><td><code>expires_at</code></td><td>DateTime</td><td>Дата истечения</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- fct_events_raw -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">fct_events_raw</span>
+              <span class="badge badge-teal">fact</span>
+            </div>
+            <div class="accordion-body">
+              <p>Сырые события трекинга. Semi-structured: event_params — JSON. Source для <a href="event-taxonomy.html">Event Taxonomy</a>.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>event_id</code></td><td>String PK</td><td>UUID события</td></tr>
+                    <tr><td><code>player_id</code></td><td>String FK</td><td>→ dim_players</td></tr>
+                    <tr><td><code>event_name</code></td><td>String</td><td>Имя события (см. Event Taxonomy)</td></tr>
+                    <tr><td><code>event_params</code></td><td>JSON</td><td>Параметры, schema-on-read</td></tr>
+                    <tr><td><code>timestamp</code></td><td>DateTime</td><td>Время события (ISO 8601)</td></tr>
+                    <tr><td><code>session_id</code></td><td>String FK</td><td>→ fct_sessions</td></tr>
+                    <tr><td><code>platform</code></td><td>String</td><td>web / ios / android</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- dbt Layers -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>dbt Layers</h2>
+          <p>Три слоя трансформации. Подробнее о стеке — в <a href="data-architecture.html">01. Data Architecture</a>.</p>
+
+          <h3>Staging (stg_)</h3>
+          <p>1:1 с источником. Очистка, типизация, дедупликация. Без бизнес-логики.</p>
+          <div class="code-block" data-lang="sql">
+            <pre><code><span class="cmt">-- stg_betting__bets</span>
+<span class="kw">SELECT</span>
+    bet_id,
+    player_id,
+    <span class="fn">lower</span>(product) <span class="kw">AS</span> product,
+    game_id,
+    event_id,
+    <span class="fn">CAST</span>(bet_amount <span class="kw">AS</span> Decimal64(<span class="num">2</span>)) <span class="kw">AS</span> bet_amount,
+    <span class="fn">CAST</span>(payout_amount <span class="kw">AS</span> Decimal64(<span class="num">2</span>)) <span class="kw">AS</span> payout_amount,
+    <span class="fn">lower</span>(status) <span class="kw">AS</span> status,
+    <span class="fn">toDateTime</span>(placed_at) <span class="kw">AS</span> placed_at,
+    <span class="fn">toDateTime</span>(settled_at) <span class="kw">AS</span> settled_at
+<span class="kw">FROM</span> raw.betting_bets
+<span class="kw">WHERE</span> bet_id <span class="kw">IS NOT NULL</span></code></pre>
+          </div>
+
+          <h3>Intermediate (int_)</h3>
+          <p>Джойны, расчёты, обогащение данных.</p>
+          <div class="code-block" data-lang="sql">
+            <pre><code><span class="cmt">-- int_bets_enriched</span>
+<span class="kw">SELECT</span>
+    b.bet_id,
+    b.player_id,
+    p.geo,
+    p.vip_tier,
+    p.acquisition_channel,
+    b.product,
+    b.bet_amount,
+    b.payout_amount,
+    b.bet_amount - b.payout_amount <span class="kw">AS</span> ggr,
+    b.is_bonus_bet,
+    g.game_type,
+    g.provider,
+    b.placed_at
+<span class="kw">FROM</span> stg_betting__bets b
+<span class="kw">LEFT JOIN</span> stg_core__players p <span class="kw">ON</span> b.player_id = p.player_id
+<span class="kw">LEFT JOIN</span> stg_core__games g <span class="kw">ON</span> b.game_id = g.game_id</code></pre>
+          </div>
+
+          <h3>Marts (mart_)</h3>
+          <p>Финальные витрины для BI и DS. Каждый mart отвечает на конкретный бизнес-вопрос.</p>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Mart Descriptions -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Mart-таблицы</h2>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">mart_daily_kpi</span>
+              <span class="badge badge-amber">daily refresh</span>
+            </div>
+            <div class="accordion-body">
+              <p>Ежедневные бизнес-метрики. Основной дашборд CEO. Обновляется к 07:00 UTC.</p>
+              <p><strong>Sources:</strong> int_bets_enriched, int_daily_costs</p>
+              <ul class="list">
+                <li><code>dt</code> — дата</li>
+                <li><code>active_players</code> — уникальные игроки за день</li>
+                <li><code>turnover</code> — сумма ставок (handle)</li>
+                <li><code>ggr</code> — Gross Gaming Revenue</li>
+                <li><code>ngr</code> — Net Gaming Revenue (GGR - bonus - fees)</li>
+                <li><code>deposits</code>, <code>withdrawals</code> — суммы</li>
+                <li><code>ftd_count</code> — новые депозиторы</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">mart_player_lifetime</span>
+              <span class="badge badge-amber">daily refresh</span>
+            </div>
+            <div class="accordion-body">
+              <p>Lifetime-метрики по каждому игроку. Основа для LTV-моделей и сегментации.</p>
+              <p><strong>Sources:</strong> int_bets_enriched, int_deposits, int_sessions</p>
+              <ul class="list">
+                <li><code>player_id</code> — ID игрока</li>
+                <li><code>lifetime_turnover</code> — все ставки за всё время</li>
+                <li><code>lifetime_ggr</code> — cumulative GGR</li>
+                <li><code>lifetime_deposits</code> — сумма депозитов</li>
+                <li><code>total_bets</code> — количество ставок</li>
+                <li><code>days_active</code> — дней с активностью</li>
+                <li><code>last_activity_at</code> — последняя активность</li>
+                <li><code>churn_risk</code> — score из ML-модели</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">mart_cohort_analysis</span>
+              <span class="badge badge-blue">weekly refresh</span>
+            </div>
+            <div class="accordion-body">
+              <p>Когортный анализ по дате регистрации. Retention, cumulative NGR, LTV по когортам.</p>
+              <p><strong>Sources:</strong> int_bets_enriched, stg_core__players</p>
+              <ul class="list">
+                <li><code>cohort_month</code> — месяц регистрации</li>
+                <li><code>period_number</code> — месяц жизни когорты (0, 1, 2...)</li>
+                <li><code>cohort_size</code> — размер когорты</li>
+                <li><code>retained_players</code> — активные в период</li>
+                <li><code>retention_rate</code> — % retained</li>
+                <li><code>cumulative_ngr</code> — накопленный NGR</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">mart_marketing_performance</span>
+              <span class="badge badge-amber">daily refresh</span>
+            </div>
+            <div class="accordion-body">
+              <p>Эффективность маркетинга: CAC, LTV:CAC, ROAS по каналам и кампаниям.</p>
+              <p><strong>Sources:</strong> int_deposits_enriched, stg_core__players, stg_marketing__spend</p>
+              <ul class="list">
+                <li><code>channel</code> — канал привлечения</li>
+                <li><code>campaign</code> — кампания</li>
+                <li><code>spend</code> — маркетинговые расходы</li>
+                <li><code>registrations</code> — регистрации</li>
+                <li><code>ftd_count</code> — первые депозиты</li>
+                <li><code>cac</code> — cost per acquisition</li>
+                <li><code>ltv_cac_ratio</code> — LTV / CAC</li>
+                <li><code>roas</code> — return on ad spend</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">mart_game_performance</span>
+              <span class="badge badge-amber">daily refresh</span>
+            </div>
+            <div class="accordion-body">
+              <p>Эффективность казино-игр: GGR по провайдерам, фактический vs теоретический RTP, топ-игры. Основной mart для продуктовой команды казино.</p>
+              <p><strong>Sources:</strong> int_bets_enriched, stg_core__games</p>
+              <ul class="list">
+                <li><code>game_id</code> — ID игры</li>
+                <li><code>provider</code> — провайдер (Pragmatic Play, Evolution и др.)</li>
+                <li><code>game_type</code> — slot / table / live / crash</li>
+                <li><code>total_bets</code> — количество ставок</li>
+                <li><code>turnover</code> — сумма ставок</li>
+                <li><code>ggr</code> — GGR по игре</li>
+                <li><code>theoretical_rtp</code> — теоретический RTP</li>
+                <li><code>actual_rtp</code> — фактический RTP (payout / turnover)</li>
+                <li><code>unique_players</code> — уникальные игроки</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#534AB7',
+        primaryTextColor: '#eeedf5',
+        primaryBorderColor: '#1e1e24',
+        lineColor: '#7d7890',
+        secondaryColor: '#16161c',
+        tertiaryColor: '#1a1a22'
+      }
+    });
+  </script>
+</body>
+</html>

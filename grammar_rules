@@ -1,0 +1,10 @@
+CRITICAL INSTRUCTION FOR REASONING:
+When thinking, you MUST strictly use the following format and nothing else. Do not write free-form thoughts.
+
+<think>
+GOAL: [Write one short sentence about what you need to achieve]
+APPROACH: [Write one short sentence about how you will do it]
+EDGE: [Write one short sentence about potential pitfalls]
+</think>
+
+Proceed directly to the action or code after closing the tag.

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fantasy iGaming Data Department</title>
+  <meta name="description" content="Интерактивный справочник по аналитической функции iGaming-компании. Архитектура, метрики, процессы, команда.">
+  <meta property="og:title" content="Fantasy iGaming Data Department">
+  <meta property="og:description" content="Интерактивный справочник по аналитической функции iGaming-компании.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Burger -->
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </button>
+
+  <!-- Sidebar overlay -->
+  <div class="sidebar-overlay"></div>
+
+  <!-- Sidebar (built by nav.js) -->
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <!-- Hero -->
+        <section class="hero">
+          <h1 class="hero-title">Fantasy iGaming Data Department</h1>
+          <p class="hero-subtitle">The Ultimate Data Function Reference</p>
+          <p class="hero-desc">
+            Открытый справочник по построению data-функции в вымышленной iGaming-компании.
+            Архитектура, метрики, процессы, команда, ML — всё в одном месте.
+            Идеализированная, но реалистичная картина.
+          </p>
+          <a href="pages/data-architecture.html" class="btn btn-primary">Начать обзор &rarr;</a>
+        </section>
+
+        <!-- Company Card -->
+        <section class="company-card">
+          <h2 class="company-card-title">О компании</h2>
+          <div class="company-card-grid">
+            <div class="company-card-item">
+              <span class="company-card-label">Продукт</span>
+              <span class="company-card-value">Sportsbook + Casino</span>
+            </div>
+            <div class="company-card-item">
+              <span class="company-card-label">Рынки</span>
+              <span class="company-card-value">CIS, LatAm, Europe</span>
+            </div>
+            <div class="company-card-item">
+              <span class="company-card-label">MAU</span>
+              <span class="company-card-value">~500K</span>
+            </div>
+            <div class="company-card-item">
+              <span class="company-card-label">NGR / мес.</span>
+              <span class="company-card-value">~$5M</span>
+            </div>
+            <div class="company-card-item">
+              <span class="company-card-label">Команда</span>
+              <span class="company-card-value">~300 чел.</span>
+            </div>
+            <div class="company-card-item">
+              <span class="company-card-label">Data Team</span>
+              <span class="company-card-value">20 чел., 4 стрима</span>
+            </div>
+            <div class="company-card-item">
+              <span class="company-card-label">Стадия</span>
+              <span class="company-card-value">Scale-up</span>
+            </div>
+            <div class="company-card-item">
+              <span class="company-card-label">Стек</span>
+              <span class="company-card-value">ClickHouse, dbt, Airflow — самый попсовый :)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section Grid -->
+        <section>
+          <h2>Разделы</h2>
+          <div class="section-grid" id="section-grid">
+
+            <a href="pages/data-architecture.html" class="section-card" style="border-left-color: var(--color-purple)">
+              <div class="section-card-header">
+                <span class="section-card-num">01</span>
+                <span class="section-card-title">Data Architecture</span>
+              </div>
+              <p class="section-card-desc">Стек технологий по слоям: от источников до BI и ML</p>
+            </a>
+
+            <a href="pages/org-structure.html" class="section-card" style="border-left-color: var(--color-purple)">
+              <div class="section-card-header">
+                <span class="section-card-num">02</span>
+                <span class="section-card-title">Org Structure</span>
+              </div>
+              <p class="section-card-desc">Команда из 20 человек: 4 стрима, роли, RACI, карьерная лестница</p>
+            </a>
+
+            <a href="pages/data-model.html" class="section-card" style="border-left-color: var(--color-purple)">
+              <div class="section-card-header">
+                <span class="section-card-num">03</span>
+                <span class="section-card-title">Data Model</span>
+              </div>
+              <p class="section-card-desc">ERD, слои dbt (staging → intermediate → marts), ключевые сущности</p>
+            </a>
+
+            <a href="pages/event-taxonomy.html" class="section-card" style="border-left-color: var(--color-purple)">
+              <div class="section-card-header">
+                <span class="section-card-num">04</span>
+                <span class="section-card-title">Event Taxonomy</span>
+              </div>
+              <p class="section-card-desc">Naming convention, схема событий, tracking plan, процесс изменений</p>
+            </a>
+
+            <a href="pages/metrics.html" class="section-card" style="border-left-color: var(--color-purple)">
+              <div class="section-card-header">
+                <span class="section-card-num">05</span>
+                <span class="section-card-title">Metrics Dictionary</span>
+              </div>
+              <p class="section-card-desc">15+ ключевых метрик: формулы, SQL, бенчмарки, подводные камни</p>
+            </a>
+
+            <a href="pages/data-governance.html" class="section-card" style="border-left-color: var(--color-amber)">
+              <div class="section-card-header">
+                <span class="section-card-num">06</span>
+                <span class="section-card-title">Data Governance</span>
+              </div>
+              <p class="section-card-desc">Ownership, каталог, RBAC, DQ framework, жизненный цикл данных</p>
+            </a>
+
+            <a href="pages/sla.html" class="section-card" style="border-left-color: var(--color-amber)">
+              <div class="section-card-header">
+                <span class="section-card-num">07</span>
+                <span class="section-card-title">SLA</span>
+              </div>
+              <p class="section-card-desc">Матрица SLA: провайдер → консьюмер → метрика → таргет → эскалация</p>
+            </a>
+
+            <a href="pages/dataops.html" class="section-card" style="border-left-color: var(--color-red)">
+              <div class="section-card-header">
+                <span class="section-card-num">08</span>
+                <span class="section-card-title">DataOps</span>
+              </div>
+              <p class="section-card-desc">CI/CD для данных, мониторинг, on-call, среды разработки</p>
+            </a>
+
+            <a href="pages/mlops.html" class="section-card" style="border-left-color: var(--color-red)">
+              <div class="section-card-header">
+                <span class="section-card-num">09</span>
+                <span class="section-card-title">MLOps</span>
+              </div>
+              <p class="section-card-desc">ML lifecycle, MLflow, Feature Store, model cards (LTV, Churn, Fraud)</p>
+            </a>
+
+            <a href="pages/data-lineage.html" class="section-card" style="border-left-color: var(--color-red)">
+              <div class="section-card-header">
+                <span class="section-card-num">10</span>
+                <span class="section-card-title">Data Lineage</span>
+              </div>
+              <p class="section-card-desc">End-to-end путь данных: от события до дашборда CEO</p>
+            </a>
+
+            <a href="pages/incident-response.html" class="section-card" style="border-left-color: var(--color-red)">
+              <div class="section-card-header">
+                <span class="section-card-num">11</span>
+                <span class="section-card-title">Incident Response</span>
+              </div>
+              <p class="section-card-desc">Severity levels, протокол реагирования, post-mortem с примером</p>
+            </a>
+
+            <a href="pages/dashboards.html" class="section-card" style="border-left-color: var(--color-teal)">
+              <div class="section-card-header">
+                <span class="section-card-num">12</span>
+                <span class="section-card-title">Dashboards</span>
+              </div>
+              <p class="section-card-desc">6 мокапов: CEO pulse, маркетинг, казино, спорт, когорты, data health</p>
+            </a>
+
+            <a href="pages/ab-testing.html" class="section-card" style="border-left-color: var(--color-teal)">
+              <div class="section-card-header">
+                <span class="section-card-num">13</span>
+                <span class="section-card-title">A/B Testing</span>
+              </div>
+              <p class="section-card-desc">HADI-цикл, бэклог гипотез, чеклист запуска, полный кейс</p>
+            </a>
+
+            <a href="pages/management.html" class="section-card" style="border-left-color: var(--color-teal)">
+              <div class="section-card-header">
+                <span class="section-card-num">14</span>
+                <span class="section-card-title">Management</span>
+              </div>
+              <p class="section-card-desc">Спринты, встречи, OKR, управление бэклогом, база знаний</p>
+            </a>
+
+            <a href="pages/onboarding.html" class="section-card" style="border-left-color: var(--color-blue)">
+              <div class="section-card-header">
+                <span class="section-card-num">15</span>
+                <span class="section-card-title">Onboarding</span>
+              </div>
+              <p class="section-card-desc">День 1 → месяц 1: доступы, buddy, первые задачи, чеклист</p>
+            </a>
+
+            <a href="pages/finops.html" class="section-card" style="border-left-color: var(--color-blue)">
+              <div class="section-card-header">
+                <span class="section-card-num">16</span>
+                <span class="section-card-title">FinOps</span>
+              </div>
+              <p class="section-card-desc">Структура затрат, оптимизация, бюджетное планирование</p>
+            </a>
+
+            <a href="pages/roadmap.html" class="section-card" style="border-left-color: var(--color-blue)">
+              <div class="section-card-header">
+                <span class="section-card-num">17</span>
+                <span class="section-card-title">Roadmap</span>
+              </div>
+              <p class="section-card-desc">Годовой план: Q1 стабилизация → Q4 масштабирование</p>
+            </a>
+
+            <a href="pages/glossary.html" class="section-card" style="border-left-color: var(--color-gray)">
+              <div class="section-card-header">
+                <span class="section-card-num">18</span>
+                <span class="section-card-title">Glossary</span>
+              </div>
+              <p class="section-card-desc">Все термины проекта в одном месте: от A/B testing до Whale</p>
+            </a>
+
+          </div>
+        </section>
+
+        <!-- About Card (special, full-width) -->
+        <a href="pages/about.html" class="about-card">
+          <div class="about-card-inner">
+            <div class="about-card-text">
+              <span class="about-card-label">19. About</span>
+              <span class="about-card-title">О проекте и авторе</span>
+              <p class="about-card-desc">Зачем этот проект, кто за ним стоит, как контрибьютить</p>
+            </div>
+            <span class="about-card-cta">Подробнее &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Disclaimer -->
+        <div class="disclaimer">
+          <strong>Disclaimer.</strong> Все данные вымышлены. Это не best practice и не консалтинг.
+          Это отправная точка для обсуждения — идеализированная картина data-функции,
+          которая может быть полезна как референс.
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="js/nav.js"></script>
+</body>
+</html>

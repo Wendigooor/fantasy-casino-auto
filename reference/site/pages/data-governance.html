@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Governance — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Data Ownership, каталог (DataHub), Data Dictionary, RBAC, DQ framework (5 измерений), data lifecycle.">
+  <meta property="og:title" content="Data Governance — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Data Ownership, каталог (DataHub), Data Dictionary, RBAC, DQ framework (5 измерений), data lifecycle.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Data Governance</h1>
+          <p class="page-header-desc">Кто владеет данными, как они каталогизированы, кто имеет доступ, как проверяется качество и сколько данные живут.</p>
+        </div>
+
+        <!-- ================================ -->
+        <!-- Roles -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Roles & Ownership</h2>
+
+          <h3>Data Owners</h3>
+          <p>Бизнес-руководители, принимающие решения о данных своего домена: доступ, качество, retention, определения метрик.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Domain</th><th>Owner</th><th>Owns</th><th>Decides</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Betting</td>
+                  <td>Head of Product</td>
+                  <td>fct_bets, dim_games, dim_sports_events</td>
+                  <td>Определения bet-метрик, доступ к raw betting data</td>
+                </tr>
+                <tr>
+                  <td>Finance</td>
+                  <td>CFO</td>
+                  <td>mart_daily_kpi (revenue), fct_deposits, fct_withdrawals</td>
+                  <td>Формулы NGR/GGR, финансовая отчётность, аудит</td>
+                </tr>
+                <tr>
+                  <td>Marketing</td>
+                  <td>CMO</td>
+                  <td>mart_marketing_performance, attribution data</td>
+                  <td>Модели атрибуции, доступ к маркетинговым расходам</td>
+                </tr>
+                <tr>
+                  <td>Player PII</td>
+                  <td>Head of Compliance</td>
+                  <td>dim_players (PII fields), KYC data</td>
+                  <td>Доступ к PII, retention PII, GDPR requests</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Data Stewards</h3>
+          <p>Аналитик или DE, назначенный на домен. Отвечает за операционное качество: мониторит свежесть, чинит аномалии, поддерживает документацию.</p>
+
+          <div class="card mb-lg">
+            <p><strong>Пример:</strong> Steward для <code>mart_daily_kpi</code> — Financial Analyst.</p>
+            <ul class="list">
+              <li>Проверяет данные каждое утро к 07:30 UTC</li>
+              <li>Валидирует NGR: сравнивает с платёжным отчётом</li>
+              <li>Эскалирует расхождения &gt; 0.5% в #data-alerts</li>
+              <li>Обновляет документацию при изменении формул</li>
+            </ul>
+          </div>
+
+          <h3>Governance Council</h3>
+          <div class="card">
+            <p><strong>Состав:</strong> Director of Data (chair), все Data Owners, Lead Analyst, Lead DE.</p>
+            <p><strong>Cadence:</strong> Ежеквартально, 1.5 часа.</p>
+            <p><strong>Типичная повестка:</strong></p>
+            <ul class="list">
+              <li>Ревью DQ score по доменам</li>
+              <li>Новые определения метрик (спорные случаи)</li>
+              <li>Запросы на доступ к PII</li>
+              <li>Изменения retention policy</li>
+            </ul>
+            <p><strong>Пример решения:</strong> Q1 2026 — утверждение новой формулы Churn Rate (с 30 на 45 дней для sports-only игроков, на основе анализа сезонности).</p>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Data Catalog -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Data Catalog (DataHub)</h2>
+          <p>Централизованный каталог: поиск таблиц, описания полей, владельцы, lineage. Self-hosted, интеграция с dbt и Airflow.</p>
+
+          <div class="card">
+            <h3>Пример карточки таблицы</h3>
+            <div class="table-wrap">
+              <table>
+                <tbody>
+                  <tr><td><strong>Table</strong></td><td><code>mart_daily_kpi</code></td></tr>
+                  <tr><td><strong>Description</strong></td><td>Ежедневные KPI: NGR, GGR, active players, deposits. Основной mart для CEO dashboard.</td></tr>
+                  <tr><td><strong>Owner</strong></td><td>CFO (Data Owner), Financial Analyst (Steward)</td></tr>
+                  <tr><td><strong>Freshness</strong></td><td>Daily, updated by 07:00 UTC</td></tr>
+                  <tr><td><strong>Lineage</strong></td><td>int_bets_enriched → int_daily_costs → <strong>mart_daily_kpi</strong> → Metabase CEO Pulse</td></tr>
+                  <tr><td><strong>Tags</strong></td><td><span class="badge badge-teal">revenue</span> <span class="badge badge-red">critical</span> <span class="badge badge-blue">certified</span></td></tr>
+                  <tr><td><strong>Popularity</strong></td><td>47 queries/day (top-5 most used)</td></tr>
+                  <tr><td><strong>DQ Score</strong></td><td>98.5% (last 30 days)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Data Dictionary -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Data Dictionary</h2>
+          <p>Стандартизированные определения ключевых терминов. Единый источник правды — если два человека спорят о значении метрики, побеждает Data Dictionary.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Term</th><th>Definition</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Active Player</strong></td><td>Игрок, сделавший хотя бы 1 ставку за последние 30 дней</td><td>Не логин, не депозит — именно ставка</td></tr>
+                <tr><td><strong>FTD</strong></td><td>First Time Depositor — игрок, совершивший первый депозит</td><td>Считается по completed deposits, не pending</td></tr>
+                <tr><td><strong>GGR</strong></td><td>SUM(bet_amount) - SUM(payout_amount) по settled bets</td><td>Только settled, не open/void</td></tr>
+                <tr><td><strong>NGR</strong></td><td>GGR - bonus_cost - provider_fees - payment_fees</td><td>Не включает marketing spend и payroll</td></tr>
+                <tr><td><strong>Churn</strong></td><td>Игрок без ставок 30+ дней (45 для sports-only)</td><td>Утверждено Governance Council Q1 2026</td></tr>
+                <tr><td><strong>Whale</strong></td><td>Игрок в top-1% по lifetime GGR</td><td>Требует responsible gaming мониторинга</td></tr>
+                <tr><td><strong>Bonus Cost</strong></td><td>Сумма бонусных средств, использованных для ставок</td><td>Не выданных, а фактически использованных</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Процесс изменения определений</h3>
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">1. Proposal</div>
+              <div class="timeline-block-body">Аналитик или Product создаёт RFC в Confluence: текущее определение, предлагаемое, обоснование, impact analysis.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">2. Review</div>
+              <div class="timeline-block-body">Data Owner домена + Lead Analyst ревьюят. Если cross-domain — выносится на Governance Council.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">3. Approve & Update</div>
+              <div class="timeline-block-body">Обновление в Data Dictionary, DataHub, dbt docs. Уведомление в #data-announcements. Grace period 2 недели для даунстрим-потребителей.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- RBAC -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Access Policies (RBAC)</h2>
+          <p>Role-Based Access Control. Принцип least privilege: каждая роль получает только необходимый доступ.</p>
+
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Betting</th>
+                  <th>Finance</th>
+                  <th>Player PII</th>
+                  <th>Marketing</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Analyst</td>
+                  <td><span class="badge badge-teal">read</span></td>
+                  <td><span class="badge badge-teal">read</span></td>
+                  <td><span class="badge badge-amber">masked</span></td>
+                  <td><span class="badge badge-teal">read</span></td>
+                </tr>
+                <tr>
+                  <td>Data Scientist</td>
+                  <td><span class="badge badge-teal">read</span></td>
+                  <td><span class="badge badge-gray">no</span></td>
+                  <td><span class="badge badge-amber">masked</span></td>
+                  <td><span class="badge badge-teal">read</span></td>
+                </tr>
+                <tr>
+                  <td>BI Developer</td>
+                  <td><span class="badge badge-teal">read</span></td>
+                  <td><span class="badge badge-teal">read</span></td>
+                  <td><span class="badge badge-gray">no</span></td>
+                  <td><span class="badge badge-teal">read</span></td>
+                </tr>
+                <tr>
+                  <td>Lead</td>
+                  <td><span class="badge badge-teal">read</span></td>
+                  <td><span class="badge badge-teal">read</span></td>
+                  <td><span class="badge badge-amber">masked</span></td>
+                  <td><span class="badge badge-teal">read</span></td>
+                </tr>
+                <tr>
+                  <td>Director</td>
+                  <td><span class="badge badge-blue">full</span></td>
+                  <td><span class="badge badge-blue">full</span></td>
+                  <td><span class="badge badge-blue">full</span></td>
+                  <td><span class="badge badge-blue">full</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-info">
+            <strong>Masked</strong> = PII-поля (email, phone, name) заменяются хэшем. player_id доступен для джойнов, но идентификация невозможна. Доступ к raw PII — только через запрос к Head of Compliance с обоснованием.
+          </div>
+
+          <h3>Row-Level Security — пример</h3>
+          <div class="code-block" data-lang="sql">
+            <pre><code><span class="cmt">-- Marketing Analyst видит только marketing-related данные</span>
+<span class="kw">CREATE</span> ROW POLICY marketing_only <span class="kw">ON</span> mart_marketing_performance
+<span class="kw">FOR</span> <span class="kw">SELECT</span>
+<span class="kw">USING</span> currentUser() <span class="kw">IN</span> (<span class="str">'marketing_analyst_1'</span>, <span class="str">'marketing_analyst_2'</span>)
+<span class="kw">TO</span> marketing_team;</code></pre>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- DQ Framework -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>DQ Framework</h2>
+          <p>5 измерений качества данных. Каждое измерение — набор автоматизированных тестов (dbt tests + Great Expectations). Подробнее о стеке — <a href="data-architecture.html">01. Data Architecture</a>.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Completeness</span>
+              <span class="badge badge-teal">dimension</span>
+            </div>
+            <div class="accordion-body">
+              <p>Полнота данных — отсутствие NULL в обязательных полях.</p>
+              <div class="code-block" data-lang="yaml">
+                <pre><code><span class="cmt"># dbt test: payment_method completeness</span>
+- name: fct_deposits
+  columns:
+    - name: payment_method
+      tests:
+        - not_null:
+            config:
+              severity: warn
+              warn_if: "> 1%"
+              error_if: "> 5%"</code></pre>
+              </div>
+              <p><strong>Target:</strong> % NULL в payment_method &lt; 1%</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Accuracy</span>
+              <span class="badge badge-blue">dimension</span>
+            </div>
+            <div class="accordion-body">
+              <p>Точность — данные соответствуют реальности.</p>
+              <div class="code-block" data-lang="sql">
+                <pre><code><span class="cmt">-- Great Expectations: actual RTP vs theoretical</span>
+<span class="kw">SELECT</span>
+    game_id,
+    <span class="fn">abs</span>(actual_rtp - theoretical_rtp) <span class="kw">AS</span> rtp_diff
+<span class="kw">FROM</span> mart_game_performance
+<span class="kw">WHERE</span> total_bets > <span class="num">10000</span>
+  <span class="kw">AND</span> <span class="fn">abs</span>(actual_rtp - theoretical_rtp) > <span class="num">0.02</span></code></pre>
+              </div>
+              <p><strong>Target:</strong> actual RTP vs theoretical ±2pp для игр с 10K+ ставок</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Timeliness</span>
+              <span class="badge badge-amber">dimension</span>
+            </div>
+            <div class="accordion-body">
+              <p>Своевременность — данные обновляются по расписанию.</p>
+              <div class="code-block" data-lang="sql">
+                <pre><code><span class="cmt">-- Мониторинг: системная таблица (не часть аналитической модели)</span>
+<span class="cmt">-- Airflow sensor: mart updated by 7:00 UTC</span>
+<span class="kw">SELECT</span>
+    table_name,
+    last_updated_at,
+    <span class="fn">dateDiff</span>(<span class="str">'minute'</span>, last_updated_at, <span class="fn">now</span>()) <span class="kw">AS</span> staleness_min
+<span class="kw">FROM</span> meta.table_freshness
+<span class="kw">WHERE</span> staleness_min > <span class="num">120</span> <span class="cmt">-- stale > 2 hours</span></code></pre>
+              </div>
+              <p><strong>Target:</strong> critical marts обновлены к 07:00 UTC, staleness &lt; 2 часов</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Consistency</span>
+              <span class="badge badge-pink">dimension</span>
+            </div>
+            <div class="accordion-body">
+              <p>Согласованность — одни и те же данные совпадают между таблицами.</p>
+              <div class="code-block" data-lang="sql">
+                <pre><code><span class="cmt">-- Cross-table consistency check</span>
+<span class="kw">SELECT</span>
+    <span class="fn">abs</span>(
+        (<span class="kw">SELECT</span> <span class="fn">sum</span>(bet_amount) <span class="kw">FROM</span> fct_bets <span class="kw">WHERE</span> <span class="fn">toDate</span>(placed_at) = <span class="fn">today</span>() - <span class="num">1</span>)
+        - (<span class="kw">SELECT</span> turnover <span class="kw">FROM</span> mart_daily_kpi <span class="kw">WHERE</span> dt = <span class="fn">today</span>() - <span class="num">1</span>)
+    ) / <span class="fn">nullIf</span>(
+        (<span class="kw">SELECT</span> turnover <span class="kw">FROM</span> mart_daily_kpi <span class="kw">WHERE</span> dt = <span class="fn">today</span>() - <span class="num">1</span>), <span class="num">0</span>
+    ) * <span class="num">100</span> <span class="kw">AS</span> diff_pct</code></pre>
+              </div>
+              <p><strong>Target:</strong> SUM(fct_bets.bet_amount) = mart_daily_kpi.turnover ±0.01%</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Uniqueness</span>
+              <span class="badge badge-red">dimension</span>
+            </div>
+            <div class="accordion-body">
+              <p>Уникальность — нет дубликатов по primary key.</p>
+              <div class="code-block" data-lang="yaml">
+                <pre><code><span class="cmt"># dbt test: no duplicates on bet_id</span>
+- name: fct_bets
+  columns:
+    - name: bet_id
+      tests:
+        - unique
+        - not_null</code></pre>
+              </div>
+              <p><strong>Target:</strong> 0 дубликатов на bet_id, deposit_id, player_id</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Data Lifecycle -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Data Lifecycle</h2>
+          <p>Retention policy: данные проходят три стадии хранения. Регуляторные требования: betting data 5+ лет (Curaçao license).</p>
+
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">Hot — 3 месяца</div>
+              <div class="timeline-block-body">
+                <p><strong>Storage:</strong> ClickHouse (primary SSD)</p>
+                <p>Активные данные для daily operations, дашбордов, ad-hoc запросов. Максимальная скорость. Все mart-таблицы, свежие факты.</p>
+              </div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">Warm — 1 год</div>
+              <div class="timeline-block-body">
+                <p><strong>Storage:</strong> ClickHouse (cold storage / HDD)</p>
+                <p>Исторические данные для когортного анализа, YoY сравнений, ML-тренировок. Запросы медленнее, но доступны через тот же SQL.</p>
+              </div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">Cold — 5+ лет</div>
+              <div class="timeline-block-body">
+                <p><strong>Storage:</strong> GCS (Parquet format)</p>
+                <p>Архив для compliance и аудита. Регуляторные требования Curaçao: betting data хранится минимум 5 лет. Доступ через ad-hoc Spark/DuckDB job.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-warning">
+            <strong>PII retention:</strong> Player PII (email, phone, name) удаляется через 30 дней после запроса на удаление (GDPR). player_id остаётся для аналитики в анонимизированном виде.
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

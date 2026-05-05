@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Architecture — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Стек технологий по слоям: от источников данных до BI, ML и Reverse ETL.">
+  <meta property="og:title" content="Data Architecture — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Стек технологий по слоям: от источников данных до BI, ML и Reverse ETL.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Data Architecture</h1>
+          <p class="page-header-desc">Полный стек данных Fantasy iGaming — от источников до обратной интеграции. Каждый слой раскрывается с описанием инструментов, альтернатив и trade-off.</p>
+        </div>
+
+        <div class="alert alert-info">
+          Эта страница описывает <strong>целевой стейт</strong> стека Fantasy iGaming. Текущий прогресс внедрения — в разделе <a href="roadmap.html">Roadmap</a>.
+        </div>
+
+        <div class="alert alert-info">
+          Кликните на любой слой, чтобы увидеть инструменты. Каждый tool card содержит: что делает, почему выбран, альтернатива и ключевой trade-off.
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 1: Sources -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">1. Sources</span>
+            <span class="badge badge-primary">6 sources</span>
+          </div>
+          <div class="accordion-body">
+            <p>Первичные источники данных компании. Данные приходят из продакшн-систем, трекеров, CRM и внешних API. Напрямую к продакшн-базам аналитика не ходит — только через слой ingestion.</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">PostgreSQL</span>
+                <span class="badge badge-primary">production DB</span>
+              </div>
+              <p class="tool-card-desc">Основная продакшн-база: аккаунты игроков, ставки, транзакции, балансы. Содержит текущий state всех бизнес-сущностей. Никогда не используется напрямую для аналитики — нагрузка может положить прод.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">MySQL, MongoDB</span>
+                <span class="tool-card-tradeoff">надёжная и зрелая, но не подходит для аналитических запросов на больших объёмах</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Apache Kafka</span>
+                <span class="badge badge-teal">real-time</span>
+              </div>
+              <p class="tool-card-desc">Шина реалтайм-событий iGaming-платформы. Основные топики: <code>bets.placed</code>, <code>deposits.completed</code>, <code>sessions.events</code>. Во время live-матчей нагрузка на <code>bets.placed</code> растёт в 5-10x. Три consumer groups: бэкенд (расчёт выигрышей), аналитический pipeline (стриминг в ClickHouse), fraud-сервис (real-time scoring).</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">RabbitMQ, Amazon Kinesis, Redpanda</span>
+                <span class="tool-card-tradeoff">мощный, но требует DevOps-экспертизы для эксплуатации кластера</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">GA4 + GTM</span>
+                <span class="badge badge-blue">web analytics</span>
+              </div>
+              <p class="tool-card-desc">Веб-аналитика и маркетинговая атрибуция. В iGaming GA4 — не основной источник аналитики, а дополнение. Продуктовая аналитика живёт в DWH на базе собственного трекинга через Kafka. GA4 используется для маркетинговой атрибуции и анализа pre-registration поведения. GTM управляет тегами на сайте.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Amplitude, Mixpanel, Snowplow</span>
+                <span class="tool-card-tradeoff">бесплатный, но данные семплированы и ограничены по retention</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Adjust</span>
+                <span class="badge badge-blue">mobile SDK</span>
+              </div>
+              <p class="tool-card-desc">Мобильная атрибуция: установки приложений, in-app события, маркетинговая атрибуция по каналам. Критично для понимания эффективности мобильного маркетинга.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">AppsFlyer, Branch</span>
+                <span class="tool-card-tradeoff">хорошая интеграция с ad-сетями, но стоимость растёт с объёмом событий</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">CRM</span>
+                <span class="badge badge-pink">player lifecycle</span>
+              </div>
+              <p class="tool-card-desc">Жизненный цикл игрока: сегментация, бонусные кампании, коммуникации. Данные о том, какие бонусы выданы, в какой сегмент попал игрок, история взаимодействий.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">in-house решение, Salesforce</span>
+                <span class="tool-card-tradeoff">данные часто неструктурированы и требуют очистки</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">External APIs</span>
+                <span class="badge badge-gray">feeds</span>
+              </div>
+              <p class="tool-card-desc">Внешние фиды: коэффициенты (odds), результаты матчей, статусы платёжных провайдеров. Данные приходят через REST/WebSocket API от третьих сторон.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">собственные скраперы, data vendors</span>
+                <span class="tool-card-tradeoff">зависимость от сторонних провайдеров, SLA на их стороне</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 2: Ingestion -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">2. Ingestion</span>
+            <span class="badge badge-teal">2 tools</span>
+          </div>
+          <div class="accordion-body">
+            <p>Слой загрузки данных из источников в хранилище. Два подхода: batch (Airbyte) для периодической синхронизации и CDC (Debezium) для реалтайм-захвата изменений.</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Airbyte</span>
+                <span class="badge badge-primary">primary</span>
+              </div>
+              <p class="tool-card-desc">Основной инструмент batch-загрузки. Self-hosted, 300+ готовых коннекторов к БД, API, SaaS-сервисам. Дешевле Fivetran, но требует поддержки от DE-команды: обновления, мониторинг, custom-коннекторы.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Fivetran (managed, дороже, меньше контроля)</span>
+                <span class="tool-card-tradeoff">экономия на лицензиях vs расход на ops-поддержку</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Debezium / CDC</span>
+                <span class="badge badge-teal">real-time</span>
+              </div>
+              <p class="tool-card-desc">Change Data Capture из продакшн PostgreSQL через Kafka Connect. Захватывает только дельты (INSERT/UPDATE/DELETE), минимальная нагрузка на прод. Критичен для near-real-time аналитики: ставки, депозиты, балансы.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">AWS DMS, Striim</span>
+                <span class="tool-card-tradeoff">сложнее в настройке чем batch, но данные свежее на порядок</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 3: Storage -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">3. Storage</span>
+            <span class="badge badge-blue">2 systems</span>
+          </div>
+          <div class="accordion-body">
+            <p>Два уровня хранения: горячее (ClickHouse для аналитики) и холодное (GCS data lake для архивации и raw-данных).</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">ClickHouse</span>
+                <span class="badge badge-primary">primary DWH</span>
+              </div>
+              <p class="tool-card-desc">Колоночная СУБД для аналитики. Быстрые агрегации на миллиардах строк, популярна в CIS и iGaming. Self-hosted = полный контроль над данными (регуляторные требования). Основное хранилище для всех mart-таблиц.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">BigQuery (serverless, дорого без партиционирования), Snowflake (западный стандарт, разделение compute/storage)</span>
+                <span class="tool-card-tradeoff">быстрее и дешевле облачных DWH, но требует DE-команду для эксплуатации</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">GCS Data Lake</span>
+                <span class="badge badge-gray">cold storage</span>
+              </div>
+              <p class="tool-card-desc">Google Cloud Storage для raw/cold данных в формате Parquet. Сырые данные хранятся здесь бессрочно. Дёшево, надёжно. Используется для re-processing, compliance (хранение 5+ лет) и ML-тренировок на исторических данных.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">AWS S3, Azure Blob Storage</span>
+                <span class="tool-card-tradeoff">дёшево для хранения, но запросы напрямую медленнее чем из DWH</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 4: Transformation -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">4. Transformation</span>
+            <span class="badge badge-primary">dbt Core</span>
+          </div>
+          <div class="accordion-body">
+            <p>Вся трансформация данных — через dbt Core. Три слоя моделей: staging (очистка) → intermediate (бизнес-логика) → marts (готово для BI/DS). Версионирование в Git, тесты, документация из коробки.</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">dbt Core</span>
+                <span class="badge badge-primary">primary</span>
+              </div>
+              <p class="tool-card-desc">SQL-first фреймворк для трансформации данных в DWH. Модели организованы в три слоя, каждая модель — SQL-файл в Git. Встроенные тесты, автодокументация, lineage graph.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Spark (тяжёлые batch-задачи), SQLMesh</span>
+                <span class="tool-card-tradeoff">простой для аналитиков (чистый SQL), но ограничен возможностями SQL для сложных преобразований</span>
+              </div>
+            </div>
+
+            <h3>Staging — очистка и типизация</h3>
+            <p>1:1 с источником. Приведение типов, дедупликация, переименование полей. Никакой бизнес-логики.</p>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="cmt">-- stg_betting__bets: очистка сырых ставок</span>
+<span class="kw">SELECT</span>
+    bet_id,
+    player_id,
+    <span class="fn">lower</span>(product) <span class="kw">AS</span> product,
+    game_id,
+    event_id,
+    <span class="fn">CAST</span>(bet_amount <span class="kw">AS</span> Decimal64(<span class="num">2</span>)) <span class="kw">AS</span> bet_amount,
+    <span class="fn">CAST</span>(payout_amount <span class="kw">AS</span> Decimal64(<span class="num">2</span>)) <span class="kw">AS</span> payout_amount,
+    <span class="fn">lower</span>(status) <span class="kw">AS</span> status,
+    <span class="fn">toDateTime</span>(placed_at) <span class="kw">AS</span> placed_at,
+    <span class="fn">toDateTime</span>(settled_at) <span class="kw">AS</span> settled_at
+<span class="kw">FROM</span> raw.betting_bets
+<span class="kw">WHERE</span> bet_id <span class="kw">IS NOT NULL</span></code></pre>
+            </div>
+
+            <h3>Intermediate — бизнес-логика</h3>
+            <p>Джойны, расчёты, обогащение. Здесь ставка обогащается данными игрока и игры.</p>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="cmt">-- int_bets_enriched: ставка + игрок + игра</span>
+<span class="kw">SELECT</span>
+    b.bet_id,
+    b.player_id,
+    p.geo,
+    p.acquisition_channel,
+    b.bet_amount,
+    b.payout_amount,
+    b.bet_amount - b.payout_amount <span class="kw">AS</span> ggr,
+    g.game_type,
+    g.provider,
+    b.placed_at
+<span class="kw">FROM</span> stg_betting__bets b
+<span class="kw">LEFT JOIN</span> stg_core__players p <span class="kw">ON</span> b.player_id = p.player_id
+<span class="kw">LEFT JOIN</span> stg_core__games g <span class="kw">ON</span> b.game_id = g.game_id</code></pre>
+            </div>
+
+            <h3>Marts — готовые витрины</h3>
+            <p>Финальные агрегаты для BI и DS. Один mart = один бизнес-вопрос.</p>
+            <div class="code-block" data-lang="sql">
+              <pre><code><span class="cmt">-- mart_daily_kpi: NGR = GGR - bonus - provider fees - payment fees</span>
+<span class="kw">WITH</span> daily_ggr <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        <span class="fn">toDate</span>(placed_at) <span class="kw">AS</span> dt,
+        <span class="fn">count</span>(<span class="kw">DISTINCT</span> player_id) <span class="kw">AS</span> active_players,
+        <span class="fn">sum</span>(bet_amount) <span class="kw">AS</span> turnover,
+        <span class="fn">sum</span>(ggr) <span class="kw">AS</span> ggr
+    <span class="kw">FROM</span> int_bets_enriched
+    <span class="kw">GROUP BY</span> dt
+),
+daily_costs <span class="kw">AS</span> (
+    <span class="kw">SELECT</span>
+        dt,
+        <span class="fn">sum</span>(bonus_cost) <span class="kw">AS</span> bonus_cost,
+        <span class="fn">sum</span>(provider_fee) <span class="kw">AS</span> provider_fees,
+        <span class="fn">sum</span>(payment_fee) <span class="kw">AS</span> payment_fees
+    <span class="kw">FROM</span> int_daily_costs
+    <span class="kw">GROUP BY</span> dt
+)
+<span class="kw">SELECT</span>
+    g.dt,
+    g.active_players,
+    g.turnover,
+    g.ggr,
+    g.ggr - <span class="fn">coalesce</span>(c.bonus_cost, <span class="num">0</span>)
+           - <span class="fn">coalesce</span>(c.provider_fees, <span class="num">0</span>)
+           - <span class="fn">coalesce</span>(c.payment_fees, <span class="num">0</span>) <span class="kw">AS</span> ngr
+<span class="kw">FROM</span> daily_ggr g
+<span class="kw">LEFT JOIN</span> daily_costs c <span class="kw">ON</span> g.dt = c.dt
+<span class="kw">ORDER BY</span> g.dt <span class="kw">DESC</span></code></pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 5: Orchestration -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">5. Orchestration</span>
+            <span class="badge badge-amber">Airflow</span>
+          </div>
+          <div class="accordion-body">
+            <p>Оркестрация всех data-процессов: расписание, зависимости, ретраи, алерты. Почему не cron? Потому что cron не знает про зависимости между задачами, не умеет retry, не имеет UI для мониторинга.</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Apache Airflow</span>
+                <span class="badge badge-primary">primary</span>
+              </div>
+              <p class="tool-card-desc">DAG-based оркестратор. Каждый pipeline описан как Directed Acyclic Graph: extract → load → dbt run → dbt test → alert. Web UI для мониторинга, встроенные retries, SLA alerts, интеграция со Slack.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Dagster (modern, better dev UX), Prefect (cloud-native)</span>
+                <span class="tool-card-tradeoff">зрелый и проверенный, но UI/DX устарели, scheduler бывает капризным</span>
+              </div>
+            </div>
+
+            <h3>Типичный DAG</h3>
+            <div class="code-block" data-lang="python">
+              <pre><code><span class="kw">from</span> airflow <span class="kw">import</span> DAG
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime, timedelta
+
+default_args = {
+    <span class="str">'owner'</span>: <span class="str">'data-engineering'</span>,
+    <span class="str">'retries'</span>: <span class="num">2</span>,
+    <span class="str">'retry_delay'</span>: timedelta(minutes=<span class="num">5</span>),
+}
+
+dag = DAG(
+    <span class="str">'daily_pipeline'</span>,
+    default_args=default_args,
+    schedule_interval=<span class="str">'0 5 * * *'</span>,  <span class="cmt"># 05:00 UTC daily</span>
+    start_date=datetime(<span class="num">2024</span>, <span class="num">1</span>, <span class="num">1</span>),
+)
+
+<span class="cmt"># Task dependencies</span>
+[extract_betting, extract_payments, extract_players] \
+    >> load_to_clickhouse \
+    >> dbt_run_staging \
+    >> dbt_run_intermediate \
+    >> dbt_run_marts \
+    >> dbt_test \
+    >> slack_notify</code></pre>
+            </div>
+            <p>Расписание: ежедневно в 05:00 UTC. Данные готовы к 07:00 для утренних отчётов CEO. При падении — 2 автоматических retry с интервалом 5 минут, затем алерт в Slack.</p>
+          </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 6: DQ & Governance -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">6. DQ & Governance</span>
+            <span class="badge badge-blue">3 tools</span>
+          </div>
+          <div class="accordion-body">
+            <p>Качество данных и управление. Три уровня защиты: dbt tests (быстрые, на каждый PR), Great Expectations (сложные валидации), DataHub (каталог и lineage). Подробнее — в разделе <a href="data-governance.html">06. Data Governance</a>.</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">dbt tests</span>
+                <span class="badge badge-primary">first line</span>
+              </div>
+              <p class="tool-card-desc">Встроенные тесты dbt: unique, not_null, accepted_values, relationships. Запускаются на каждый PR в CI и после каждого dbt run в production. Первая линия защиты от битых данных.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">custom SQL tests</span>
+                <span class="tool-card-tradeoff">просто и быстро, но ограничены простыми проверками</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Great Expectations</span>
+                <span class="badge badge-teal">advanced DQ</span>
+              </div>
+              <p class="tool-card-desc">Сложные валидации: распределения, аномалии, cross-table consistency. Профилирование данных, автоматическая генерация expectations на основе исторических данных.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Soda, Monte Carlo (managed)</span>
+                <span class="tool-card-tradeoff">мощный, но кривая обучения крутая, конфигурация многословная</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">DataHub</span>
+                <span class="badge badge-blue">catalog</span>
+              </div>
+              <p class="tool-card-desc">Каталог данных: поиск таблиц, описания полей, владельцы, lineage, теги. Self-hosted. Интеграция с dbt (автоматический импорт моделей) и Airflow.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Atlan (managed), OpenMetadata</span>
+                <span class="tool-card-tradeoff">бесплатный и гибкий, но требует выделенного DE на поддержку</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 7: BI -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">7. BI & Reporting</span>
+            <span class="badge badge-green">2 tools</span>
+          </div>
+          <div class="accordion-body">
+            <p>Визуализация и self-service аналитика. Два инструмента под разные аудитории. Подробнее о дашбордах — в разделе <a href="dashboards.html">12. Dashboards</a>.</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Metabase</span>
+                <span class="badge badge-primary">primary</span>
+              </div>
+              <p class="tool-card-desc">Основной BI-инструмент. Open-source, self-hosted. Простой интерфейс для self-service: бизнес-пользователи строят отчёты без SQL. Semantic layer через «вопросы» и «коллекции».</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Tableau (мощный, дорогой), Power BI (MS-экосистема), Looker (семантический слой)</span>
+                <span class="tool-card-tradeoff">бесплатный и простой, но ограничен в сложных визуализациях и embedded analytics</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Looker Studio</span>
+                <span class="badge badge-gray">marketing</span>
+              </div>
+              <p class="tool-card-desc">Бесплатный BI от Google. Используется маркетинговой командой: нативная интеграция с GA4, Google Ads, Sheets. Маркетинг-дашборды живут здесь.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Google Sheets (для простых отчётов)</span>
+                <span class="tool-card-tradeoff">бесплатный и знакомый маркетологам, но ограниченные возможности моделирования данных</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 8: ML -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">8. ML Platform</span>
+            <span class="badge badge-pink">3 tools</span>
+          </div>
+          <div class="accordion-body">
+            <p>Инфраструктура для машинного обучения: разработка моделей, эксперименты, Feature Store. Подробнее — в разделе <a href="mlops.html">09. MLOps</a>.</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Python / Jupyter</span>
+                <span class="badge badge-primary">dev</span>
+              </div>
+              <p class="tool-card-desc">Основная среда разработки моделей. Jupyter notebooks для EDA и прототипирования, Python-скрипты для production-кода. Стандартный стек: pandas, scikit-learn, LightGBM, PyTorch.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">R (для специфических стат-задач)</span>
+                <span class="tool-card-tradeoff">гибкость и экосистема, но notebooks плохо версионируются</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">MLflow</span>
+                <span class="badge badge-teal">lifecycle</span>
+              </div>
+              <p class="tool-card-desc">Tracking экспериментов, реестр моделей, управление артефактами. Каждый эксперимент логирует параметры, метрики (AUC, MAE), версии данных. Model Registry: staging → production → archived.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Weights & Biases, Neptune.ai</span>
+                <span class="tool-card-tradeoff">open-source и интегрируется с любым фреймворком, но UI базовый</span>
+              </div>
+            </div>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Feast</span>
+                <span class="badge badge-amber">feature store</span>
+              </div>
+              <p class="tool-card-desc">Feature Store: единый реестр фичей для ML. Offline store (для тренировки) + online store (для real-time inference). Пример фичи: <code>player_avg_bet_7d</code> — средняя ставка игрока за 7 дней.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Tecton, Hopsworks</span>
+                <span class="tool-card-tradeoff">open-source, но ограниченный UI и требует ручной настройки инфраструктуры</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- LAYER 9: Reverse ETL -->
+        <!-- ================================ -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">9. Reverse ETL</span>
+            <span class="badge badge-coral">1 tool</span>
+          </div>
+          <div class="accordion-body">
+            <p>Обратная интеграция: данные из DWH отправляются в операционные системы. Замыкает цикл: аналитика → действие.</p>
+
+            <div class="tool-card">
+              <div class="tool-card-header">
+                <span class="tool-card-name">Census</span>
+                <span class="badge badge-primary">primary</span>
+              </div>
+              <p class="tool-card-desc">Reverse ETL: синхронизация данных из ClickHouse в CRM, рекламные платформы, email-сервисы. Ключевой use case: ML-модель считает churn score → Census отправляет его в CRM → CRM создаёт сегмент «at risk» → игрок получает персонализированный бонус.</p>
+              <div class="tool-card-meta">
+                <span class="tool-card-alt">Hightouch, custom API-интеграции</span>
+                <span class="tool-card-tradeoff">простая настройка, но стоимость растёт с количеством sync-записей</span>
+              </div>
+            </div>
+
+            <div class="alert alert-tip">
+              <strong>Use case:</strong> churn_score (ML) → Census → CRM segment → персонализированный бонус. Цикл: данные → модель → действие → результат → данные.
+            </div>
+          </div>
+        </div>
+
+        <!-- Prev/Next -->
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

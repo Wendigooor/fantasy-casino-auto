@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Taxonomy — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Naming convention, стандартная схема событий, tracking plan, JSON-примеры, процесс изменений.">
+  <meta property="og:title" content="Event Taxonomy — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Naming convention, стандартная схема событий, tracking plan, JSON-примеры, процесс изменений.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Event Taxonomy</h1>
+          <p class="page-header-desc">Единая система именования событий, стандартная схема, tracking plan и процесс добавления новых событий.</p>
+        </div>
+
+        <!-- ================================ -->
+        <!-- Naming Convention -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Naming Convention</h2>
+          <p>Все события следуют формату: <code>{domain}_{object}_{action}</code>. Это обеспечивает единообразие, сортировку и фильтрацию.</p>
+
+          <h3>Domains</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Domain</th><th>Description</th><th>Примеры</th></tr></thead>
+              <tbody>
+                <tr><td><code>player</code></td><td>Действия игрока</td><td>player_bet_placed, player_deposit_completed</td></tr>
+                <tr><td><code>session</code></td><td>Сессия и навигация</td><td>session_page_viewed, session_started</td></tr>
+                <tr><td><code>marketing</code></td><td>Маркетинг и кампании</td><td>marketing_campaign_clicked, marketing_banner_viewed</td></tr>
+                <tr><td><code>system</code></td><td>Системные события</td><td>system_error_occurred, system_maintenance_started</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Objects</h3>
+          <div class="code-block" data-lang="text">
+            <pre><code>bet, deposit, withdrawal, bonus, session, page,
+registration, kyc, game, promo, notification</code></pre>
+          </div>
+
+          <h3>Actions</h3>
+          <div class="code-block" data-lang="text">
+            <pre><code>placed, completed, started, viewed, settled,
+issued, expired, cancelled, failed, clicked</code></pre>
+          </div>
+
+          <div class="alert alert-tip">
+            <strong>Правило:</strong> если не можете описать событие в формате <code>domain_object_action</code> — скорее всего, это не одно событие, а два.
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Event Schema -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Event Schema</h2>
+          <p>Стандартная структура каждого события. Все поля обязательны кроме event-specific.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Required fields</span>
+              <span class="badge badge-red">required</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>event_name</code></td><td>String</td><td>Имя события (naming convention)</td></tr>
+                    <tr><td><code>event_id</code></td><td>UUID</td><td>Уникальный ID события</td></tr>
+                    <tr><td><code>player_id</code></td><td>String</td><td>ID игрока (null для анонимных)</td></tr>
+                    <tr><td><code>timestamp</code></td><td>ISO 8601</td><td>Время события с timezone</td></tr>
+                    <tr><td><code>session_id</code></td><td>String</td><td>ID текущей сессии</td></tr>
+                    <tr><td><code>platform</code></td><td>String</td><td>web / ios / android</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Context fields (auto-collected)</span>
+              <span class="badge badge-blue">auto</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>geo_ip</code></td><td>String</td><td>Страна по IP</td></tr>
+                    <tr><td><code>device_type</code></td><td>String</td><td>mobile / tablet / desktop</td></tr>
+                    <tr><td><code>app_version</code></td><td>String</td><td>Версия приложения (для mobile)</td></tr>
+                    <tr><td><code>page_url</code></td><td>String</td><td>URL страницы (для web)</td></tr>
+                    <tr><td><code>user_agent</code></td><td>String</td><td>User-Agent браузера</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Event-specific fields</span>
+              <span class="badge badge-gray">varies</span>
+            </div>
+            <div class="accordion-body">
+              <p>Зависят от типа события. Примеры:</p>
+              <ul class="list">
+                <li><code>player_bet_placed</code>: bet_amount, product, game_id, odds, bet_type</li>
+                <li><code>player_deposit_completed</code>: amount, currency, payment_method, is_first_deposit</li>
+                <li><code>session_page_viewed</code>: page_name, referrer, load_time_ms</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- JSON Examples -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>JSON Payloads</h2>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">player_bet_placed</span>
+            </div>
+            <div class="accordion-body">
+              <div class="code-block" data-lang="json">
+                <pre><code>{
+  <span class="str">"event_name"</span>: <span class="str">"player_bet_placed"</span>,
+  <span class="str">"event_id"</span>: <span class="str">"a1b2c3d4-e5f6-7890-abcd-ef1234567890"</span>,
+  <span class="str">"player_id"</span>: <span class="str">"usr_28491"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-03-15T14:23:01.456Z"</span>,
+  <span class="str">"session_id"</span>: <span class="str">"ses_9f8e7d6c"</span>,
+  <span class="str">"platform"</span>: <span class="str">"ios"</span>,
+  <span class="str">"context"</span>: {
+    <span class="str">"geo_ip"</span>: <span class="str">"BR"</span>,
+    <span class="str">"device_type"</span>: <span class="str">"mobile"</span>,
+    <span class="str">"app_version"</span>: <span class="str">"4.2.1"</span>
+  },
+  <span class="str">"properties"</span>: {
+    <span class="str">"bet_amount"</span>: <span class="num">25.00</span>,
+    <span class="str">"product"</span>: <span class="str">"sports"</span>,
+    <span class="str">"match_id"</span>: <span class="str">"evt_champions_league_final"</span>,
+    <span class="str">"bet_type"</span>: <span class="str">"single"</span>,
+    <span class="str">"odds"</span>: <span class="num">2.15</span>,
+    <span class="str">"market"</span>: <span class="str">"match_winner"</span>,
+    <span class="str">"is_live"</span>: <span class="kw">true</span>,
+    <span class="str">"is_bonus_bet"</span>: <span class="kw">false</span>
+  }
+}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">player_deposit_completed</span>
+            </div>
+            <div class="accordion-body">
+              <div class="code-block" data-lang="json">
+                <pre><code>{
+  <span class="str">"event_name"</span>: <span class="str">"player_deposit_completed"</span>,
+  <span class="str">"event_id"</span>: <span class="str">"b2c3d4e5-f6a7-8901-bcde-f12345678901"</span>,
+  <span class="str">"player_id"</span>: <span class="str">"usr_28491"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-03-15T14:20:33.789Z"</span>,
+  <span class="str">"session_id"</span>: <span class="str">"ses_9f8e7d6c"</span>,
+  <span class="str">"platform"</span>: <span class="str">"ios"</span>,
+  <span class="str">"properties"</span>: {
+    <span class="str">"amount"</span>: <span class="num">100.00</span>,
+    <span class="str">"currency"</span>: <span class="str">"USD"</span>,
+    <span class="str">"payment_method"</span>: <span class="str">"card"</span>,
+    <span class="str">"is_first_deposit"</span>: <span class="kw">false</span>,
+    <span class="str">"fee_amount"</span>: <span class="num">2.50</span>,
+    <span class="str">"processing_time_ms"</span>: <span class="num">3200</span>
+  }
+}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">session_page_viewed</span>
+            </div>
+            <div class="accordion-body">
+              <div class="code-block" data-lang="json">
+                <pre><code>{
+  <span class="str">"event_name"</span>: <span class="str">"session_page_viewed"</span>,
+  <span class="str">"event_id"</span>: <span class="str">"c3d4e5f6-a7b8-9012-cdef-123456789012"</span>,
+  <span class="str">"player_id"</span>: <span class="str">"usr_28491"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-03-15T14:19:45.123Z"</span>,
+  <span class="str">"session_id"</span>: <span class="str">"ses_9f8e7d6c"</span>,
+  <span class="str">"platform"</span>: <span class="str">"ios"</span>,
+  <span class="str">"properties"</span>: {
+    <span class="str">"page_name"</span>: <span class="str">"sportsbook/football"</span>,
+    <span class="str">"referrer"</span>: <span class="str">"sportsbook/home"</span>,
+    <span class="str">"load_time_ms"</span>: <span class="num">420</span>
+  }
+}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">player_registration_completed</span>
+            </div>
+            <div class="accordion-body">
+              <div class="code-block" data-lang="json">
+                <pre><code>{
+  <span class="str">"event_name"</span>: <span class="str">"player_registration_completed"</span>,
+  <span class="str">"event_id"</span>: <span class="str">"d4e5f6a7-b8c9-0123-defa-234567890123"</span>,
+  <span class="str">"player_id"</span>: <span class="str">"usr_52837"</span>,
+  <span class="str">"timestamp"</span>: <span class="str">"2026-03-15T10:05:12.001Z"</span>,
+  <span class="str">"session_id"</span>: <span class="str">"ses_1a2b3c4d"</span>,
+  <span class="str">"platform"</span>: <span class="str">"web"</span>,
+  <span class="str">"properties"</span>: {
+    <span class="str">"method"</span>: <span class="str">"email"</span>,
+    <span class="str">"acquisition_channel"</span>: <span class="str">"paid_search"</span>,
+    <span class="str">"utm_source"</span>: <span class="str">"google"</span>,
+    <span class="str">"utm_campaign"</span>: <span class="str">"brand_latam_q1"</span>,
+    <span class="str">"geo"</span>: <span class="str">"BR"</span>,
+    <span class="str">"promo_code"</span>: <span class="str">"WELCOME100"</span>
+  }
+}</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Tracking Plan -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Tracking Plan</h2>
+          <p>Ключевые события, отслеживаемые платформой. Полный каталог — в Data Catalog (DataHub).</p>
+
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>Trigger</th>
+                  <th>Key Params</th>
+                  <th>Source</th>
+                  <th>Owner</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>player_registration_completed</code></td>
+                  <td>Игрок завершил регистрацию</td>
+                  <td>method, channel, geo</td>
+                  <td>backend</td>
+                  <td>Product</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_kyc_completed</code></td>
+                  <td>KYC верификация пройдена</td>
+                  <td>kyc_status, document_type</td>
+                  <td>backend</td>
+                  <td>Compliance</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_deposit_completed</code></td>
+                  <td>Депозит зачислен</td>
+                  <td>amount, currency, method, is_ftd</td>
+                  <td>backend</td>
+                  <td>Payments</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_withdrawal_requested</code></td>
+                  <td>Игрок запросил вывод</td>
+                  <td>amount, currency, method</td>
+                  <td>backend</td>
+                  <td>Payments</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_bet_placed</code></td>
+                  <td>Ставка размещена</td>
+                  <td>amount, product, odds, bet_type</td>
+                  <td>backend</td>
+                  <td>Product</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_bet_settled</code></td>
+                  <td>Ставка рассчитана</td>
+                  <td>payout, result, settled_at</td>
+                  <td>backend</td>
+                  <td>Product</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_bonus_issued</code></td>
+                  <td>Бонус выдан игроку</td>
+                  <td>bonus_type, amount, wager_req</td>
+                  <td>backend</td>
+                  <td>CRM</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>session_started</code></td>
+                  <td>Игрок открыл приложение/сайт</td>
+                  <td>platform, device_type</td>
+                  <td>frontend</td>
+                  <td>Product</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>session_page_viewed</code></td>
+                  <td>Переход на страницу</td>
+                  <td>page_name, referrer, load_time</td>
+                  <td>frontend</td>
+                  <td>Product</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_game_launched</code></td>
+                  <td>Игрок запустил казино-игру</td>
+                  <td>game_id, provider, game_type</td>
+                  <td>frontend</td>
+                  <td>Product</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>marketing_campaign_clicked</code></td>
+                  <td>Клик по маркетинговому баннеру</td>
+                  <td>campaign_id, placement, creative</td>
+                  <td>frontend</td>
+                  <td>Marketing</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_self_excluded</code></td>
+                  <td>Игрок активировал самоисключение</td>
+                  <td>exclusion_period, reason</td>
+                  <td>backend</td>
+                  <td>Compliance</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>system_error_occurred</code></td>
+                  <td>Ошибка в системе</td>
+                  <td>error_code, service, stack_trace</td>
+                  <td>server</td>
+                  <td>DE</td>
+                  <td><span class="badge badge-teal">live</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_notification_sent</code></td>
+                  <td>Push/email/SMS отправлен</td>
+                  <td>channel, template_id, campaign</td>
+                  <td>server</td>
+                  <td>CRM</td>
+                  <td><span class="badge badge-blue">planned</span></td>
+                </tr>
+                <tr>
+                  <td><code>player_promo_redeemed</code></td>
+                  <td>Промокод использован</td>
+                  <td>promo_code, discount_type</td>
+                  <td>backend</td>
+                  <td>Marketing</td>
+                  <td><span class="badge badge-blue">planned</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Change Process -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Процесс изменений</h2>
+          <p>Как добавить новое событие или изменить существующее. Каждое изменение проходит ревью.</p>
+
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">1. Request</div>
+              <div class="timeline-block-body">Продакт/аналитик создаёт тикет в Jira с описанием: зачем нужно событие, когда должно срабатывать, какие параметры. Шаблон: event_name, trigger, properties, source.</div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">2. Review</div>
+              <div class="timeline-block-body">Ревью двумя сторонами: Analytics (бизнес-смысл, naming convention, дубликаты) + DE (техническая реализуемость, нагрузка, формат данных). Согласование за 2 рабочих дня.</div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">3. Spec</div>
+              <div class="timeline-block-body">Финальная спецификация: JSON schema, trigger condition, validation rules. Добавляется в Tracking Plan (DataHub). Версионирование: v1, v2, etc.</div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">4. Implementation</div>
+              <div class="timeline-block-body">Backend/frontend разработчик реализует отправку события. PR с тегом <code>[tracking]</code> для фильтрации.</div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">5. QA</div>
+              <div class="timeline-block-body">Проверка на staging: событие приходит, формат верный, все обязательные поля заполнены. Аналитик валидирует в Kafka UI / ClickHouse.</div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">6. Deploy</div>
+              <div class="timeline-block-body">Деплой в production. Мониторинг первые 24 часа: объём событий, NULL rate, ошибки парсинга. Статус в Tracking Plan: planned → live.</div>
+            </div>
+          </div>
+
+          <div class="alert alert-warning">
+            <strong>Deprecation:</strong> событие нельзя просто удалить. Сначала статус → <code>deprecated</code>, затем 30 дней grace period (для миграции потребителей), потом удаление из кода.
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

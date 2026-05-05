@@ -1,0 +1,12 @@
+{
+  "name": "python_backend",
+  "trigger_condition": "Task involves Python code, testing, linting, or debugging",
+  "description": "Python development skills: writing clean code (PEP8), unit testing (pytest), linting (flake8/pycodestyle), type hints, module structure, import management, virtual environments, dependency management.",
+  "required_tools": "write_file, read_file, run_command, edit_file",
+  "expected_output": "PEP8-compliant Python code with tests and lint passing",
+  "known_limitations": "Cannot install system-level dependencies without sudo; type checking requires mypy not always available",
+  "review_status": "approved",
+  "version": "1",
+  "created_at": "2026-04-30T10:49:09Z",
+  "approved_at": "2026-04-30T10:49:09Z"
+}

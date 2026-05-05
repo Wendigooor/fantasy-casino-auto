@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLOps — Fantasy iGaming Data Department</title>
+  <meta name="description" content="ML lifecycle, эксперименты в MLflow, Feature Store (Feast), мониторинг дрифта и 3 model cards.">
+  <meta property="og:title" content="MLOps — Fantasy iGaming Data Department">
+  <meta property="og:description" content="ML lifecycle, эксперименты в MLflow, Feature Store (Feast), мониторинг дрифта и 3 model cards.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>MLOps</h1>
+          <p class="page-header-desc">Как ML-модели проходят путь от гипотезы до production: lifecycle, эксперименты, Feature Store, мониторинг и три model cards.</p>
+        </div>
+
+        <div class="alert alert-info">
+          Эта страница описывает <strong>целевой стейт</strong> ML-платформы Fantasy iGaming. Текущий прогресс внедрения — в разделе <a href="roadmap.html">Roadmap</a>.
+        </div>
+
+        <!-- ================================ -->
+        <!-- ML Lifecycle -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>ML Lifecycle</h2>
+          <p>Каждая модель проходит полный цикл. Не все задачи требуют ML — если эвристика решает проблему, модель не нужна. Подробнее о стеке — в <a href="data-architecture.html">01. Data Architecture</a>.</p>
+
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">1. Постановка задачи</div>
+              <div class="timeline-block-body">Lead DS + Product определяют: какую бизнес-задачу решаем, какая метрика успеха, есть ли данные, оправдан ли ML (vs эвристика). Результат: ML Design Doc.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">2. Подготовка данных</div>
+              <div class="timeline-block-body">DS совместно с DE: выбор фичей, создание training dataset, feature engineering. Фичи регистрируются в Feature Store (Feast). Проверка качества: нет утечки данных (data leakage), корректное разделение train/test.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">3. Обучение</div>
+              <div class="timeline-block-body">Эксперименты в Jupyter, трекинг в MLflow: параметры, метрики, артефакты. Сравнение подходов: baseline (эвристика) → простая модель → сложная модель. Выбор по метрике + интерпретируемости.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">4. Валидация</div>
+              <div class="timeline-block-body">Оценка на hold-out и кросс-валидация. Проверка на смещения (bias): по гео, сегментам, VIP-тирам. Lead DS ревьюит результаты и методологию.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">5. Деплой</div>
+              <div class="timeline-block-body">ML Engineer упаковывает модель: Docker-контейнер + REST API (для real-time) или batch-скрипт (для offline scoring). Модель регистрируется в Model Registry: staging → production.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">6. Мониторинг</div>
+              <div class="timeline-block-body">Отслеживание в production: model drift (PSI), data drift (распределение входных фичей), бизнес-метрики vs baseline. Алерты при деградации.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">7. Переобучение</div>
+              <div class="timeline-block-body">По расписанию (monthly) или по триггеру (drift alert). Новая версия проходит валидацию → staging → production. Старая версия архивируется.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Experiment Tracking -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Experiment Tracking (MLflow)</h2>
+          <p>Каждый эксперимент логируется в MLflow: параметры, метрики, артефакты. Воспроизводимость гарантирована — любой run можно повторить.</p>
+
+          <div class="card">
+            <h3>Пример записи эксперимента</h3>
+            <div class="table-wrap">
+              <table>
+                <tbody>
+                  <tr><td><strong>Experiment</strong></td><td><code>ltv_prediction_v3</code></td></tr>
+                  <tr><td><strong>Run ID</strong></td><td><code>run_2026-03-12_14-30</code></td></tr>
+                  <tr><td><strong>Алгоритм</strong></td><td>LightGBM</td></tr>
+                  <tr><td><strong>Параметры</strong></td><td>n_estimators=500, max_depth=8, learning_rate=0.05, min_child_samples=50</td></tr>
+                  <tr><td><strong>Фичи</strong></td><td>47 (из Feature Store)</td></tr>
+                  <tr><td><strong>Training set</strong></td><td>120K игроков, когорты Jan 2025 — Dec 2025</td></tr>
+                  <tr><td><strong>Метрики</strong></td><td>MAE: $42.3, MAPE: 18.7%, R²: 0.72</td></tr>
+                  <tr><td><strong>Артефакты</strong></td><td>model.pkl, feature_importance.png, confusion_matrix.png</td></tr>
+                  <tr><td><strong>Статус</strong></td><td><span class="badge badge-teal">promoted to staging</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Model Registry -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Model Registry</h2>
+          <p>Реестр версий моделей. Каждая модель проходит стадии: staging → production → archived.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Модель</th><th>Версия</th><th>Стадия</th><th>Дата</th><th>Метрика</th></tr></thead>
+              <tbody>
+                <tr><td>ltv_prediction</td><td>v1.2</td><td><span class="badge badge-teal">production</span></td><td>2026-03-15</td><td>MAE: $42.3</td></tr>
+                <tr><td>ltv_prediction</td><td>v1.3</td><td><span class="badge badge-amber">staging</span></td><td>2026-04-01</td><td>MAE: $39.8</td></tr>
+                <tr><td>ltv_prediction</td><td>v1.1</td><td><span class="badge badge-gray">archived</span></td><td>2026-02-10</td><td>MAE: $48.1</td></tr>
+                <tr><td>churn_prediction</td><td>v2.0</td><td><span class="badge badge-teal">production</span></td><td>2026-03-01</td><td>AUC: 0.84</td></tr>
+                <tr><td>fraud_detection</td><td>v3.1</td><td><span class="badge badge-teal">production</span></td><td>2026-02-20</td><td>AUC: 0.91</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Процесс промоушена</h3>
+          <ul class="list">
+            <li>DS обучает и валидирует → коммитит в MLflow</li>
+            <li>Lead DS ревьюит: метрики, bias check, методологию</li>
+            <li>ML Engineer деплоит на staging → нагрузочное тестирование</li>
+            <li>Ок → промоушен в production, старая версия в archived</li>
+          </ul>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Feature Store -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Feature Store (Feast)</h2>
+          <p>Единый реестр фичей для ML. Offline store (для обучения, ClickHouse) + online store (для real-time inference, Redis). Одна фича — один источник правды.</p>
+
+          <div class="card">
+            <h3>Пример фичи: <code>player_avg_bet_7d</code></h3>
+            <div class="table-wrap">
+              <table>
+                <tbody>
+                  <tr><td><strong>Имя</strong></td><td><code>player_avg_bet_7d</code></td></tr>
+                  <tr><td><strong>Описание</strong></td><td>Средняя сумма ставки игрока за последние 7 дней</td></tr>
+                  <tr><td><strong>Entity</strong></td><td>player_id</td></tr>
+                  <tr><td><strong>Тип</strong></td><td>Float64</td></tr>
+                  <tr><td><strong>Источник</strong></td><td>int_bets_enriched (агрегация по player_id, window 7 days)</td></tr>
+                  <tr><td><strong>Обновление</strong></td><td>Daily, к 08:00 UTC (после обновления mart)</td></tr>
+                  <tr><td><strong>Потребители</strong></td><td>LTV model, Churn model, Fraud model</td></tr>
+                  <tr><td><strong>Online latency</strong></td><td>&lt; 5ms (Redis)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="code-block" data-lang="python">
+            <pre><code><span class="cmt"># Получение фичей для prediction</span>
+<span class="kw">from</span> feast <span class="kw">import</span> FeatureStore
+
+store = FeatureStore(repo_path=<span class="str">"feature_repo/"</span>)
+
+features = store.get_online_features(
+    features=[
+        <span class="str">"player_features:avg_bet_7d"</span>,
+        <span class="str">"player_features:total_deposits_30d"</span>,
+        <span class="str">"player_features:days_since_last_bet"</span>,
+        <span class="str">"player_features:session_count_7d"</span>,
+    ],
+    entity_rows=[{<span class="str">"player_id"</span>: <span class="str">"usr_28491"</span>}],
+).to_dict()</code></pre>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Monitoring -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Мониторинг моделей</h2>
+          <p>Три типа мониторинга в production: дрифт модели, дрифт данных, бизнес-метрики.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Тип</th><th>Что измеряем</th><th>Метрика</th><th>Порог алерта</th><th>Действие</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>Model drift</strong></td>
+                  <td>Изменение распределения предсказаний</td>
+                  <td>PSI (Population Stability Index)</td>
+                  <td>PSI &gt; 0.2</td>
+                  <td>Переобучение</td>
+                </tr>
+                <tr>
+                  <td><strong>Data drift</strong></td>
+                  <td>Изменение распределения входных фичей</td>
+                  <td>KS-test по каждой фиче</td>
+                  <td>p-value &lt; 0.01 для &gt;3 фичей</td>
+                  <td>Исследование + возможное переобучение</td>
+                </tr>
+                <tr>
+                  <td><strong>Бизнес-метрики</strong></td>
+                  <td>Совпадение предсказаний с реальностью</td>
+                  <td>MAE, AUC, precision/recall vs baseline</td>
+                  <td>Деградация &gt;10% от baseline</td>
+                  <td>Срочное переобучение</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Model Cards -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Model Cards</h2>
+
+          <!-- LTV -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">LTV Prediction</span>
+              <span class="badge badge-teal">production</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Задача</strong></td><td>Прогноз lifetime NGR игрока на горизонте 12 месяцев</td></tr>
+                    <tr><td><strong>Целевая переменная</strong></td><td>lifetime_ngr_12m (непрерывная, USD)</td></tr>
+                    <tr><td><strong>Алгоритм</strong></td><td>LightGBM (gradient boosting)</td></tr>
+                    <tr><td><strong>Метрики</strong></td><td>MAE: $42.3, MAPE: 18.7%, R²: 0.72</td></tr>
+                    <tr><td><strong>Переобучение</strong></td><td>Ежемесячно (1-е число)</td></tr>
+                    <tr><td><strong>SLA</strong></td><td>Scoring batch: к 09:00 UTC ежедневно</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <h3>Топ-10 фичей</h3>
+              <ul class="list">
+                <li><code>total_deposits_30d</code> — сумма депозитов за 30 дней</li>
+                <li><code>avg_bet_7d</code> — средняя ставка за 7 дней</li>
+                <li><code>days_since_registration</code> — возраст аккаунта</li>
+                <li><code>session_count_7d</code> — количество сессий за 7 дней</li>
+                <li><code>deposit_frequency_30d</code> — частота депозитов</li>
+                <li><code>product_mix</code> — casino vs sports (доля)</li>
+                <li><code>geo</code> — страна</li>
+                <li><code>acquisition_channel</code> — канал привлечения</li>
+                <li><code>bonus_usage_rate</code> — доля бонусных ставок</li>
+                <li><code>avg_session_duration_7d</code> — средняя длительность сессии</li>
+              </ul>
+              <div class="alert alert-info">
+                <strong>Использование:</strong> маркетинг (определение бюджета по каналам), CRM (сегментация по прогнозируемой ценности), Product (приоритизация фичей для high-LTV сегмента).
+              </div>
+            </div>
+          </div>
+
+          <!-- Churn -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Churn Prediction</span>
+              <span class="badge badge-teal">production</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Задача</strong></td><td>Вероятность ухода игрока в течение 30 дней</td></tr>
+                    <tr><td><strong>Целевая переменная</strong></td><td>is_churned_30d (бинарная: 0/1)</td></tr>
+                    <tr><td><strong>Алгоритм</strong></td><td>LightGBM (classification)</td></tr>
+                    <tr><td><strong>Метрики</strong></td><td>AUC: 0.84, Precision@top10%: 0.62, Recall@top10%: 0.41</td></tr>
+                    <tr><td><strong>Переобучение</strong></td><td>Ежемесячно</td></tr>
+                    <tr><td><strong>SLA</strong></td><td>Scoring batch: к 09:00 UTC ежедневно</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <h3>Trade-off: precision vs recall</h3>
+              <p>Для churn-модели важнее <strong>precision в верхнем дециле</strong>: мы хотим, чтобы из топ-10% «рискованных» большинство действительно ушли. Высокий recall менее критичен — лучше точно определить 40% churners, чем «поймать всех» с кучей false positives (лишние бонусы = лишние расходы).</p>
+              <div class="alert alert-tip">
+                <strong>Интеграция:</strong> churn_score → Census (Reverse ETL) → CRM segment «at risk» → персонализированный бонус или push-уведомление. Замкнутый цикл: данные → модель → действие → результат.
+              </div>
+            </div>
+          </div>
+
+          <!-- Fraud -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Fraud Detection</span>
+              <span class="badge badge-red">production — real-time</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Задача</strong></td><td>Real-time скоринг транзакций на фрод (мульти-аккаунты, бонус-абьюз, коллюзия)</td></tr>
+                    <tr><td><strong>Целевая переменная</strong></td><td>is_fraud (бинарная), fraud_score (0.0–1.0)</td></tr>
+                    <tr><td><strong>Алгоритм</strong></td><td>LightGBM + rule-based engine (гибрид)</td></tr>
+                    <tr><td><strong>Метрики</strong></td><td>AUC: 0.91, FPR: 3.2%, Precision: 0.78, Recall: 0.65</td></tr>
+                    <tr><td><strong>Переобучение</strong></td><td>Еженедельно (фрод-паттерны меняются быстро)</td></tr>
+                    <tr><td><strong>SLA</strong></td><td>Latency: &lt; 100ms p99, доступность: 99.9%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <h3>Архитектура</h3>
+              <p>Real-time scoring через REST API (Docker + FastAPI). Фичи из online Feature Store (Redis, &lt; 5ms). При fraud_score &gt; 0.8 транзакция блокируется автоматически. При 0.5–0.8 — отправляется на ручную проверку в Risk-команду.</p>
+              <div class="alert alert-warning">
+                <strong>FPR критичен:</strong> каждый false positive — это легитимный игрок, которому заблокировали транзакцию. При FPR 3.2% на 100K транзакций/день = ~3,200 ложных блокировок. Цель: FPR &lt; 5%, оптимально &lt; 2%.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Model Utilization -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Утилизация моделей: от score к бизнес-действию</h2>
+          <p>Модель в production бесполезна, если её output не приводит к конкретному действию. Для каждой из трёх моделей — как именно score превращается в бизнес-результат.</p>
+
+          <!-- LTV Utilization -->
+          <h3>LTV Prediction — утилизация</h3>
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr><th>pLTV сегмент</th><th>Порог</th><th>Действие</th><th>Исполнитель</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-teal">High LTV</span> (&gt;$500)</td>
+                  <td>top 15%</td>
+                  <td>Увеличить bid в paid каналах, приоритет в VIP-программе, персональный менеджер</td>
+                  <td>Marketing + VIP team</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-blue">Medium LTV</span> ($100–500)</td>
+                  <td>middle 60%</td>
+                  <td>Стандартная CRM-коммуникация, стандартные бонусы</td>
+                  <td>CRM автоматически</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-gray">Low LTV</span> (&lt;$100)</td>
+                  <td>bottom 25%</td>
+                  <td>Снизить маркетинговый бюджет на канал, не давать крупные бонусы</td>
+                  <td>Marketing</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card mb-lg">
+            <h3>Пример</h3>
+            <p>Канал <strong>Facebook CIS</strong> показывает средний pLTV = $85 при CAC = $60. LTV:CAC = 1.4 — ниже порога 3.0. Решение: снизить бюджет на 50%, перераспределить в пользу Organic Search (pLTV = $320, CAC ≈ $0). Ожидаемый эффект: общий blended LTV:CAC вырастет с 2.8 до 3.5.</p>
+          </div>
+
+          <!-- Churn Utilization -->
+          <h3>Churn Prediction — утилизация</h3>
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr><th>Churn risk</th><th>Порог score</th><th>Действие</th><th>Канал</th><th>Timing</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-red">Critical</span></td>
+                  <td>&gt; 0.8</td>
+                  <td>Персональный звонок от VIP-менеджера (для VIP) или крупный cashback</td>
+                  <td>Телефон / email</td>
+                  <td>В течение 24ч</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">High</span></td>
+                  <td>0.6–0.8</td>
+                  <td>Персонализированный бонус: фрибет на любимый спорт или фриспины на любимый слот</td>
+                  <td>Push / email</td>
+                  <td>В течение 48ч</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-blue">Medium</span></td>
+                  <td>0.4–0.6</td>
+                  <td>Стандартная реактивация: общий бонус + напоминание о предстоящих матчах</td>
+                  <td>Email</td>
+                  <td>В течение 72ч</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-gray">Low</span></td>
+                  <td>&lt; 0.4</td>
+                  <td>Ничего — не тратить ресурсы, игрок активен</td>
+                  <td>—</td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card mb-lg">
+            <h3>Пример</h3>
+            <p>Игрок <code>usr_28491</code>, сегмент regular, churn_score = 0.73. Последняя ставка 12 дней назад. Любимый спорт — футбол. CRM автоматически отправляет push: «Финал Лиги Чемпионов через 3 дня — вот фрибет $10 на любой исход». Retention rate в этом сегменте после такой кампании: +18%.</p>
+          </div>
+
+          <!-- Fraud Utilization -->
+          <h3>Fraud Detection — утилизация</h3>
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr><th>Fraud score</th><th>Порог</th><th>Действие</th><th>Автоматизация</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-red">Block</span></td>
+                  <td>&gt; 0.8</td>
+                  <td>Транзакция заблокирована, аккаунт flagged для расследования</td>
+                  <td>Полностью автоматически</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">Review</span></td>
+                  <td>0.5–0.8</td>
+                  <td>Транзакция на hold, уходит в очередь Risk-команды</td>
+                  <td>Авто-hold, ручной review</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-teal">Pass</span></td>
+                  <td>&lt; 0.5</td>
+                  <td>Транзакция проходит, логируется для обучения модели</td>
+                  <td>Автоматически</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card mb-lg">
+            <h3>Пример</h3>
+            <p>Новый аккаунт, зарегистрирован 2 часа назад. Первый депозит $500 (в 5x выше среднего FTD). IP совпадает с 3 другими аккаунтами. fraud_score = 0.87. Автоматическая блокировка транзакции. Risk-команда проверяет — подтверждённый мульти-аккаунт. Все связанные аккаунты заблокированы.</p>
+          </div>
+
+          <div class="alert alert-tip">
+            <strong>Пороги — не константа.</strong> Их калибруют ежеквартально на основе precision/recall trade-off и бизнес-стоимости ошибок. False positive в fraud = потеря легитимного игрока ($200+ LTV). False negative = фрод-потери ($50–500 per case). Баланс пересматривается на Governance Council.
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

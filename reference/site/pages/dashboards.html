@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboards — Fantasy iGaming Data Department</title>
+  <meta name="description" content="6 мокапов дашбордов с фейковыми данными: CEO pulse, маркетинг, казино, спорт, когорты, data health.">
+  <meta property="og:title" content="Dashboards — Fantasy iGaming Data Department">
+  <meta property="og:description" content="6 мокапов дашбордов с фейковыми данными: CEO pulse, маркетинг, казино, спорт, когорты, data health.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Dashboards</h1>
+          <p class="page-header-desc">6 мокапов ключевых дашбордов с фейковыми данными. Каждый выглядит как реальный BI-отчёт: sparklines, bar charts, heatmaps — чистый CSS + inline SVG.</p>
+        </div>
+
+        <!-- ================================================ -->
+        <!-- 1. CEO Daily Pulse -->
+        <!-- ================================================ -->
+        <section class="section">
+          <div class="accordion open">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">1. CEO Daily Pulse</span>
+              <span class="badge badge-red">critical</span>
+            </div>
+            <div class="accordion-body">
+              <p><strong>Аудитория:</strong> CEO, CFO, C-level. <strong>Решения:</strong> общее здоровье бизнеса, аномалии. <strong>Source:</strong> <code>mart_daily_kpi</code></p>
+
+              <div class="dash-mockup">
+                <div class="dash-mockup-title">KPI за вчера (2026-04-14)</div>
+                <div class="dash-grid dash-grid-4">
+                  <!-- NGR -->
+                  <div class="dash-kpi">
+                    <div class="dash-kpi-label">NGR</div>
+                    <div class="dash-kpi-row">
+                      <div>
+                        <div class="dash-kpi-value">$168K</div>
+                        <div class="dash-kpi-change up">&#9650; +12% WoW</div>
+                      </div>
+                      <svg class="dash-sparkline" viewBox="0 0 80 32"><polyline class="spark-up" points="0,28 12,24 24,26 36,18 48,20 60,14 72,8 80,6"/><polygon class="spark-area spark-up" points="0,32 0,28 12,24 24,26 36,18 48,20 60,14 72,8 80,6 80,32" style="fill:var(--color-teal)"/></svg>
+                    </div>
+                  </div>
+                  <!-- GGR -->
+                  <div class="dash-kpi">
+                    <div class="dash-kpi-label">GGR</div>
+                    <div class="dash-kpi-row">
+                      <div>
+                        <div class="dash-kpi-value">$243K</div>
+                        <div class="dash-kpi-change up">&#9650; +8% WoW</div>
+                      </div>
+                      <svg class="dash-sparkline" viewBox="0 0 80 32"><polyline class="spark-up" points="0,22 12,25 24,20 36,18 48,22 60,15 72,12 80,10"/><polygon class="spark-area spark-up" points="0,32 0,22 12,25 24,20 36,18 48,22 60,15 72,12 80,10 80,32" style="fill:var(--color-teal)"/></svg>
+                    </div>
+                  </div>
+                  <!-- Active Players -->
+                  <div class="dash-kpi">
+                    <div class="dash-kpi-label">Active Players</div>
+                    <div class="dash-kpi-row">
+                      <div>
+                        <div class="dash-kpi-value">82.4K</div>
+                        <div class="dash-kpi-change down">&#9660; -3% WoW</div>
+                      </div>
+                      <svg class="dash-sparkline" viewBox="0 0 80 32"><polyline class="spark-down" points="0,10 12,12 24,8 36,14 48,18 60,20 72,22 80,24"/><polygon class="spark-area spark-down" points="0,32 0,10 12,12 24,8 36,14 48,18 60,20 72,22 80,24 80,32" style="fill:var(--color-red)"/></svg>
+                    </div>
+                  </div>
+                  <!-- Deposits -->
+                  <div class="dash-kpi">
+                    <div class="dash-kpi-label">Deposits</div>
+                    <div class="dash-kpi-row">
+                      <div>
+                        <div class="dash-kpi-value">$412K</div>
+                        <div class="dash-kpi-change up">&#9650; +5% WoW</div>
+                      </div>
+                      <svg class="dash-sparkline" viewBox="0 0 80 32"><polyline class="spark-up" points="0,20 12,22 24,18 36,16 48,19 60,14 72,12 80,11"/><polygon class="spark-area spark-up" points="0,32 0,20 12,22 24,18 36,16 48,19 60,14 72,12 80,11 80,32" style="fill:var(--color-teal)"/></svg>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- NGR 30-day trend -->
+                <div class="dash-mockup-title mt-lg">NGR тренд (30 дней, тыс. $)</div>
+                <svg class="dash-chart" viewBox="0 0 600 140">
+                  <!-- Grid -->
+                  <line class="chart-grid" x1="40" y1="10" x2="40" y2="120"/>
+                  <line class="chart-grid" x1="40" y1="120" x2="590" y2="120"/>
+                  <line class="chart-grid" x1="40" y1="65" x2="590" y2="65" stroke-dasharray="4"/>
+                  <line class="chart-grid" x1="40" y1="10" x2="590" y2="10" stroke-dasharray="4"/>
+                  <!-- Y axis labels -->
+                  <text x="4" y="124">$100K</text>
+                  <text x="4" y="69">$150K</text>
+                  <text x="4" y="14">$200K</text>
+                  <!-- Area + Line -->
+                  <polygon style="fill:var(--color-primary);opacity:0.08" points="40,120 58,105 76,110 94,100 112,108 130,95 148,92 166,98 184,88 202,82 220,90 238,85 256,78 274,82 292,75 310,70 328,80 346,72 364,65 382,60 400,68 418,55 436,50 454,58 472,48 490,42 508,50 526,38 544,35 562,30 580,25 580,120"/>
+                  <polyline class="chart-line" style="stroke:var(--color-primary)" points="40,105 58,105 76,110 94,100 112,108 130,95 148,92 166,98 184,88 202,82 220,90 238,85 256,78 274,82 292,75 310,70 328,80 346,72 364,65 382,60 400,68 418,55 436,50 454,58 472,48 490,42 508,50 526,38 544,35 562,30 580,25"/>
+                  <!-- X axis labels -->
+                  <text x="40" y="135">Mar 15</text>
+                  <text x="220" y="135">Mar 25</text>
+                  <text x="400" y="135">Apr 5</text>
+                  <text x="560" y="135">Apr 14</text>
+                </svg>
+
+                <!-- Geo breakdown -->
+                <div class="dash-mockup-title mt-lg">NGR по гео</div>
+                <div class="dash-hbar">
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">CIS</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:62%;background:var(--color-primary)"></div></div>
+                    <span class="dash-hbar-value">$104K <span class="text-muted">(62%)</span></span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">LatAm</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:25%;background:var(--color-teal)"></div></div>
+                    <span class="dash-hbar-value">$42K <span class="text-muted">(25%)</span></span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Europe</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:13%;background:var(--color-blue)"></div></div>
+                    <span class="dash-hbar-value">$22K <span class="text-muted">(13%)</span></span>
+                  </div>
+                </div>
+
+                <!-- Product split -->
+                <div class="dash-mockup-title mt-lg">Casino vs Sports</div>
+                <div class="dash-stacked">
+                  <div class="dash-stacked-seg" style="flex:58;background:var(--color-pink)">Casino 58%</div>
+                  <div class="dash-stacked-seg" style="flex:42;background:var(--color-blue)">Sports 42%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================ -->
+        <!-- 2. Marketing Performance -->
+        <!-- ================================================ -->
+        <section class="section">
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">2. Marketing Performance</span>
+              <span class="badge badge-coral">marketing</span>
+            </div>
+            <div class="accordion-body">
+              <p><strong>Аудитория:</strong> CMO, Marketing Analysts. <strong>Решения:</strong> бюджет по каналам, эффективность кампаний. <strong>Source:</strong> <code>mart_marketing_performance</code></p>
+
+              <div class="dash-mockup">
+                <!-- Visual funnel -->
+                <div class="dash-mockup-title">Воронка привлечения (апрель 2026)</div>
+                <div class="dash-funnel">
+                  <div class="dash-funnel-step">
+                    <span class="dash-funnel-label">Визиты</span>
+                    <div style="flex:1"><div class="dash-funnel-bar" style="width:100%;background:var(--color-primary)"></div></div>
+                    <span class="dash-funnel-value">245K</span>
+                    <span class="dash-funnel-conv"></span>
+                  </div>
+                  <div class="dash-funnel-step">
+                    <span class="dash-funnel-label">Регистрации</span>
+                    <div style="flex:1"><div class="dash-funnel-bar" style="width:30%;background:var(--color-blue)"></div></div>
+                    <span class="dash-funnel-value">24.5K</span>
+                    <span class="dash-funnel-conv">10.0%</span>
+                  </div>
+                  <div class="dash-funnel-step">
+                    <span class="dash-funnel-label">FTD</span>
+                    <div style="flex:1"><div class="dash-funnel-bar" style="width:10%;background:var(--color-teal)"></div></div>
+                    <span class="dash-funnel-value">8.1K</span>
+                    <span class="dash-funnel-conv">33.1%</span>
+                  </div>
+                </div>
+
+                <!-- Spend distribution -->
+                <div class="dash-mockup-title mt-lg">Распределение бюджета по каналам</div>
+                <div class="dash-hbar">
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Google Ads</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:41%;background:var(--color-blue)"></div></div>
+                    <span class="dash-hbar-value">$180K</span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Affiliates</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:27%;background:var(--color-teal)"></div></div>
+                    <span class="dash-hbar-value">$120K</span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Facebook</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:22%;background:var(--color-primary)"></div></div>
+                    <span class="dash-hbar-value">$95K</span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">TikTok</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:10%;background:var(--color-pink)"></div></div>
+                    <span class="dash-hbar-value">$45K</span>
+                  </div>
+                </div>
+
+                <!-- Channel performance with conditional formatting -->
+                <div class="dash-mockup-title mt-lg">Эффективность каналов</div>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Канал</th><th>Spend</th><th>FTD</th><th>CAC</th><th>pLTV</th><th>LTV:CAC</th><th>ROAS</th></tr></thead>
+                    <tbody>
+                      <tr><td>Organic</td><td>$0</td><td>2,800</td><td>$0</td><td>$320</td><td class="cell-bg-good cell-good"><strong>&#8734;</strong></td><td class="cell-bg-good cell-good">&#8734;</td></tr>
+                      <tr><td>Google Ads</td><td>$180K</td><td>2,100</td><td>$86</td><td>$280</td><td class="cell-bg-good cell-good"><strong>3.3</strong></td><td>3.3x</td></tr>
+                      <tr><td>Affiliates</td><td>$120K</td><td>1,900</td><td>$63</td><td>$195</td><td class="cell-bg-good cell-good"><strong>3.1</strong></td><td>3.1x</td></tr>
+                      <tr><td>Facebook</td><td>$95K</td><td>850</td><td>$112</td><td>$165</td><td class="cell-bg-bad cell-bad"><strong>1.5</strong></td><td class="cell-bad">1.5x</td></tr>
+                      <tr><td>TikTok</td><td>$45K</td><td>450</td><td>$100</td><td>$110</td><td class="cell-bg-bad cell-bad"><strong>1.1</strong></td><td class="cell-bad">1.1x</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================ -->
+        <!-- 3. Casino Product -->
+        <!-- ================================================ -->
+        <section class="section">
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">3. Casino Product</span>
+              <span class="badge badge-pink">product</span>
+            </div>
+            <div class="accordion-body">
+              <p><strong>Аудитория:</strong> PM Casino. <strong>Решения:</strong> провайдерский микс, отклонения RTP, топ-игры. <strong>Source:</strong> <code>mart_game_performance</code></p>
+
+              <div class="dash-mockup">
+                <!-- GGR by provider (horizontal bars) -->
+                <div class="dash-mockup-title">GGR по провайдерам (апрель)</div>
+                <div class="dash-hbar">
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Pragmatic Play</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:80%;background:var(--color-primary)"></div></div>
+                    <span class="dash-hbar-value">$89K</span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Evolution</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:65%;background:var(--color-teal)"></div></div>
+                    <span class="dash-hbar-value">$72K</span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">NetEnt</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:37%;background:var(--color-blue)"></div></div>
+                    <span class="dash-hbar-value">$41K</span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Play'n GO</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:25%;background:var(--color-pink)"></div></div>
+                    <span class="dash-hbar-value">$28K</span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Остальные</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:43%;background:var(--color-gray)"></div></div>
+                    <span class="dash-hbar-value">$48K</span>
+                  </div>
+                </div>
+
+                <!-- Game type donut -->
+                <div class="dash-mockup-title mt-lg">Разбивка по типам игр</div>
+                <div style="display:flex;align-items:center;gap:var(--space-xl);flex-wrap:wrap">
+                  <div class="dash-donut" style="background:conic-gradient(var(--color-primary) 0% 65%, var(--color-teal) 65% 90%, var(--color-amber) 90% 100%)">
+                    <div class="dash-donut-center">$278K</div>
+                  </div>
+                  <div class="dash-donut-legend">
+                    <div class="dash-donut-legend-item"><div class="dash-donut-swatch" style="background:var(--color-primary)"></div> Slots — 65% ($181K)</div>
+                    <div class="dash-donut-legend-item"><div class="dash-donut-swatch" style="background:var(--color-teal)"></div> Live — 25% ($69K)</div>
+                    <div class="dash-donut-legend-item"><div class="dash-donut-swatch" style="background:var(--color-amber)"></div> Table — 10% ($28K)</div>
+                  </div>
+                </div>
+
+                <!-- Top 10 games with RTP conditional formatting -->
+                <div class="dash-mockup-title mt-lg">Топ-10 игр по GGR</div>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Игра</th><th>Провайдер</th><th>Тип</th><th>GGR</th><th>RTP теор.</th><th>RTP факт.</th><th>Статус</th></tr></thead>
+                    <tbody>
+                      <tr><td>Sweet Bonanza</td><td>Pragmatic</td><td>slot</td><td>$18.2K</td><td>96.50%</td><td class="cell-good">96.12%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                      <tr><td>Crazy Time</td><td>Evolution</td><td>live</td><td>$15.8K</td><td>95.50%</td><td class="cell-good">95.23%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                      <tr><td>Gates of Olympus</td><td>Pragmatic</td><td>slot</td><td>$12.1K</td><td>96.50%</td><td class="cell-warn">97.82%</td><td><span class="badge badge-amber">RTP+</span></td></tr>
+                      <tr><td>Lightning Roulette</td><td>Evolution</td><td>live</td><td>$9.7K</td><td>97.30%</td><td class="cell-good">97.05%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                      <tr><td>Book of Dead</td><td>Play'n GO</td><td>slot</td><td>$8.4K</td><td>96.20%</td><td class="cell-good">95.81%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                      <tr><td>Big Bass Bonanza</td><td>Pragmatic</td><td>slot</td><td>$7.9K</td><td>96.71%</td><td class="cell-good">96.55%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                      <tr><td>Monopoly Live</td><td>Evolution</td><td>live</td><td>$6.3K</td><td>96.23%</td><td class="cell-bad">98.41%</td><td><span class="badge badge-red">RTP!!</span></td></tr>
+                      <tr><td>Starburst</td><td>NetEnt</td><td>slot</td><td>$5.8K</td><td>96.10%</td><td class="cell-good">96.02%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                      <tr><td>Aviator</td><td>Spribe</td><td>crash</td><td>$5.2K</td><td>97.00%</td><td class="cell-good">96.88%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                      <tr><td>Reactoonz</td><td>Play'n GO</td><td>slot</td><td>$4.5K</td><td>96.51%</td><td class="cell-good">96.30%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================ -->
+        <!-- 4. Sports Product -->
+        <!-- ================================================ -->
+        <section class="section">
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">4. Sports Product</span>
+              <span class="badge badge-blue">product</span>
+            </div>
+            <div class="accordion-body">
+              <p><strong>Аудитория:</strong> PM Sports. <strong>Решения:</strong> маржинальность по лигам, баланс pre-match vs live. <strong>Source:</strong> <code>mart_daily_kpi</code> (sports slice)</p>
+
+              <div class="dash-mockup">
+                <!-- Handle by league -->
+                <div class="dash-mockup-title">Handle по лигам (апрель)</div>
+                <div class="dash-hbar">
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Champions L.</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:85%;background:var(--color-primary)"></div></div>
+                    <span class="dash-hbar-value">$2.1M <span class="text-muted">(8.5%)</span></span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Premier L.</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:57%;background:var(--color-blue)"></div></div>
+                    <span class="dash-hbar-value">$1.4M <span class="text-muted">(8.0%)</span></span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">La Liga</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:33%;background:var(--color-teal)"></div></div>
+                    <span class="dash-hbar-value">$820K <span class="text-muted">(8.1%)</span></span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">NBA</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:26%;background:var(--color-amber)"></div></div>
+                    <span class="dash-hbar-value">$650K <span class="text-muted">(7.5%)</span></span>
+                  </div>
+                  <div class="dash-hbar-row">
+                    <span class="dash-hbar-label">Esports</span>
+                    <div class="dash-hbar-track"><div class="dash-hbar-fill" style="width:20%;background:var(--color-pink)"></div></div>
+                    <span class="dash-hbar-value">$480K <span class="text-muted">(9.0%)</span></span>
+                  </div>
+                </div>
+
+                <!-- Pre-match vs Live -->
+                <div class="dash-mockup-title mt-lg">Pre-match vs Live</div>
+                <div class="dash-stacked" style="height:32px">
+                  <div class="dash-stacked-seg" style="flex:62;background:var(--color-blue)">Pre-match 62%</div>
+                  <div class="dash-stacked-seg" style="flex:38;background:var(--color-teal)">Live 38%</div>
+                </div>
+                <p style="font-size:11px;color:var(--text-muted);margin-top:6px">Live доля растёт: +5pp vs прошлый месяц. Тренд на увеличение live-ставок — типичный для зрелых рынков.</p>
+
+                <!-- Margin trend sparkline -->
+                <div class="dash-mockup-title mt-lg">Маржа % (30 дней)</div>
+                <div class="dash-kpi" style="display:inline-flex;align-items:center;gap:var(--space-lg)">
+                  <div>
+                    <div class="dash-kpi-label">Средняя маржа</div>
+                    <div class="dash-kpi-value">8.2%</div>
+                    <div class="dash-kpi-change up">&#9650; +0.3pp MoM</div>
+                  </div>
+                  <svg class="dash-sparkline" viewBox="0 0 120 32" style="width:120px">
+                    <polyline class="spark-up" points="0,20 8,18 16,22 24,19 32,16 40,20 48,17 56,14 64,18 72,15 80,12 88,16 96,10 104,13 112,8 120,6"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================ -->
+        <!-- 5. Cohort Analysis -->
+        <!-- ================================================ -->
+        <section class="section">
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">5. Cohort Analysis</span>
+              <span class="badge badge-primary">analytics</span>
+            </div>
+            <div class="accordion-body">
+              <p><strong>Аудитория:</strong> Product, Marketing, DS. <strong>Решения:</strong> качество когорт, retention деградация, LTV-оценка. <strong>Source:</strong> <code>mart_cohort_analysis</code></p>
+
+              <div class="dash-mockup">
+                <!-- Retention heatmap -->
+                <div class="dash-mockup-title">Retention heatmap (% активных)</div>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Когорта</th><th>N</th><th>M0</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th><th>M6</th></tr></thead>
+                    <tbody>
+                      <tr>
+                        <td>Oct '25</td><td>8.2K</td>
+                        <td style="background:rgba(29,158,117,0.5);color:#fff;text-align:center;font-weight:600">100%</td>
+                        <td style="background:rgba(29,158,117,0.32);text-align:center">38%</td>
+                        <td style="background:rgba(29,158,117,0.2);text-align:center">24%</td>
+                        <td style="background:rgba(186,117,23,0.2);text-align:center">18%</td>
+                        <td style="background:rgba(186,117,23,0.15);text-align:center">15%</td>
+                        <td style="background:rgba(226,75,74,0.15);text-align:center">13%</td>
+                        <td style="background:rgba(226,75,74,0.12);text-align:center">12%</td>
+                      </tr>
+                      <tr>
+                        <td>Nov '25</td><td>9.1K</td>
+                        <td style="background:rgba(29,158,117,0.5);color:#fff;text-align:center;font-weight:600">100%</td>
+                        <td style="background:rgba(29,158,117,0.36);text-align:center">42%</td>
+                        <td style="background:rgba(29,158,117,0.22);text-align:center">26%</td>
+                        <td style="background:rgba(186,117,23,0.2);text-align:center">19%</td>
+                        <td style="background:rgba(186,117,23,0.16);text-align:center">16%</td>
+                        <td style="background:rgba(226,75,74,0.15);text-align:center">14%</td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>Dec '25</td><td>11.5K</td>
+                        <td style="background:rgba(29,158,117,0.5);color:#fff;text-align:center;font-weight:600">100%</td>
+                        <td style="background:rgba(29,158,117,0.28);text-align:center">35%</td>
+                        <td style="background:rgba(29,158,117,0.18);text-align:center">21%</td>
+                        <td style="background:rgba(186,117,23,0.16);text-align:center">16%</td>
+                        <td style="background:rgba(226,75,74,0.14);text-align:center">13%</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>Jan '26</td><td>7.8K</td>
+                        <td style="background:rgba(29,158,117,0.5);color:#fff;text-align:center;font-weight:600">100%</td>
+                        <td style="background:rgba(29,158,117,0.38);text-align:center">44%</td>
+                        <td style="background:rgba(29,158,117,0.24);text-align:center">28%</td>
+                        <td style="background:rgba(29,158,117,0.18);text-align:center">20%</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>Feb '26</td><td>8.6K</td>
+                        <td style="background:rgba(29,158,117,0.5);color:#fff;text-align:center;font-weight:600">100%</td>
+                        <td style="background:rgba(29,158,117,0.34);text-align:center">40%</td>
+                        <td style="background:rgba(29,158,117,0.22);text-align:center">25%</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>Mar '26</td><td>9.4K</td>
+                        <td style="background:rgba(29,158,117,0.5);color:#fff;text-align:center;font-weight:600">100%</td>
+                        <td style="background:rgba(29,158,117,0.32);text-align:center">39%</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Cumulative NGR curves (SVG) -->
+                <div class="dash-mockup-title mt-lg">Cumulative NGR по когортам (тыс. $)</div>
+                <svg class="dash-chart" viewBox="0 0 500 140" style="height:160px">
+                  <!-- Grid -->
+                  <line class="chart-grid" x1="40" y1="10" x2="40" y2="120"/>
+                  <line class="chart-grid" x1="40" y1="120" x2="480" y2="120"/>
+                  <line class="chart-grid" x1="40" y1="65" x2="480" y2="65" stroke-dasharray="4"/>
+                  <line class="chart-grid" x1="40" y1="10" x2="480" y2="10" stroke-dasharray="4"/>
+                  <text x="4" y="124">$0</text>
+                  <text x="4" y="69">$60K</text>
+                  <text x="4" y="14">$120K</text>
+                  <text x="40" y="136">M0</text><text x="110" y="136">M1</text><text x="180" y="136">M2</text><text x="250" y="136">M3</text><text x="320" y="136">M4</text><text x="390" y="136">M5</text><text x="460" y="136">M6</text>
+                  <!-- Oct 2025 (full line) -->
+                  <polyline class="chart-line" style="stroke:var(--color-primary)" points="40,84 110,59 180,47 250,38 320,32 390,28 460,24"/>
+                  <circle class="chart-dot" cx="460" cy="24" style="fill:var(--color-primary)"/>
+                  <!-- Nov 2025 -->
+                  <polyline class="chart-line" style="stroke:var(--color-teal)" points="40,78 110,52 180,37 250,28 320,22 390,18"/>
+                  <circle class="chart-dot" cx="390" cy="18" style="fill:var(--color-teal)"/>
+                  <!-- Dec 2025 -->
+                  <polyline class="chart-line" style="stroke:var(--color-blue)" points="40,72 110,48 180,35 250,27 320,23"/>
+                  <circle class="chart-dot" cx="320" cy="23" style="fill:var(--color-blue)"/>
+                  <!-- Jan 2026 -->
+                  <polyline class="chart-line" style="stroke:var(--color-pink)" points="40,88 110,62 180,48 250,40"/>
+                  <circle class="chart-dot" cx="250" cy="40" style="fill:var(--color-pink)"/>
+                  <!-- Legend -->
+                  <text x="300" y="14" style="fill:var(--color-primary);font-size:10px">&#9632; Oct '25 ($118K)</text>
+                  <text x="300" y="26" style="fill:var(--color-teal);font-size:10px">&#9632; Nov '25 ($104K...)</text>
+                  <text x="300" y="38" style="fill:var(--color-blue);font-size:10px">&#9632; Dec '25 ($108K...)</text>
+                  <text x="300" y="50" style="fill:var(--color-pink);font-size:10px">&#9632; Jan '26 ($87K...)</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================ -->
+        <!-- 6. Data Health -->
+        <!-- ================================================ -->
+        <section class="section">
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">6. Data Health</span>
+              <span class="badge badge-amber">operations</span>
+            </div>
+            <div class="accordion-body">
+              <p><strong>Аудитория:</strong> DE team, Director of Data. <strong>Решения:</strong> состояние пайплайнов, приоритизация инцидентов. <strong>Source:</strong> Airflow, dbt tests, Grafana</p>
+
+              <div class="dash-mockup">
+                <!-- KPIs -->
+                <div class="dash-mockup-title">Обзор за текущий месяц</div>
+                <div class="dash-grid dash-grid-4">
+                  <div class="dash-kpi">
+                    <div class="dash-kpi-label">DQ Score</div>
+                    <div class="dash-kpi-row">
+                      <div>
+                        <div class="dash-kpi-value">96.4%</div>
+                        <div class="dash-kpi-change up">&#9650; +1.2pp</div>
+                      </div>
+                      <svg class="dash-sparkline" viewBox="0 0 80 32"><polyline class="spark-up" points="0,24 12,22 24,20 36,18 48,16 60,12 72,10 80,8"/></svg>
+                    </div>
+                  </div>
+                  <div class="dash-kpi">
+                    <div class="dash-kpi-label">SLA Compliance</div>
+                    <div class="dash-kpi-value">97.8%</div>
+                    <div class="dash-kpi-change flat">стабильно</div>
+                  </div>
+                  <div class="dash-kpi">
+                    <div class="dash-kpi-label">P1 инцидентов</div>
+                    <div class="dash-kpi-value"><span class="badge badge-red">1</span></div>
+                    <div class="dash-kpi-change down">было 0 в прошлом</div>
+                  </div>
+                  <div class="dash-kpi">
+                    <div class="dash-kpi-label">Открытые P2/P3</div>
+                    <div class="dash-kpi-value">3</div>
+                    <div class="dash-kpi-change flat">норма</div>
+                  </div>
+                </div>
+
+                <!-- Mart status table -->
+                <div class="dash-mockup-title mt-lg">Статус mart-таблиц</div>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>Mart</th><th>Обновлён</th><th>DQ Score</th><th>Статус</th><th>Инциденты</th></tr></thead>
+                    <tbody>
+                      <tr>
+                        <td><code>mart_daily_kpi</code></td>
+                        <td>06:45 UTC</td>
+                        <td>99.2%</td>
+                        <td><span class="status-dot green"></span>OK</td>
+                        <td>—</td>
+                      </tr>
+                      <tr>
+                        <td><code>mart_player_lifetime</code></td>
+                        <td>06:52 UTC</td>
+                        <td>98.8%</td>
+                        <td><span class="status-dot green"></span>OK</td>
+                        <td>—</td>
+                      </tr>
+                      <tr>
+                        <td><code>mart_cohort_analysis</code></td>
+                        <td>07:15 UTC</td>
+                        <td>97.5%</td>
+                        <td><span class="status-dot green"></span>OK</td>
+                        <td>—</td>
+                      </tr>
+                      <tr>
+                        <td><code>mart_marketing_performance</code></td>
+                        <td>07:30 UTC</td>
+                        <td class="cell-warn">95.1%</td>
+                        <td><span class="status-dot yellow"></span>WARN</td>
+                        <td><span class="badge badge-gray">P3</span> NULL spike в utm_campaign</td>
+                      </tr>
+                      <tr>
+                        <td><code>mart_game_performance</code></td>
+                        <td class="cell-bad">08:45 UTC</td>
+                        <td class="cell-bad">91.3%</td>
+                        <td><span class="status-dot red"></span>ALERT</td>
+                        <td><span class="badge badge-amber">P2</span> задержка провайдера</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- SLA Compliance bar chart -->
+                <div class="dash-mockup-title mt-lg">SLA Compliance по неделям</div>
+                <div class="dash-bar" style="height:60px;align-items:flex-end">
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="dash-bar-col" style="height:92%;background:var(--color-teal)"></div><div class="dash-bar-label">W1</div></div>
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="dash-bar-col" style="height:98%;background:var(--color-teal)"></div><div class="dash-bar-label">W2</div></div>
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="dash-bar-col" style="height:100%;background:var(--color-teal)"></div><div class="dash-bar-label">W3</div></div>
+                  <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="dash-bar-col" style="height:95%;background:var(--color-amber)"></div><div class="dash-bar-label">W4</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

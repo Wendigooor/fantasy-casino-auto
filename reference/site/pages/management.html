@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Management Practices — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Спринты, встречи, 1-on-1, OKR, управление бэклогом и база знаний data-команды.">
+  <meta property="og:title" content="Management Practices — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Спринты, встречи, 1-on-1, OKR, управление бэклогом и база знаний data-команды.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Management Practices</h1>
+          <p class="page-header-desc">Как организована работа data-команды: спринты, встречи, OKR, бэклог и база знаний.</p>
+        </div>
+
+        <!-- ================================ -->
+        <!-- Sprint Structure -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Структура спринта</h2>
+          <p>2-недельные спринты. Баланс: 70% roadmap-задачи / 30% буфер на ad-hoc запросы от бизнеса.</p>
+
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">Понедельник W1 — Planning (1ч)</div>
+              <div class="timeline-block-body">Лиды представляют задачи из бэклога. Оценка в story points. Коммитмент команды. Буфер 30% не планируется — резерв на ad-hoc.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">Ежедневно — Standup (15 мин)</div>
+              <div class="timeline-block-body">Async в Slack (текстовый формат) или короткий call. Три вопроса: что сделал, что буду делать, есть ли блокеры. Не для отчётности — для синхронизации.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">Среда W1 — Mid-sprint check</div>
+              <div class="timeline-block-body">Лид проверяет прогресс: что в трекере, есть ли риски по дедлайну. Если ad-hoc забрал больше 30% — пересогласовать scope.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">Пятница W2 — Review (1ч)</div>
+              <div class="timeline-block-body">Демо результатов: новые дашборды, модели, пайплайны. Стейкхолдеры приглашены. Фидбек фиксируется в бэклоге.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">Пятница W2 — Retro (30 мин)</div>
+              <div class="timeline-block-body">Что пошло хорошо / что пошло не так / что улучшить. Action items с владельцем. Ротация фасилитатора между стримами.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Meeting Cadence -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Регулярные встречи</h2>
+
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr><th>Встреча</th><th>Участники</th><th>Частота</th><th>Длительность</th><th>Цель</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1-on-1 Director ↔ Lead</td>
+                  <td>Director + каждый Lead</td>
+                  <td>Еженедельно</td>
+                  <td>30 мин</td>
+                  <td>Люди, процессы, стратегия</td>
+                </tr>
+                <tr>
+                  <td>Director ↔ C-level</td>
+                  <td>Director + CEO/CFO/CMO</td>
+                  <td>Раз в 2 недели</td>
+                  <td>45 мин</td>
+                  <td>Статус, приоритеты, ресурсы</td>
+                </tr>
+                <tr>
+                  <td>All-hands Data</td>
+                  <td>Вся data-команда (20 чел)</td>
+                  <td>Ежемесячно</td>
+                  <td>1ч</td>
+                  <td>Результаты, roadmap, признание</td>
+                </tr>
+                <tr>
+                  <td>Governance Council</td>
+                  <td>Director + Owners + Leads</td>
+                  <td>Ежеквартально</td>
+                  <td>1.5ч</td>
+                  <td>DQ, определения, политики</td>
+                </tr>
+                <tr>
+                  <td>Cross-functional sync</td>
+                  <td>Lead Analyst + PM/Marketing/Finance</td>
+                  <td>Еженедельно</td>
+                  <td>30 мин</td>
+                  <td>Приоритеты ad-hoc, статус задач</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- 1-on-1 -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>1-on-1 с лидом</h2>
+          <p>30 минут еженедельно. Агенду ставит лид (не директор). Три блока:</p>
+
+          <div class="dash-grid dash-grid-3">
+            <div class="card">
+              <h3>People</h3>
+              <p>Как дела в команде? Кто перегружен, кто недогружен? Есть ли конфликты? Кого пора повышать? Настроение и мотивация.</p>
+            </div>
+            <div class="card">
+              <h3>Process</h3>
+              <p>Что мешает работать? Блокеры, зависимости от других команд, технический долг. Что улучшить в процессах?</p>
+            </div>
+            <div class="card">
+              <h3>Strategy</h3>
+              <p>Куда движемся? Правильные ли приоритеты? Что важного мы не делаем? Идеи для следующего квартала.</p>
+            </div>
+          </div>
+
+          <div class="alert alert-info">
+            <strong>Правило:</strong> если 1-on-1 превращается в статус-апдейт по задачам — что-то идёт не так. Для статуса есть standup и Jira. 1-on-1 — про людей и стратегию.
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- OKR -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>OKR Framework</h2>
+          <p>Квартальные OKR. Устанавливаются Director + Leads, синхронизируются с компанейскими OKR.</p>
+
+          <div class="card">
+            <h3>Пример: Q2 2026</h3>
+            <p><strong>Objective:</strong> Обеспечить data-driven принятие решений во всех бизнес-функциях</p>
+
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Key Result</th><th>Target</th><th>Текущий</th><th>Owner</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>100% critical marts покрыты SLA с мониторингом</td>
+                    <td>100%</td>
+                    <td class="cell-good">100%</td>
+                    <td>Lead DE</td>
+                  </tr>
+                  <tr>
+                    <td>80% ad-hoc запросов решаются через self-service (Metabase)</td>
+                    <td>80%</td>
+                    <td class="cell-warn">62%</td>
+                    <td>Lead BI</td>
+                  </tr>
+                  <tr>
+                    <td>LTV-модель в production с MAPE &lt; 20%</td>
+                    <td>MAPE &lt;20%</td>
+                    <td class="cell-good">18.7%</td>
+                    <td>Lead DS</td>
+                  </tr>
+                  <tr>
+                    <td>3 data literacy воркшопа проведены</td>
+                    <td>3</td>
+                    <td class="cell-warn">1</td>
+                    <td>Data Literacy Spec.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Backlog Management -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Управление бэклогом</h2>
+
+          <h3>Как приходят запросы</h3>
+          <ul class="list">
+            <li><strong>Jira-форма:</strong> стейкхолдер заполняет: что нужно, зачем, к когда, кто потребитель. Автоматически попадает в бэклог.</li>
+            <li><strong>Slack #data-requests:</strong> для срочных/простых вопросов. Бот напоминает оформить тикет если вопрос не закрыт за 24ч.</li>
+            <li><strong>Cross-functional sync:</strong> еженедельно PM/Marketing/Finance приносят приоритеты.</li>
+          </ul>
+
+          <h3>Приоритизация (RICE)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Фактор</th><th>Описание</th><th>Шкала</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Reach</strong></td><td>Сколько людей/процессов затронет за квартал</td><td>Кол-во пользователей</td></tr>
+                <tr><td><strong>Impact</strong></td><td>Насколько сильно повлияет на метрику</td><td>3 / 2 / 1 / 0.5 / 0.25</td></tr>
+                <tr><td><strong>Confidence</strong></td><td>Уверенность в оценке</td><td>100% / 80% / 50%</td></tr>
+                <tr><td><strong>Effort</strong></td><td>Человеко-недели</td><td>Число</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="metric-card-formula">RICE Score = (Reach × Impact × Confidence) / Effort</div>
+
+          <h3>Коммуникация статуса</h3>
+          <ul class="list">
+            <li><strong>Slack-бот:</strong> автоматическое обновление при смене статуса тикета (in progress, done, blocked)</li>
+            <li><strong>Weekly digest:</strong> каждую пятницу в #data-updates — что закрыли, что в работе, что заблокировано</li>
+          </ul>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Priority Decision Example -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Пример: три запроса, ресурсы на один</h2>
+          <p>Реальная ситуация: три стейкхолдера одновременно просят срочную задачу. В спринте осталось 12 человеко-дней свободной ёмкости. Каждая задача — ~10 дней.</p>
+
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr><th>Запрос</th><th>От кого</th><th>RICE</th><th>Effort</th><th>Решение</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Churn-модель в production</td>
+                  <td>CPO</td>
+                  <td class="cell-good"><strong>680</strong></td>
+                  <td>10 дней</td>
+                  <td><span class="badge badge-teal">Sprint 12 (приоритет)</span></td>
+                </tr>
+                <tr>
+                  <td>Новый дашборд P&L</td>
+                  <td>CFO</td>
+                  <td><strong>450</strong></td>
+                  <td>8 дней</td>
+                  <td><span class="badge badge-blue">Sprint 13</span></td>
+                </tr>
+                <tr>
+                  <td>Аудит GA4 тегов</td>
+                  <td>CMO</td>
+                  <td class="text-muted"><strong>120</strong></td>
+                  <td>5 дней</td>
+                  <td><span class="badge badge-gray">Бэклог, Q3</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <h3>Почему churn-модель важнее P&L дашборда?</h3>
+            <p>RICE помог расставить приоритеты, но CFO недоволен: «мне нужен P&L-отчёт к совету директоров».</p>
+            <p><strong>Эскалация:</strong> Director выносит на bi-weekly sync с C-level. Аргументация через бизнес-impact:</p>
+            <ul class="list">
+              <li><strong>Churn-модель:</strong> при текущем churn 8%/мес мы теряем ~1,400 игроков/мес × avg LTV $180 = <strong>$252K/мес revenue at risk</strong>. Модель снижает churn на 18% (по пилоту) = $45K/мес сохранённого revenue.</li>
+              <li><strong>P&L дашборд:</strong> CFO и так получает данные в Excel от Financial Analyst. Дашборд — удобство, не блокер. Ценность = экономия ~4 часов/неделю работы аналитика.</li>
+            </ul>
+            <p><strong>Решение C-level:</strong> churn-модель идёт в Sprint 12. P&L дашборд — в Sprint 13. CFO получает промежуточное решение: улучшенный Excel-шаблон на время ожидания.</p>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Capacity Planning -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Capacity Planning</h2>
+          <p>Как считать реальную ёмкость команды на спринт. Частая ошибка — планировать от «20 человек × 10 дней = 200 дней». Реальность другая.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Фактор</th><th>Расчёт</th><th>Человеко-дней</th></tr></thead>
+              <tbody>
+                <tr><td>Общая ёмкость</td><td>20 чел × 10 рабочих дней</td><td><strong>200</strong></td></tr>
+                <tr><td class="cell-warn">Ad-hoc буфер (30%)</td><td>200 × 0.30</td><td class="cell-warn">-60</td></tr>
+                <tr><td>= Доступно для roadmap</td><td></td><td><strong>140</strong></td></tr>
+                <tr><td class="cell-warn">Отпуска, больничные (~10%)</td><td>140 × 0.10</td><td class="cell-warn">-14</td></tr>
+                <tr><td>= После отпусков</td><td></td><td><strong>126</strong></td></tr>
+                <tr><td class="cell-warn">On-call, встречи, код-ревью (~15%)</td><td>126 × 0.15</td><td class="cell-warn">-19</td></tr>
+                <tr><td class="cell-good">= Реально на фичи</td><td></td><td class="cell-good"><strong>~107</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-warning">
+            <strong>Правило:</strong> из 200 человеко-дней в спринте реально доступны ~107 на roadmap-задачи. Планируйте от этого числа, не от 200. Если планировать от 200 — каждый спринт будет «провален», команда демотивирована, стейкхолдеры разочарованы.
+          </div>
+
+          <div class="card">
+            <h3>Распределение по стримам (Sprint 12)</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Стрим</th><th>Люди</th><th>Ёмкость (грубо)</th><th>Roadmap задачи</th></tr></thead>
+                <tbody>
+                  <tr><td>Data Engineering</td><td>5</td><td>~27 дней</td><td>Churn model pipeline + Feature Store интеграция</td></tr>
+                  <tr><td>Analytics</td><td>8</td><td>~43 дня</td><td>3 ad-hoc, cohort deep dive, weekly reports</td></tr>
+                  <tr><td>Data Science</td><td>4</td><td>~21 день</td><td>Churn model v2 training + A/B analysis</td></tr>
+                  <tr><td>BI Engineering</td><td>3</td><td>~16 дней</td><td>Self-service воркшоп + шаблон P&L (prep)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Delegation Framework -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Delegation Framework</h2>
+          <p>Что директор делает сам, что полностью делегирует лидам, что решается совместно. Чёткие границы снижают bottleneck на директоре и дают лидам автономию.</p>
+
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr><th>Зона принятия решений</th><th>Директор</th><th>Лид</th><th>Совместно</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Найм — финальное решение</td><td>&#10003;</td><td></td><td></td></tr>
+                <tr><td>Найм — интервью и отбор</td><td></td><td>&#10003;</td><td></td></tr>
+                <tr><td>Приоритизация внутри стрима</td><td></td><td>&#10003;</td><td></td></tr>
+                <tr><td>Приоритизация между стримами</td><td>&#10003;</td><td></td><td></td></tr>
+                <tr><td>OKR — цели (Objectives)</td><td>&#10003;</td><td></td><td></td></tr>
+                <tr><td>OKR — ключевые результаты (KR)</td><td></td><td></td><td>&#10003;</td></tr>
+                <tr><td>Бюджет</td><td>&#10003;</td><td></td><td></td></tr>
+                <tr><td>Архитектурные решения</td><td></td><td></td><td>&#10003;</td></tr>
+                <tr><td>Инцидент P1</td><td></td><td></td><td>&#10003;</td></tr>
+                <tr><td>Инцидент P2/P3</td><td></td><td>&#10003;</td><td></td></tr>
+                <tr><td>Повышения и пересмотр грейдов</td><td></td><td></td><td>&#10003;</td></tr>
+                <tr><td>Увольнения</td><td>&#10003;</td><td></td><td></td></tr>
+                <tr><td>Технический долг — приоритизация</td><td></td><td>&#10003;</td><td></td></tr>
+                <tr><td>Внешние интеграции и vendor selection</td><td></td><td></td><td>&#10003;</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-info">
+            <strong>Принцип:</strong> директор принимает решения, которые затрагивают несколько стримов или бюджет. Лид принимает решения внутри своего стрима. «Совместно» = лид предлагает, директор утверждает (или наоборот). Цель: максимум автономии лидам при сохранении согласованности.
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Knowledge Management -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>База знаний</h2>
+          <p>Wiki в Confluence. Структура по разделам. Правило: если объяснил в Slack — напиши в wiki.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Раздел</th><th>Содержимое</th><th>Owner</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Architecture</strong></td><td>Стек, ERD, dbt lineage, ADR (Architecture Decision Records)</td><td>Lead DE</td></tr>
+                <tr><td><strong>Metrics</strong></td><td>Data Dictionary, формулы, SQL-примеры</td><td>Lead Analyst</td></tr>
+                <tr><td><strong>Processes</strong></td><td>CI/CD, on-call, incident response, A/B testing</td><td>Lead DE + Lead DS</td></tr>
+                <tr><td><strong>Runbooks</strong></td><td>Типичные инциденты и как их чинить</td><td>DE team</td></tr>
+                <tr><td><strong>Onboarding</strong></td><td>Чеклист новичка, доступы, первые задачи</td><td>Director</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-tip">
+            <strong>Правило двух раз:</strong> если один и тот же вопрос задали в Slack дважды — ответ должен появиться в wiki. Иначе знания остаются в головах и теряются при увольнении.
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

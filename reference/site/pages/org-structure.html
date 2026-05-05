@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Org Structure — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Data-команда из 20 человек: 4 стрима, роли, RACI-матрица, skill matrix и карьерная лестница.">
+  <meta property="og:title" content="Org Structure — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Data-команда из 20 человек: 4 стрима, роли, RACI-матрица, skill matrix и карьерная лестница.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Org Structure</h1>
+          <p class="page-header-desc">Data-команда Fantasy iGaming — 21 человек: Director + 4 стрима по 5/8/4/3. Директор, лиды, инженеры, аналитики, DS. Кто за что отвечает, как взаимодействуют, куда расти.</p>
+        </div>
+
+        <!-- ================================ -->
+        <!-- Org Chart Visual -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Org Chart</h2>
+
+          <div class="org-chart">
+            <!-- Director -->
+            <div class="org-node org-node-director">
+              <div class="org-node-title">Director of Data</div>
+              <div class="org-node-subtitle">1 person</div>
+            </div>
+
+            <div class="org-connector"></div>
+
+            <!-- 4 Leads -->
+            <div class="org-row">
+              <div class="org-branch">
+                <div class="org-node org-node-lead" style="border-color: var(--color-blue)">
+                  <div class="org-node-title">Data Engineering</div>
+                  <div class="org-node-subtitle">Lead + 4</div>
+                </div>
+                <div class="org-team-list">
+                  <div class="org-team-member">2 Data Engineers</div>
+                  <div class="org-team-member">1 Analytics Engineer</div>
+                  <div class="org-team-member">1 Platform/DevOps</div>
+                </div>
+              </div>
+
+              <div class="org-branch">
+                <div class="org-node org-node-lead" style="border-color: var(--color-teal)">
+                  <div class="org-node-title">Analytics</div>
+                  <div class="org-node-subtitle">Lead + 7</div>
+                </div>
+                <div class="org-team-list">
+                  <div class="org-team-member">3 Product Analysts</div>
+                  <div class="org-team-member">2 Marketing Analysts</div>
+                  <div class="org-team-member">1 Financial Analyst</div>
+                  <div class="org-team-member">1 BI Developer</div>
+                </div>
+              </div>
+
+              <div class="org-branch">
+                <div class="org-node org-node-lead" style="border-color: var(--color-pink)">
+                  <div class="org-node-title">Data Science</div>
+                  <div class="org-node-subtitle">Lead + 3</div>
+                </div>
+                <div class="org-team-list">
+                  <div class="org-team-member">1 ML Engineer</div>
+                  <div class="org-team-member">1 DS (LTV, Churn)</div>
+                  <div class="org-team-member">1 DS (Fraud, Risk)</div>
+                </div>
+              </div>
+
+              <div class="org-branch">
+                <div class="org-node org-node-lead" style="border-color: var(--color-amber)">
+                  <div class="org-node-title">BI Engineering</div>
+                  <div class="org-node-subtitle">Lead + 2</div>
+                </div>
+                <div class="org-team-list">
+                  <div class="org-team-member">1 BI Developer</div>
+                  <div class="org-team-member">1 Data Literacy Spec.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Stream Details -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Стримы</h2>
+
+          <!-- DE Stream -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Data Engineering</span>
+              <span class="badge badge-blue">5 человек</span>
+            </div>
+            <div class="accordion-body">
+              <h3>Команда</h3>
+              <div class="person-card">
+                <div class="person-card-role">Lead Data Engineer</div>
+                <div class="person-card-desc">Архитектура DWH, код-ревью, планирование, on-call эскалации. Мост между DE и аналитикой — переводит бизнес-требования в технические задачи для инженеров.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Data Engineer &times; 2</div>
+                <div class="person-card-desc">Разработка и поддержка пайплайнов: Airbyte коннекторы, Kafka consumers, загрузка в ClickHouse. Мониторинг, on-call ротация.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Analytics Engineer</div>
+                <div class="person-card-desc">dbt-модели: staging → intermediate → marts. Тесты качества данных, документация моделей. Работает на стыке DE и аналитики.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Platform / DevOps Engineer</div>
+                <div class="person-card-desc">Инфраструктура data-платформы: Airflow, ClickHouse кластер, мониторинг (Grafana, alerting). CI/CD для dbt и пайплайнов.</div>
+              </div>
+
+              <h3>Зона ответственности</h3>
+              <ul class="list">
+                <li>Ingestion: все пайплайны из источников в DWH</li>
+                <li>DWH: схема, производительность, партиционирование ClickHouse</li>
+                <li>Инфраструктура: Airflow, Kafka, мониторинг</li>
+                <li>DQ на уровне пайплайнов: свежесть, полнота, схема</li>
+                <li>On-call: ротация 1 неделя, реагирование на P1/P2 инциденты</li>
+              </ul>
+
+              <h3>Взаимодействие</h3>
+              <ul class="list">
+                <li><strong>Backend:</strong> доступ к данным, API, схемы таблиц</li>
+                <li><strong>DevOps:</strong> инфраструктура, деплой, сети</li>
+                <li><strong>Analytics:</strong> требования к mart-таблицам, SLA по свежести</li>
+              </ul>
+
+              <h3>Ключевые deliverables</h3>
+              <ul class="list">
+                <li>Пайплайны работают 24/7</li>
+                <li>Данные в DWH свежие к 07:00 UTC</li>
+                <li>SLA uptime: 99.5%</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Analytics Stream -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Analytics</span>
+              <span class="badge badge-teal">8 человек</span>
+            </div>
+            <div class="accordion-body">
+              <h3>Команда</h3>
+              <div class="person-card">
+                <div class="person-card-role">Lead Analyst</div>
+                <div class="person-card-desc">Приоритизация задач аналитиков, методология исследований, ревью отчётов. Представляет данные на C-level. Стратегические инсайты.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Product Analyst &times; 3</div>
+                <div class="person-card-desc">По направлениям: Sports, Casino, Payments. Метрики продукта, воронки, когортный анализ, A/B-тесты. Работают в связке с продуктовыми менеджерами.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Marketing Analyst &times; 2</div>
+                <div class="person-card-desc">Acquisition: CAC, ROAS, атрибуция по каналам. Retention/CRM: churn-анализ, бонусная эффективность, LTV по когортам.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Financial Analyst</div>
+                <div class="person-card-desc">P&L, unit economics, бюджетирование. NGR breakdown по продуктам и рынкам. Финансовая отчётность для CFO.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">BI Developer</div>
+                <div class="person-card-desc">Дашборды в Metabase, семантический слой. Стандартизация отчётов, шаблоны. Мост между аналитиками и BI-инженерами.</div>
+              </div>
+
+              <h3>Зона ответственности</h3>
+              <ul class="list">
+                <li>Регулярная отчётность: daily/weekly/monthly</li>
+                <li>Исследования: deep dives, impact analysis</li>
+                <li>Ad-hoc: ответы на вопросы бизнеса (SLA: 3 рабочих дня)</li>
+                <li>Когортный анализ, воронки, сегментация</li>
+              </ul>
+
+              <h3>Взаимодействие</h3>
+              <ul class="list">
+                <li><strong>Product:</strong> метрики фичей, A/B-тесты, user research</li>
+                <li><strong>Marketing:</strong> эффективность каналов, CRM-кампании</li>
+                <li><strong>Finance:</strong> P&L, unit economics, прогнозы</li>
+                <li><strong>C-level:</strong> стратегические отчёты, OKR-трекинг</li>
+              </ul>
+
+              <h3>Ключевые deliverables</h3>
+              <ul class="list">
+                <li>Дашборды актуальны и доступны</li>
+                <li>Weekly/monthly отчёты вовремя</li>
+                <li>Ad-hoc: ≤ 3 рабочих дня</li>
+                <li>Исследование: ≤ 2 недели</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- DS Stream -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Data Science</span>
+              <span class="badge badge-pink">4 человека</span>
+            </div>
+            <div class="accordion-body">
+              <h3>Команда</h3>
+              <div class="person-card">
+                <div class="person-card-role">Lead Data Scientist</div>
+                <div class="person-card-desc">Методология, приоритизация ML-задач, ревью моделей. Координация с Product по use cases. Определяет, когда ML оправдан, а когда хватит эвристики.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">ML Engineer</div>
+                <div class="person-card-desc">Деплой моделей в продакшн, MLOps инфраструктура: MLflow, Feature Store, мониторинг дрифта. Мост между DS-экспериментами и production.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Data Scientist — LTV & Churn</div>
+                <div class="person-card-desc">Предиктивные модели: LTV prediction, churn scoring, recommendation engine. Работает с product-аналитиками на когортных данных.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Data Scientist — Fraud & Risk</div>
+                <div class="person-card-desc">Real-time fraud scoring, anomaly detection, risk models. Latency SLA &lt; 100ms. Работает с Risk/Compliance командой.</div>
+              </div>
+
+              <h3>Зона ответственности</h3>
+              <ul class="list">
+                <li>Предиктивные модели: LTV, churn, fraud, recommendations</li>
+                <li>A/B тестирование: методология, расчёт sample size, анализ</li>
+                <li>Experimentation platform</li>
+              </ul>
+
+              <h3>Взаимодействие</h3>
+              <ul class="list">
+                <li><strong>Product:</strong> use cases, приоритизация моделей</li>
+                <li><strong>DE:</strong> данные, Feature Store, пайплайны для моделей</li>
+                <li><strong>Risk/Compliance:</strong> fraud detection, ответственный гейминг</li>
+              </ul>
+
+              <h3>Ключевые deliverables</h3>
+              <ul class="list">
+                <li>Модели в production</li>
+                <li>A/B отчёты с рекомендациями</li>
+                <li>Fraud scoring: latency &lt; 100ms, FPR &lt; 5%</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- BI Engineering Stream -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">BI Engineering</span>
+              <span class="badge badge-amber">3 человека</span>
+            </div>
+            <div class="accordion-body">
+              <h3>Команда</h3>
+              <div class="person-card">
+                <div class="person-card-role">Lead BI Engineer</div>
+                <div class="person-card-desc">Архитектура BI-слоя, стандарты визуализации, семантический слой. Координация с Lead Analyst по метрикам.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">BI Developer</div>
+                <div class="person-card-desc">Сложные дашборды в Metabase, embedded analytics, кастомные визуализации. Оптимизация запросов для быстрой загрузки.</div>
+              </div>
+              <div class="person-card">
+                <div class="person-card-role">Data Literacy Specialist</div>
+                <div class="person-card-desc">Обучение бизнес-пользователей self-service аналитике. Воркшопы, документация, шаблоны. Цель — 80% ad-hoc через self-service.</div>
+              </div>
+
+              <h3>Зона ответственности</h3>
+              <ul class="list">
+                <li>Семантический слой: единые определения метрик</li>
+                <li>Стандартизация отчётности: шаблоны, гайдлайны</li>
+                <li>Self-service инструменты: Metabase для бизнес-пользователей</li>
+                <li>Data literacy программа: обучение, воркшопы</li>
+              </ul>
+
+              <h3>Взаимодействие</h3>
+              <ul class="list">
+                <li><strong>Все бизнес-функции:</strong> конечные пользователи дашбордов</li>
+                <li><strong>Analytics:</strong> требования к метрикам, валидация</li>
+                <li><strong>DE:</strong> производительность запросов, SLA по обновлению</li>
+              </ul>
+
+              <h3>Ключевые deliverables</h3>
+              <ul class="list">
+                <li>Self-service покрытие: 80% ad-hoc через Metabase</li>
+                <li>Data literacy: 3 воркшопа в квартал</li>
+                <li>Стандартизированные шаблоны отчётов</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- RACI Matrix -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>RACI Matrix</h2>
+          <p>Кто за что отвечает в ключевых процессах. <strong>R</strong> — Responsible (делает), <strong>A</strong> — Accountable (отвечает за результат), <strong>C</strong> — Consulted, <strong>I</strong> — Informed.</p>
+
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr>
+                  <th>Процесс</th>
+                  <th>DE</th>
+                  <th>Analytics</th>
+                  <th>DS</th>
+                  <th>BI Eng</th>
+                  <th>Director</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Новый дашборд</td>
+                  <td>C</td>
+                  <td>R</td>
+                  <td>I</td>
+                  <td>A</td>
+                  <td>I</td>
+                </tr>
+                <tr>
+                  <td>Новый pipeline</td>
+                  <td>R, A</td>
+                  <td>C</td>
+                  <td>I</td>
+                  <td>I</td>
+                  <td>I</td>
+                </tr>
+                <tr>
+                  <td>Новая ML-модель</td>
+                  <td>C</td>
+                  <td>C</td>
+                  <td>R, A</td>
+                  <td>I</td>
+                  <td>I</td>
+                </tr>
+                <tr>
+                  <td>Инцидент P1</td>
+                  <td>R</td>
+                  <td>I</td>
+                  <td>C</td>
+                  <td>I</td>
+                  <td>A</td>
+                </tr>
+                <tr>
+                  <td>Новая метрика</td>
+                  <td>C</td>
+                  <td>R, A</td>
+                  <td>C</td>
+                  <td>R</td>
+                  <td>I</td>
+                </tr>
+                <tr>
+                  <td>A/B тест</td>
+                  <td>I</td>
+                  <td>C</td>
+                  <td>R, A</td>
+                  <td>I</td>
+                  <td>I</td>
+                </tr>
+                <tr>
+                  <td>Data Governance review</td>
+                  <td>R</td>
+                  <td>C</td>
+                  <td>C</td>
+                  <td>C</td>
+                  <td>A</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Skill Matrix -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Skill Matrix</h2>
+          <p>Ожидаемый уровень навыков по ролям. <span class="badge badge-teal">expert</span> <span class="badge badge-blue">proficient</span> <span class="badge badge-gray">basic</span></p>
+
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr>
+                  <th>Роль</th>
+                  <th>SQL</th>
+                  <th>Python</th>
+                  <th>dbt</th>
+                  <th>BI</th>
+                  <th>Statistics</th>
+                  <th>ML</th>
+                  <th>Comm.</th>
+                  <th>Domain</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Data Engineer</td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                </tr>
+                <tr>
+                  <td>Analytics Engineer</td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                </tr>
+                <tr>
+                  <td>Product Analyst</td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                </tr>
+                <tr>
+                  <td>Marketing Analyst</td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                </tr>
+                <tr>
+                  <td>Data Scientist</td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                </tr>
+                <tr>
+                  <td>ML Engineer</td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                </tr>
+                <tr>
+                  <td>BI Developer</td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-teal">expert</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-gray">basic</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                  <td><span class="badge badge-blue">prof</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Career Ladder -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Career Ladder</h2>
+          <p>Единая карьерная лестница для всех стримов. Каждый уровень — это не только про hard skills, но и про scope of impact.</p>
+
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">Junior</div>
+              <div class="timeline-block-body">
+                <ul class="list">
+                  <li>Выполняет задачи под руководством ментора</li>
+                  <li>Учится стандартам и процессам команды</li>
+                  <li>Scope: отдельные задачи (запрос, модель, тест)</li>
+                  <li>Срок на уровне: 1-2 года</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">Middle</div>
+              <div class="timeline-block-body">
+                <ul class="list">
+                  <li>Самостоятельно решает задачи без постоянного ревью</li>
+                  <li>Понимает бизнес-контекст своих задач</li>
+                  <li>Scope: фича / исследование / pipeline целиком</li>
+                  <li>Менторит джуниоров, участвует в код-ревью</li>
+                  <li>Срок на уровне: 2-3 года</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">Senior</div>
+              <div class="timeline-block-body">
+                <ul class="list">
+                  <li>Определяет техническое решение для сложных задач</li>
+                  <li>Влияет на архитектуру и процессы команды</li>
+                  <li>Scope: проект / направление (все спорт-аналитика, вся ingestion)</li>
+                  <li>Менторит middle, проводит техревью, пишет RFC</li>
+                  <li>Может работать кросс-функционально</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">Lead</div>
+              <div class="timeline-block-body">
+                <ul class="list">
+                  <li>Отвечает за стрим: планирование, приоритизация, people management</li>
+                  <li>Scope: весь стрим (DE, Analytics, DS, BI)</li>
+                  <li>Нанимает, проводит 1-on-1, растит людей</li>
+                  <li>Представляет стрим перед Director и стейкхолдерами</li>
+                  <li>60% management / 40% hands-on (зависит от зрелости команды)</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="timeline-block">
+              <div class="timeline-block-title">Head / Director</div>
+              <div class="timeline-block-body">
+                <ul class="list">
+                  <li>Стратегия data-функции, OKR, бюджет</li>
+                  <li>Scope: вся data-организация (20 человек, 4 стрима)</li>
+                  <li>C-level коммуникация, приоритизация на уровне компании</li>
+                  <li>Найм лидов, организационный дизайн</li>
+                  <li>90% management / 10% hands-on (архитектурные решения)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Prev/Next -->
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    name: TypeScript Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: product
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: product/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: product
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: product/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: product
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: casino
+          POSTGRES_PASSWORD: casino_dev_password
+          POSTGRES_DB: fantasy_casino
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: product/package-lock.json
+      - run: npm ci
+      - name: Apply migrations
+        run: |
+          for f in apps/api/migrations/*.sql; do
+            psql -h localhost -U casino -d fantasy_casino -f "$f" 2>/dev/null || true
+          done
+        env:
+          PGPASSWORD: casino_dev_password
+      - run: npm run test
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: casino
+          POSTGRES_PASSWORD: casino_dev_password
+          POSTGRES_DB: fantasy_casino
+          JWT_SECRET: ci-test-secret
+          NODE_ENV: test

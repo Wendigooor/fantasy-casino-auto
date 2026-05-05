@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Incident Response — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Severity levels, протокол реагирования, post-mortem шаблон и реальный пример инцидента.">
+  <meta property="og:title" content="Incident Response — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Severity levels, протокол реагирования, post-mortem шаблон и реальный пример инцидента.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Incident Response</h1>
+          <p class="page-header-desc">Что делать, когда данные сломались. Severity levels, протокол от обнаружения до post-mortem, и реальный пример инцидента.</p>
+        </div>
+
+        <!-- ================================ -->
+        <!-- Severity Levels -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Severity Levels</h2>
+
+          <div class="table-wrap">
+            <table class="sla-table">
+              <thead>
+                <tr><th>Level</th><th>Criteria</th><th>Acknowledge</th><th>Fix</th><th>Post-mortem</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-red">P1 Critical</span></td>
+                  <td>Critical mart down, CEO report broken, fraud scoring offline, data loss</td>
+                  <td>30 min</td>
+                  <td>4h</td>
+                  <td>Required (within 48h)</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">P2 High</span></td>
+                  <td>Non-critical dashboard stale, DQ failure on important field, partial data loss</td>
+                  <td>2h</td>
+                  <td>24h</td>
+                  <td>Required (within 1 week)</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-gray">P3 Medium</span></td>
+                  <td>Minor DQ issue, docs outdated, non-critical pipeline delay, cosmetic bug</td>
+                  <td>1 business day</td>
+                  <td>1 sprint</td>
+                  <td>Optional</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-info">
+            Severity определяется по <strong>impact</strong>, не по root cause. Сломанный staging — P3. Тот же баг в prod, если ломает CEO dashboard — P1.
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Response Protocol -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Response Protocol</h2>
+
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">1. Detect</div>
+              <div class="timeline-block-body">Автоматический алерт (Airflow, dbt test, Grafana) → Slack #data-alerts. Или ручное обнаружение (стейкхолдер сообщает о проблеме).</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">2. Acknowledge</div>
+              <div class="timeline-block-body">On-call DE реагирует в thread: «investigating, ETA 30 min». Назначает severity. P1 → создаёт Slack channel <code>#incident-YYYY-MM-DD</code>, подключает Lead DE.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">3. Diagnose</div>
+              <div class="timeline-block-body">Root cause analysis: логи Airflow, ClickHouse system tables, dbt test output, source connectivity. Документирует findings в incident thread.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">4. Fix</div>
+              <div class="timeline-block-body">Применить fix или workaround. Приоритет: восстановить данные для потребителей. Re-run пайплайн, verify данные в mart. Hotfix через expedited PR если нужно.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">5. Communicate</div>
+              <div class="timeline-block-body">Уведомить стейкхолдеров: что сломалось, когда починили, есть ли data gap. Для P1: сообщение в #general и email affected stakeholders.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">6. Post-mortem</div>
+              <div class="timeline-block-body">Post-mortem без поиска виноватых — в Confluence. Хронология инцидента, корневая причина, что сработало хорошо, что пошло не так, action items с ответственным и дедлайном. Разбор на еженедельном командном синке.</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Post-mortem Template -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Post-mortem — заполненный пример</h2>
+
+          <div class="card">
+            <h3>mart_daily_kpi Update Failure — Champions League Final</h3>
+
+            <div class="table-wrap">
+              <table>
+                <tbody>
+                  <tr><td><strong>Date</strong></td><td>2026-06-01 (Monday)</td></tr>
+                  <tr><td><strong>Severity</strong></td><td><span class="badge badge-red">P1</span></td></tr>
+                  <tr><td><strong>Duration</strong></td><td>2h 15min (07:00 — 09:15 UTC)</td></tr>
+                  <tr><td><strong>Impact</strong></td><td>CEO daily pulse dashboard показывал данные за субботу. Выходные цифры отсутствовали. CFO и CMO получили incorrect weekly summary.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Timeline</h3>
+            <div class="timeline">
+              <div class="timeline-block">
+                <div class="timeline-block-title">05:00 — DAG started</div>
+                <div class="timeline-block-body">daily_pipeline DAG запустился по расписанию.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">05:47 — Task OOM killed</div>
+                <div class="timeline-block-body">Задача <code>load_to_clickhouse</code> убита по OOM (превышен лимит памяти 4GB). Данные за воскресенье после финала Лиги чемпионов: объём ставок в 3 раза выше обычного.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">05:52 — Auto-retry #1</div>
+                <div class="timeline-block-body">Airflow retry #1 — тоже OOM killed.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">06:02 — Auto-retry #2</div>
+                <div class="timeline-block-body">Retry #2 — OOM killed. DAG marked as failed.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">07:00 — SLA alert</div>
+                <div class="timeline-block-body">Airflow SLA sensor: mart_daily_kpi не обновлён к 07:00. Алерт → #data-alerts + PagerDuty.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">07:12 — Acknowledged</div>
+                <div class="timeline-block-body">On-call DE (Иван) acknowledged. Начал investigation.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">07:30 — CEO reports issue</div>
+                <div class="timeline-block-body">CEO в #general: «Цифры за выходные выглядят неправильно». Lead DE подключился к incident channel.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">07:45 — Root cause found</div>
+                <div class="timeline-block-body">OOM из-за всплеска данных после финала Лиги чемпионов. Память воркера 4GB, нужно 8GB+.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">08:10 — Fix applied</div>
+                <div class="timeline-block-body">Увеличена память воркера до 12GB. Добавлена batch-обработка (партиционирование по часам вместо полного дня).</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">09:00 — Pipeline re-run complete</div>
+                <div class="timeline-block-body">Данные за субботу и воскресенье загружены. mart_daily_kpi обновлён.</div>
+              </div>
+              <div class="timeline-block">
+                <div class="timeline-block-title">09:15 — Resolved</div>
+                <div class="timeline-block-body">Дашборд CEO проверен. Стейкхолдеры оповещены. Инцидент закрыт.</div>
+              </div>
+            </div>
+
+            <h3>Корневая причина</h3>
+            <p>Лимит памяти воркера Airflow (4GB) оказался недостаточным для всплеска данных после финала Лиги чемпионов. Объём ставок в воскресенье был в 3,2 раза выше нормы. Задача <code>load_to_clickhouse</code> загружает полный день одним батчем — OOM при большом объёме.</p>
+
+            <h3>Что сработало хорошо</h3>
+            <ul class="list">
+              <li>SLA alert сработал вовремя (07:00)</li>
+              <li>On-call DE ответил в течение 12 минут</li>
+              <li>Root cause найден за 33 минуты</li>
+              <li>Данные полностью восстановлены, без потерь</li>
+            </ul>
+
+            <h3>Что пошло не так</h3>
+            <ul class="list">
+              <li>Нет отдельного алерта на OOM — пришёл только generic SLA miss в 07:00, а не в 05:47 при первом OOM</li>
+              <li>Нет autoscaling — статичный лимит памяти не справился со всплеском</li>
+              <li>Retry потратили время впустую — та же конфигурация, тот же результат</li>
+              <li>CEO обнаружил проблему раньше, чем команда успела оповестить</li>
+            </ul>
+
+            <h3>Action Items</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Действие</th><th>Ответственный</th><th>Дедлайн</th></tr></thead>
+                <tbody>
+                  <tr><td>Добавить OOM-алерт (Grafana при memory воркера &gt;80%)</td><td>Platform DE</td><td>2026-06-06</td></tr>
+                  <tr><td>Внедрить batch-обработку по часам вместо полного дня</td><td>DE Lead</td><td>2026-06-09</td></tr>
+                  <tr><td>Настроить autoscaling воркеров Airflow (KEDA)</td><td>Platform DE</td><td>2026-06-16</td></tr>
+                  <tr><td>Планирование ёмкости перед крупными спортивными событиями</td><td>DE Lead + Product</td><td>2026-06-20</td></tr>
+                  <tr><td>Проактивное оповещение стейкхолдеров (до того как спросят)</td><td>Director</td><td>2026-06-09</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

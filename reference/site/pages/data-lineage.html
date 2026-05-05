@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Lineage — Fantasy iGaming Data Department</title>
+  <meta name="description" content="End-to-end путь данных: от события до дашборда CEO. Три примера: NGR lineage, LTV calculation, Churn prediction pipeline.">
+  <meta property="og:title" content="Data Lineage — Fantasy iGaming Data Department">
+  <meta property="og:description" content="End-to-end путь данных: от события до дашборда CEO. Три примера: NGR lineage, LTV calculation, Churn prediction pipeline.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Data Lineage</h1>
+          <p class="page-header-desc">Полный путь данных от источника до потребителя. Три примера: NGR lineage, LTV calculation, Churn prediction pipeline.</p>
+        </div>
+
+        <div class="alert alert-info">
+          Data lineage отвечает на вопрос: «откуда взялось это число в дашборде?». Каждый шаг — инструмент, владелец и DQ-проверки. Подробнее о стеке — в <a href="data-architecture.html">01. Data Architecture</a>.
+        </div>
+
+        <!-- ================================ -->
+        <!-- NGR Lineage -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Пример 1: путь NGR от ставки до дашборда CEO</h2>
+          <p>Полный end-to-end: игрок делает ставку → данные проходят 8 этапов → CEO видит NGR на утреннем дашборде.</p>
+
+          <div class="mermaid-block">
+            <pre class="mermaid">
+flowchart LR
+    A["Betting Engine\n(ставка размещена)"] --> B["Kafka\nbets.placed"]
+    B --> C["Kafka Connect\n(ClickHouse Sink)"]
+    C --> D["ClickHouse\nraw.betting_bets"]
+    D --> E["stg_betting__bets\n(dbt staging)"]
+    E --> F["int_bets_enriched\n(dbt intermediate)"]
+    F --> G["int_daily_costs\n(бонусы + fees)"]
+    G --> H["mart_daily_kpi\n(NGR = GGR - costs)"]
+    H --> I["Metabase\nCEO Daily Pulse"]
+
+    style A fill:#534AB7,color:#fff,stroke:#534AB7
+    style I fill:#1D9E75,color:#fff,stroke:#1D9E75
+            </pre>
+          </div>
+
+          <!-- Per-step annotations -->
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Betting Engine → Kafka</span>
+              <span class="badge badge-primary">источник</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Игрок размещает ставку. Бэкенд записывает событие <code>bets.placed</code> в Kafka topic.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>Apache Kafka (event streaming)</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Backend-команда</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td>Schema validation на уровне producer (Avro schema registry)</td></tr>
+                    <tr><td><strong>Latency</strong></td><td>Миллисекунды</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Kafka → ClickHouse raw</span>
+              <span class="badge badge-teal">ingestion</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Kafka Connect (ClickHouse Sink) читает из Kafka и загружает в <code>raw.betting_bets</code> таблицу ClickHouse. Streaming с минимальной задержкой.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>Kafka Connect (ClickHouse Sink)</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Data Engineering</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td>Мониторинг объёма: алерт если row count отклоняется &gt; 20% от среднего</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">raw → stg_betting__bets</span>
+              <span class="badge badge-blue">dbt staging</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Очистка: приведение типов, lower(status), дедупликация по bet_id, фильтрация NULL.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>dbt Core (SQL model)</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Analytics Engineer</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td><code>unique(bet_id)</code>, <code>not_null(bet_id, player_id, bet_amount)</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">stg → int_bets_enriched</span>
+              <span class="badge badge-blue">dbt intermediate</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Обогащение: JOIN с dim_players (geo, segment) и dim_games (provider, game_type). Расчёт GGR = bet_amount - payout_amount.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>dbt Core</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Analytics Engineer</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td><code>relationships(player_id → dim_players)</code>, <code>accepted_values(product, ['casino','sports'])</code></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">int → mart_daily_kpi</span>
+              <span class="badge badge-amber">dbt mart</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Агрегация по дням: SUM(GGR), вычет бонусов и комиссий из int_daily_costs. Финальная формула: NGR = GGR - bonus_cost - provider_fees - payment_fees.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>dbt Core</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Financial Analyst (steward), CFO (data owner)</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td>Consistency: SUM(fct_bets.amount) = mart_daily_kpi.turnover ±0.01%. Freshness: обновление к 07:00 UTC.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">mart → Metabase (CEO Daily Pulse)</span>
+              <span class="badge badge-green">BI</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Metabase запрашивает mart_daily_kpi и отображает: NGR, GGR, Active Players, Deposits. Sparklines WoW, разбивка по гео.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>Metabase (self-hosted)</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>BI Engineering</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td>Dashboard load time &lt; 5 сек. Данные не старше 1 часа после обновления DWH.</td></tr>
+                    <tr><td><strong>Потребитель</strong></td><td>CEO, CFO, C-level (ежедневный утренний обзор)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- LTV Lineage -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Пример 2: как считается LTV игрока</h2>
+          <p>Более универсальный пример — LTV как метрику считают в любом бизнесе, не только в iGaming. Полный путь: от сырых транзакций до решения «масштабировать канал или отключить».</p>
+
+          <div class="mermaid-block">
+            <pre class="mermaid">
+flowchart LR
+    A["fct_bets\nfct_deposits\nfct_bonuses"] --> B["int_bets_enriched\n(GGR per player)"]
+    B --> C["int_daily_costs\n(бонусы + fees\nper player)"]
+    C --> D["mart_player_lifetime\n(cumulative NGR,\ndays_active, segment)"]
+    D --> E["Feature Store\n+ LTV Model\n(LightGBM)"]
+    E --> F["mart_marketing_\nperformance\n(LTV:CAC per channel)"]
+    F --> G["Metabase\nMarketing Dashboard"]
+
+    style A fill:#534AB7,color:#fff,stroke:#534AB7
+    style E fill:#D4537E,color:#fff,stroke:#D4537E
+    style G fill:#1D9E75,color:#fff,stroke:#1D9E75
+            </pre>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">fct_bets + fct_deposits + fct_bonuses</span>
+              <span class="badge badge-primary">источники</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Три факт-таблицы содержат все транзакции игрока: ставки (суммы, продукт, результат), депозиты (суммы, метод, FTD-флаг) и бонусы (тип, сумма, статус отыгрыша).</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>ClickHouse (DWH)</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Data Engineering</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td><code>unique(bet_id)</code>, <code>unique(deposit_id)</code>, <code>unique(bonus_id)</code>. Полнота: NULL rate &lt; 1% в ключевых полях.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">int_bets_enriched → int_daily_costs</span>
+              <span class="badge badge-blue">dbt intermediate</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>int_bets_enriched рассчитывает GGR per player (bet_amount - payout_amount). int_daily_costs агрегирует бонусные расходы и комиссии провайдеров/платёжных систем per player per day.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>dbt Core</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Analytics Engineer</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td>Consistency: SUM(ggr) по int_bets_enriched = SUM(ggr) по mart_daily_kpi за тот же период (±0.01%)</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">mart_player_lifetime</span>
+              <span class="badge badge-amber">dbt mart</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Cumulative метрики по каждому игроку: lifetime_ngr (= GGR - bonus_cost - fees), days_active, total_bets, segment. Это фактический (когортный) LTV — то, сколько игрок уже принёс.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>dbt Core</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Financial Analyst (steward)</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td><code>not_null(player_id, lifetime_ngr)</code>. Бизнес-правило: lifetime_ngr не может быть отрицательным для когорт старше 6 месяцев (если да — аномалия).</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Feature Store + LTV Model</span>
+              <span class="badge badge-pink">ML</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Фичи из Feast (avg_bet_7d, deposit_frequency, session_count и др.) подаются в LightGBM-модель. На выходе — прогнозный LTV на 12 месяцев. Batch scoring ежедневно к 09:00 UTC.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>Feast (Feature Store) + LightGBM + MLflow</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Data Science</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td>Model drift: PSI &lt; 0.2. Бизнес-check: средний predicted LTV не отклоняется &gt; 20% от когортного LTV за тот же период.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">mart_marketing_performance</span>
+              <span class="badge badge-amber">dbt mart</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>Predicted LTV агрегируется по каналам и кампаниям. Рассчитывается LTV:CAC ratio = avg(predicted_ltv) / CAC. Это ключевая метрика для решений по маркетинговому бюджету.</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>dbt Core</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>Marketing Analyst (steward), CMO (data owner)</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td>LTV:CAC не может быть отрицательным. Алерт если LTV:CAC &lt; 1.0 для канала с spend &gt; $10K/мес.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Metabase Marketing Dashboard</span>
+              <span class="badge badge-green">BI</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <tbody>
+                    <tr><td><strong>Что происходит</strong></td><td>CMO и маркетинг-команда видят LTV:CAC по каналам, ROAS, тренды. Решение: масштабировать канал (LTV:CAC &gt; 3), оптимизировать (2-3) или отключить (&lt; 1.5).</td></tr>
+                    <tr><td><strong>Инструмент</strong></td><td>Metabase</td></tr>
+                    <tr><td><strong>Владелец</strong></td><td>BI Engineering</td></tr>
+                    <tr><td><strong>DQ-проверки</strong></td><td>Данные не старше 24 часов. Dashboard load &lt; 5 сек.</td></tr>
+                    <tr><td><strong>Потребитель</strong></td><td>CMO, Marketing Analysts, Growth-команда</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-tip">
+            <strong>LTV — прогноз, не факт.</strong> Когортный LTV (фактический) считается из mart_player_lifetime. Прогнозный LTV — из ML-модели. Маркетинг использует прогнозный для быстрых решений, финансы — когортный для отчётности. Оба должны сходиться на горизонте 6+ месяцев, иначе модель врёт.
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Churn Pipeline -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Пример 3: Churn Prediction Pipeline</h2>
+          <p>Более короткий пример: от факт-таблиц до персонализированного бонуса в CRM.</p>
+
+          <div class="mermaid-block">
+            <pre class="mermaid">
+flowchart LR
+    A["fct_bets\nfct_deposits\nfct_sessions"] --> B["Feature Store\n(Feast)"]
+    B --> C["ML Model\n(LightGBM)"]
+    C --> D["churn_score\n(0.0 — 1.0)"]
+    D --> E["Census\n(Reverse ETL)"]
+    E --> F["CRM\nсегмент 'at risk'"]
+    F --> G["Персональный\nбонус / push"]
+
+    style A fill:#534AB7,color:#fff,stroke:#534AB7
+    style C fill:#D4537E,color:#fff,stroke:#D4537E
+    style G fill:#1D9E75,color:#fff,stroke:#1D9E75
+            </pre>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Этап</th><th>Инструмент</th><th>Владелец</th><th>Описание</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>Факт-таблицы</td>
+                  <td>ClickHouse</td>
+                  <td>DE</td>
+                  <td>fct_bets, fct_deposits, fct_sessions — сырые данные о поведении игрока</td>
+                </tr>
+                <tr>
+                  <td>Feature Store</td>
+                  <td>Feast</td>
+                  <td>DS + DE</td>
+                  <td>Агрегированные фичи: avg_bet_7d, days_since_last_bet, deposit_frequency и др.</td>
+                </tr>
+                <tr>
+                  <td>ML-модель</td>
+                  <td>LightGBM + MLflow</td>
+                  <td>Data Science</td>
+                  <td>Batch scoring: каждый игрок получает churn_score от 0 до 1. Ежедневно к 09:00.</td>
+                </tr>
+                <tr>
+                  <td>Reverse ETL</td>
+                  <td>Census</td>
+                  <td>DE</td>
+                  <td>churn_score отправляется из ClickHouse в CRM. Sync каждые 2 часа.</td>
+                </tr>
+                <tr>
+                  <td>CRM-действие</td>
+                  <td>CRM</td>
+                  <td>CRM / Marketing</td>
+                  <td>Игроки с score &gt; 0.7 попадают в сегмент «at risk». Автоматический триггер: персональный бонус или push-уведомление.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-tip">
+            <strong>Замкнутый цикл:</strong> данные → модель → действие → результат → данные. Если бонус сработал и игрок остался — это новые данные для следующего переобучения модели.
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#534AB7',
+        primaryTextColor: '#eeedf5',
+        primaryBorderColor: '#1e1e24',
+        lineColor: '#7d7890',
+        secondaryColor: '#16161c',
+        tertiaryColor: '#1a1a22'
+      }
+    });
+  </script>
+</body>
+</html>

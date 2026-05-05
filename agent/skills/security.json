@@ -1,0 +1,12 @@
+{
+  "name": "security",
+  "trigger_condition": "Task involves secrets, auth, deletion, quarantine, or approval",
+  "description": "Security skills: secret handling (classification, storage, masking), quarantine policy (no-delete), approval gates (request, review, approve), snapshot/rollback flow, audit logging, permission checks, secrets detection in code and output.",
+  "required_tools": "quarantine, snapshots, approval, read_file, write_file",
+  "expected_output": "Secure code with proper secret handling and audit trail",
+  "known_limitations": "Quarantine only moves files; does not encrypt; approval gates require human reviewer",
+  "review_status": "approved",
+  "version": "1",
+  "created_at": "2026-04-30T10:49:09Z",
+  "approved_at": "2026-04-30T10:49:09Z"
+}

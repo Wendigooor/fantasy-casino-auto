@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+.turbo/
+*.log
+.env
+.env.local
+
+# TypeScript compiled output (src/ .js files are build artifacts)
+**/src/**/*.js
+!**/src/**/*.jsx
+screenshots/
+screenshots-pvp/

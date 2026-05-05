@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glossary / Словарь терминов — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Все термины data-функции в одном месте: от A/B Testing до Whale. Определения, контекст, ссылки на разделы.">
+  <meta property="og:title" content="Glossary / Словарь терминов — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Все термины data-функции в одном месте: от A/B Testing до Whale.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Glossary / Словарь терминов</h1>
+          <p class="page-header-desc">Все термины проекта в одном месте. Краткое определение + ссылка на раздел, где термин раскрыт подробнее.</p>
+        </div>
+
+        <div class="alert alert-info">
+          Термины отсортированы по алфавиту (A-Z). Кликните на букву, чтобы раскрыть список.
+        </div>
+
+        <!-- ===== A ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">A</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>A/B Testing</dt>
+              <dd>Метод контролируемого эксперимента: аудитория делится на группы (control / treatment), одной показывают изменение, другой — нет. Сравнивается влияние на целевую метрику. <a href="ab-testing.html">A/B Testing</a></dd>
+
+              <dt>Acquisition</dt>
+              <dd>Привлечение новых пользователей. В iGaming — путь от первого визита до первого депозита (FTD). Измеряется через CPA, CAC, конверсионную воронку. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Active Player</dt>
+              <dd>Игрок, совершивший хотя бы одну ставку за последние 30 дней. Основа для расчёта DAU/WAU/MAU. Определение зафиксировано в Data Dictionary. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Adjust</dt>
+              <dd>Mobile measurement partner (MMP) — SDK для атрибуции мобильных установок, in-app событий и маркетинговых кампаний. Альтернатива: AppsFlyer. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Airbyte</dt>
+              <dd>Open-source платформа для ingestion данных. 300+ коннекторов, self-hosted. Загружает данные из источников в DWH. Альтернатива: Fivetran (managed, дороже). <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Airflow (Apache Airflow)</dt>
+              <dd>Оркестратор пайплайнов данных. Управляет DAGs — направленными ациклическими графами задач. Обеспечивает расписание, retry, мониторинг, алерты. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Analytics Engineer</dt>
+              <dd>Роль на стыке DE и Analytics. Отвечает за dbt-модели, data quality, семантический слой. Работает с данными после ingestion — до BI. <a href="org-structure.html">Org Structure</a></dd>
+
+              <dt>Attribution</dt>
+              <dd>Определение источника привлечения пользователя (какая кампания, канал, креатив привёл игрока). Ключевое для маркетинговой аналитики и расчёта ROAS. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>AUC (Area Under Curve)</dt>
+              <dd>Метрика качества бинарного классификатора. Площадь под ROC-кривой. Чем ближе к 1.0, тем лучше модель отличает классы. В проекте: Churn AUC 0.84, Fraud AUC 0.91. <a href="mlops.html">MLOps</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== B ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">B</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>Batch Processing</dt>
+              <dd>Обработка данных порциями по расписанию (например, daily). Противоположность real-time / streaming. Большинство пайплайнов Fantasy iGaming — batch (ежедневный dbt run). <a href="dataops.html">DataOps</a></dd>
+
+              <dt>BI (Business Intelligence)</dt>
+              <dd>Инструменты и практики визуализации данных для принятия бизнес-решений. В проекте: Metabase (primary), Looker Studio (marketing). <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>BigQuery</dt>
+              <dd>Serverless columnar DWH от Google Cloud. Альтернатива ClickHouse. Плюс: не нужен ops. Минус: дороже при масштабе без правильного partitioning. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Bonus Cost</dt>
+              <dd>Затраты на бонусы игрокам (welcome bonus, cashback, freebet, freespin). Вычитается из GGR при расчёте NGR. Типовой benchmark: 10-15% от GGR. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Bonus Cost Ratio</dt>
+              <dd>Отношение bonus cost к GGR (в %). Показывает, какая доля дохода уходит на бонусы. Если >20% — сигнал для пересмотра бонусной политики. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Buddy</dt>
+              <dd>Опытный сотрудник, назначаемый новичку на период onboarding (обычно 1 месяц). Помогает с контекстом, отвечает на вопросы, ревьюит первые PR. <a href="onboarding.html">Onboarding</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== C ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">C</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>CAC (Customer Acquisition Cost)</dt>
+              <dd>Стоимость привлечения одного платящего клиента. Total Marketing Spend / Number of FTDs. Ключевая метрика unit economics. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>CDC (Change Data Capture)</dt>
+              <dd>Технология захвата изменений из production БД в реальном времени. В проекте: Debezium читает WAL PostgreSQL через Kafka Connect. Минимальная нагрузка на prod. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Census</dt>
+              <dd>Инструмент Reverse ETL — синхронизирует данные из DWH обратно в операционные системы (CRM, рекламные платформы). Use case: churn score → CRM → персональный бонус. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Churn Rate</dt>
+              <dd>Доля игроков, прекративших активность за период. Обычно: нет ставок 30+ дней = churned. Complement к retention. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>ClickHouse</dt>
+              <dd>Колоночная СУБД для аналитических запросов. Быстрые агрегации на больших объёмах. Primary DWH в проекте. Self-hosted, популярен в CIS/iGaming. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Cohort Analysis</dt>
+              <dd>Группировка пользователей по дате первого действия (регистрация, FTD) и отслеживание поведения когорты во времени. Основа для retention heatmap и LTV-прогнозов. <a href="dashboards.html">Dashboards</a></dd>
+
+              <dt>Confidence Interval (CI)</dt>
+              <dd>Диапазон значений, в который с заданной вероятностью (обычно 95%) попадает истинное значение параметра. Используется в отчётах A/B-тестов для оценки effect size. <a href="ab-testing.html">A/B Testing</a></dd>
+
+              <dt>Conversion</dt>
+              <dd>Переход пользователя на следующий этап воронки. В iGaming ключевые: Visit→Registration, Registration→FTD, FTD→Repeat Deposit. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>CPA (Cost Per Acquisition)</dt>
+              <dd>Стоимость привлечения одного целевого действия. В iGaming обычно = CPD (Cost Per Deposit, стоимость за FTD). <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>CRM (Customer Relationship Management)</dt>
+              <dd>Система управления жизненным циклом игрока: сегментация, коммуникации, бонусы, retention campaigns. Источник данных для analytics и потребитель ML-скоров через Reverse ETL. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Cross-validation</dt>
+              <dd>Техника оценки ML-модели: данные разбиваются на K фолдов, модель обучается на K-1 и проверяется на оставшемся. Снижает риск overfitting. <a href="mlops.html">MLOps</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== D ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">D</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>DAG (Directed Acyclic Graph)</dt>
+              <dd>Направленный ациклический граф — структура пайплайна в Airflow. Определяет последовательность задач и зависимости между ними. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Data Catalog</dt>
+              <dd>Централизованный реестр всех datasets: описания таблиц, ownership, lineage, tags, popularity. В проекте: DataHub. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Data Dictionary</dt>
+              <dd>Стандартизированные определения бизнес-терминов (Active Player, FTD, GGR, NGR и т.д.). Утверждается на Governance Council. Изменения через формальный процесс. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Data Drift</dt>
+              <dd>Изменение распределения входных данных ML-модели по сравнению с обучающей выборкой. Может привести к деградации модели. Мониторится через KS-test. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>Data Governance</dt>
+              <dd>Совокупность практик управления данными: ownership, quality, access control, lifecycle, catalog. Обеспечивает доверие к данным. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Data Lake</dt>
+              <dd>Хранилище сырых данных в исходном формате. В проекте: GCS (Google Cloud Storage) для raw / cold данных в формате Parquet. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Data Lineage</dt>
+              <dd>Визуализация пути данных от источника до потребителя. Показывает, откуда данные пришли, как трансформировались и куда попали. <a href="data-lineage.html">Data Lineage</a></dd>
+
+              <dt>Data Mesh</dt>
+              <dd>Архитектурный подход: децентрализация ownership данных по доменам. Каждый домен владеет и обслуживает свои data products. Evaluation запланирован на Q4. <a href="roadmap.html">Roadmap</a></dd>
+
+              <dt>Data Owner</dt>
+              <dd>Бизнес-руководитель, ответственный за данные домена. Принимает решения о доступе, качестве, retention. Пример: Head of Product — owner betting data. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Data Quality (DQ)</dt>
+              <dd>Измерение качества данных по 5 измерениям: completeness, accuracy, timeliness, consistency, uniqueness. Автоматизируется через dbt tests и Great Expectations. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Data Steward</dt>
+              <dd>Технический ответственный за качество конкретного dataset (обычно аналитик или DE). Проверяет freshness, DQ scores, документацию. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>DataHub</dt>
+              <dd>Open-source data catalog (от LinkedIn). Хранит метаданные: описания таблиц, lineage, ownership, tags, DQ scores. Альтернативы: Atlan, Alation. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>dbt (data build tool)</dt>
+              <dd>Инструмент трансформации данных (T в ELT). SQL-модели в три слоя: staging → intermediate → marts. Включает тестирование, документацию, lineage. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Debezium</dt>
+              <dd>Open-source CDC-платформа. Читает transaction log (WAL) из PostgreSQL и стримит изменения в Kafka. Минимальная нагрузка на production DB. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>DWH (Data Warehouse)</dt>
+              <dd>Централизованное хранилище структурированных данных, оптимизированное для аналитических запросов. В проекте: ClickHouse. <a href="data-architecture.html">Data Architecture</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== E ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">E</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>ELT / ETL</dt>
+              <dd>Extract-Load-Transform (ELT) vs Extract-Transform-Load (ETL). В modern data stack используется ELT: данные сначала загружаются в DWH «как есть», потом трансформируются (dbt). <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>ERD (Entity-Relationship Diagram)</dt>
+              <dd>Диаграмма связей между сущностями (таблицами). В проекте: mermaid.js erDiagram с 9 core entities. <a href="data-model.html">Data Model</a></dd>
+
+              <dt>Event Taxonomy</dt>
+              <dd>Систематика именования событий: {domain}_{object}_{action}. Стандарт для tracking plan. Пример: player_bet_placed, session_page_viewed. <a href="event-taxonomy.html">Event Taxonomy</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== F ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">F</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>Feast</dt>
+              <dd>Open-source Feature Store. Хранит, версионирует и сервирует фичи для ML-моделей. Пример: player_avg_bet_7d. Альтернатива: Tecton. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>Feature Store</dt>
+              <dd>Централизованное хранилище ML-фичей. Обеспечивает consistency между training и serving, переиспользование фичей между моделями. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>FinOps</dt>
+              <dd>Практика управления затратами на cloud-инфраструктуру и data-платформу. Оптимизация: партиционирование, TTL, reserved instances, query review. <a href="finops.html">FinOps</a></dd>
+
+              <dt>FPR (False Positive Rate)</dt>
+              <dd>Доля ложных срабатываний. В fraud detection: легитимная транзакция ошибочно помечена как фрод. FPR < 3% — целевой порог. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>FTD (First-Time Depositor)</dt>
+              <dd>Игрок, впервые внёсший депозит. Ключевой этап воронки. FTD Count — одна из главных метрик acquisition. <a href="metrics.html">Metrics Dictionary</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== G ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">G</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>GA4 (Google Analytics 4)</dt>
+              <dd>Платформа веб-аналитики от Google. Используется для маркетинговой атрибуции и web-аналитики. В проекте — в связке с GTM. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>GCS (Google Cloud Storage)</dt>
+              <dd>Объектное хранилище Google Cloud. Используется как Data Lake для сырых данных и cold-архивов в формате Parquet. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>GGR (Gross Gaming Revenue)</dt>
+              <dd>Валовой игровой доход. Сумма всех ставок минус сумма всех выплат: Bets - Payouts. Основная top-line метрика. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Grafana</dt>
+              <dd>Платформа мониторинга и визуализации. В проекте: мониторинг инфраструктуры (ClickHouse, Airflow), DQ dashboards, алерты. <a href="dataops.html">DataOps</a></dd>
+
+              <dt>Great Expectations</dt>
+              <dd>Open-source фреймворк для валидации данных. Комплексные проверки DQ: cross-table consistency, distribution checks, custom validations. Дополняет dbt tests. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>GTM (Google Tag Manager)</dt>
+              <dd>Система управления тегами на сайте. Позволяет маркетингу добавлять/изменять tracking без участия разработчиков. Server-side GTM для конфиденциальности. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Guardrail Metric</dt>
+              <dd>Защитная метрика в A/B-тесте. Не должна ухудшиться при внедрении изменения. Пример: тестируем новую форму депозита — guardrail: 24h deposit failure rate. <a href="ab-testing.html">A/B Testing</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== H ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">H</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>HADI Cycle</dt>
+              <dd>Фреймворк для экспериментов: Hypothesis → Action → Data → Insight, затем цикл повторяется. Основа процесса A/B-тестирования. <a href="ab-testing.html">A/B Testing</a></dd>
+
+              <dt>Hold %</dt>
+              <dd>Процент от ставок, который оператор оставляет себе. GGR / Turnover * 100%. В казино (slots) обычно 3-5%, в sports — 5-8%. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Hypothesis</dt>
+              <dd>Формализованное предположение для A/B-теста. Формат: «Если [изменение], то [метрика] [направление] на [MDE], потому что [рациональ]». <a href="ab-testing.html">A/B Testing</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== I ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">I</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>ICE / RICE</dt>
+              <dd>Фреймворки приоритизации. ICE: Impact × Confidence × Ease. RICE: Reach × Impact × Confidence / Effort. Используются для ранжирования гипотез и задач в бэклоге. <a href="ab-testing.html">A/B Testing</a>, <a href="management.html">Management</a></dd>
+
+              <dt>Incident</dt>
+              <dd>Событие, нарушающее SLA или нормальное функционирование данных. Классифицируется по severity: P1 (critical) → P2 (high) → P3 (medium). <a href="incident-response.html">Incident Response</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== K ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">K</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>Kafka (Apache Kafka)</dt>
+              <dd>Распределённая платформа потоковой обработки данных. В проекте: real-time события (ставки, депозиты, сессии). Миллионы сообщений в секунду, multiple consumers. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>KPI (Key Performance Indicator)</dt>
+              <dd>Ключевой показатель эффективности. Top-level KPIs Fantasy iGaming: NGR, Active Players, LTV:CAC, Retention. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>KYC (Know Your Customer)</dt>
+              <dd>Процедура верификации личности игрока. Обязательна по лицензии. Статусы: pending → verified → rejected. Влияет на доступ к выводу средств. <a href="data-model.html">Data Model</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== L ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">L</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>Lakehouse</dt>
+              <dd>Архитектура, объединяющая Data Lake (raw / cheap storage) и Data Warehouse (structured / fast queries). В проекте: ClickHouse + GCS Parquet — гибридный подход. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>LightGBM</dt>
+              <dd>Gradient boosting фреймворк от Microsoft. Быстрый, эффективный на табличных данных. В проекте: алгоритм для LTV, Churn и Fraud моделей. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>LTV (Lifetime Value)</dt>
+              <dd>Прогнозируемый суммарный NGR от игрока за всё время жизни (или 12 месяцев). Ключевая метрика unit economics. LTV > CAC — бизнес жизнеспособен. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>LTV:CAC Ratio</dt>
+              <dd>Отношение LTV к CAC. Показывает окупаемость привлечения. Benchmark: >3x — отлично, <1.5x — убыточно. <a href="metrics.html">Metrics Dictionary</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== M ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">M</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>MAE (Mean Absolute Error)</dt>
+              <dd>Средняя абсолютная ошибка прогноза. В проекте: MAE LTV-модели = $42.3 — в среднем прогноз отличается от реальности на $42. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>MAPE (Mean Absolute Percentage Error)</dt>
+              <dd>Средняя абсолютная процентная ошибка. MAE в процентах от фактического значения. Целевой MAPE LTV-модели: <20%. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>Mart (Data Mart)</dt>
+              <dd>Финальный слой dbt-моделей. BI/DS-ready таблицы: mart_daily_kpi, mart_player_lifetime, mart_cohort_analysis. Потребители: дашборды, отчёты, модели. <a href="data-model.html">Data Model</a></dd>
+
+              <dt>Materialized View</dt>
+              <dd>Предвычисленная агрегация, обновляемая при вставке данных. Ускоряет запросы в 10-50x. В ClickHouse — SummingMergeTree / AggregatingMergeTree. <a href="finops.html">FinOps</a></dd>
+
+              <dt>MAU / DAU / WAU</dt>
+              <dd>Monthly / Daily / Weekly Active Users. Количество уникальных активных игроков за период. MAU Fantasy iGaming: ~500K. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>MDE (Minimum Detectable Effect)</dt>
+              <dd>Минимальный эффект, который A/B-тест способен обнаружить при заданном sample size и power. Чем меньше MDE, тем больше нужен sample. <a href="ab-testing.html">A/B Testing</a></dd>
+
+              <dt>Metabase</dt>
+              <dd>Open-source BI-платформа. Primary инструмент визуализации в проекте. Self-service: бизнес-пользователи сами строят запросы и дашборды. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>MLflow</dt>
+              <dd>Open-source платформа для ML lifecycle: tracking экспериментов, model registry, артефакты. Альтернатива: Weights & Biases. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>MLOps</dt>
+              <dd>Практики операционализации ML: CI/CD для моделей, мониторинг, retraining, feature store, model registry. DevOps для Machine Learning. <a href="mlops.html">MLOps</a></dd>
+
+              <dt>Model Drift</dt>
+              <dd>Деградация производительности ML-модели со временем из-за изменений в данных или бизнесе. Мониторится через PSI (Population Stability Index). <a href="mlops.html">MLOps</a></dd>
+
+              <dt>Model Registry</dt>
+              <dd>Централизованное хранилище версий ML-моделей: staging → production → archived. Процесс промоушена через review Lead DS и ML Engineer. <a href="mlops.html">MLOps</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== N ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">N</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>NGR (Net Gaming Revenue)</dt>
+              <dd>Чистый игровой доход — то, что бизнес реально оставляет себе. GGR - Bonus Cost - Provider Fees - Payment Fees - Taxes. Главная финансовая метрика. <a href="metrics.html">Metrics Dictionary</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== O ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">O</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>OKR (Objectives and Key Results)</dt>
+              <dd>Фреймворк целеполагания: Objective (качественная цель) + 3-5 Key Results (измеримые результаты). Квартальный цикл. <a href="management.html">Management</a></dd>
+
+              <dt>On-call</dt>
+              <dd>Дежурство DE-инженера (ротация по неделям). On-call реагирует на алерты, дебажит failed DAGs, эскалирует P1 инциденты. <a href="dataops.html">DataOps</a></dd>
+
+              <dt>Overfitting</dt>
+              <dd>Переобучение ML-модели: высокая точность на train-данных, низкая на новых. Борьба: cross-validation, regularization, early stopping. <a href="mlops.html">MLOps</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== P ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">P</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>P-value</dt>
+              <dd>Вероятность получить наблюдаемый (или более экстремальный) результат при условии, что нулевая гипотеза верна. p < 0.05 — стандартный порог статистической значимости. <a href="ab-testing.html">A/B Testing</a></dd>
+
+              <dt>Parquet</dt>
+              <dd>Колоночный формат хранения данных. Эффективная компрессия, быстрое чтение отдельных колонок. Используется в Data Lake (GCS) для архивных данных. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Partitioning</dt>
+              <dd>Разбиение таблицы на физические части (обычно по дате). Запросы с фильтром по дате читают только нужные партиции. Ключевая оптимизация в ClickHouse. <a href="finops.html">FinOps</a></dd>
+
+              <dt>Payback Period</dt>
+              <dd>Время окупаемости затрат на привлечение игрока. CAC / (Monthly NGR per player). Benchmark: <6 месяцев — здоровый бизнес. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>PII (Personally Identifiable Information)</dt>
+              <dd>Персональные данные: email, телефон, документы, IP. Доступ ограничен (RBAC), маскируется для non-compliance ролей. GDPR: удаление по запросу за 30 дней. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Post-mortem</dt>
+              <dd>Документ-разбор инцидента без поиска виноватых. Содержит: timeline, root cause, что сработало, что нет, action items с дедлайнами. <a href="incident-response.html">Incident Response</a></dd>
+
+              <dt>Power (Statistical Power)</dt>
+              <dd>Вероятность обнаружить реальный эффект в A/B-тесте (если он существует). Стандарт: 80%. Power = 1 - P(Type II Error). <a href="ab-testing.html">A/B Testing</a></dd>
+
+              <dt>Precision</dt>
+              <dd>Доля верно определённых положительных случаев среди всех, которые модель назвала положительными. TP / (TP + FP). Важна в fraud detection (минимизация false positives). <a href="mlops.html">MLOps</a></dd>
+
+              <dt>PSI (Population Stability Index)</dt>
+              <dd>Метрика стабильности распределения данных. Используется для мониторинга model drift. PSI > 0.2 — значительный сдвиг, нужен retrain. <a href="mlops.html">MLOps</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== R ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">R</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>RACI</dt>
+              <dd>Матрица ответственности: Responsible (делает), Accountable (отвечает), Consulted (консультирует), Informed (информируется). Определена для 7 ключевых процессов. <a href="org-structure.html">Org Structure</a></dd>
+
+              <dt>RBAC (Role-Based Access Control)</dt>
+              <dd>Управление доступом на основе ролей. Матрица: роль × домен данных → уровень доступа (full / read / masked / no). <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Recall</dt>
+              <dd>Доля верно найденных положительных случаев среди всех реально положительных. TP / (TP + FN). Важна в churn prediction (не пропустить churning player). <a href="mlops.html">MLOps</a></dd>
+
+              <dt>Retention</dt>
+              <dd>Доля пользователей, вернувшихся через N дней после первого действия. D1/D7/D30 — стандартные окна. Визуализируется cohort heatmap. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Reverse ETL</dt>
+              <dd>Обратная синхронизация: данные из DWH → операционные системы (CRM, Ad platforms). Пример: churn score из ClickHouse → CRM → персонализированный бонус. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>ROAS (Return on Ad Spend)</dt>
+              <dd>Возврат на рекламные инвестиции. Revenue / Ad Spend. ROAS >3x — хороший показатель для iGaming. <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Row-level Security (RLS)</dt>
+              <dd>Ограничение видимости строк таблицы в зависимости от роли пользователя. Пример: аналитик CIS видит только данные geo = 'CIS'. <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>RTP (Return to Player)</dt>
+              <dd>Процент от ставок, возвращаемый игрокам в виде выигрышей (теоретический). Для слотов: 94-97%. Actual RTP мониторится vs theoretical (отклонение ±2pp — alert). <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Runbook</dt>
+              <dd>Пошаговая инструкция для on-call инженера: что проверить, как починить типовой инцидент. 4 runbook в проекте: DAG failure, query timeout, source delay, DQ failure. <a href="dataops.html">DataOps</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== S ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">S</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>Sample Size</dt>
+              <dd>Минимальное количество наблюдений для статистически значимого результата A/B-теста. Зависит от baseline, MDE, power и significance level. <a href="ab-testing.html">A/B Testing</a></dd>
+
+              <dt>Semantic Layer</dt>
+              <dd>Слой абстракции между DWH и конечным пользователем. Стандартные определения метрик и dimensions, доступные через BI без SQL. Деплоится в Q2. <a href="roadmap.html">Roadmap</a></dd>
+
+              <dt>SLA (Service Level Agreement)</dt>
+              <dd>Соглашение об уровне обслуживания. Матрица: кто → кому → что → целевой показатель → эскалация. Пример: DE → Analytics: данные к 07:00 UTC. <a href="sla.html">SLA</a></dd>
+
+              <dt>Snowflake</dt>
+              <dd>Cloud DWH с разделением compute/storage. Западный стандарт. Альтернатива ClickHouse. Плюс: serverless, auto-scaling. Минус: дороже при больших объёмах. <a href="data-architecture.html">Data Architecture</a></dd>
+
+              <dt>Staging (stg_)</dt>
+              <dd>Первый слой dbt-моделей. 1:1 с source: type casting, dedup, cleanup. Без бизнес-логики. Пример: stg_betting__bets. <a href="data-model.html">Data Model</a></dd>
+
+              <dt>Statistical Significance</dt>
+              <dd>Порог, при котором результат A/B-теста считается не случайным. Стандарт: p < 0.05 (95% confidence level). <a href="ab-testing.html">A/B Testing</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== T ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">T</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>Taxonomy</dt>
+              <dd>Систематика классификации и именования (событий, метрик, данных). В проекте: Event Taxonomy — стандарт именования tracking events. <a href="event-taxonomy.html">Event Taxonomy</a></dd>
+
+              <dt>Timeliness</dt>
+              <dd>Одно из 5 измерений Data Quality: данные доступны вовремя. Измеряется как «mart обновлён к 07:00 UTC». <a href="data-governance.html">Data Governance</a></dd>
+
+              <dt>Tracking Plan</dt>
+              <dd>Таблица всех отслеживаемых событий: название, триггер, параметры, источник (frontend/backend), owner, статус. 15 событий в проекте. <a href="event-taxonomy.html">Event Taxonomy</a></dd>
+
+              <dt>TTL (Time-to-Live)</dt>
+              <dd>Политика автоматического перемещения или удаления данных по возрасту. В ClickHouse: hot (3 мес, NVMe) → cold (12 мес, HDD) → archive (5 лет, GCS). <a href="finops.html">FinOps</a></dd>
+
+              <dt>Turnover (Handle)</dt>
+              <dd>Общая сумма всех ставок за период. Самая верхняя метрика revenue: из неё вычитаются выплаты (= GGR), затем затраты (= NGR). <a href="metrics.html">Metrics Dictionary</a></dd>
+
+              <dt>Type I / Type II Error</dt>
+              <dd>Type I (false positive): видим эффект, которого нет (p-value ошибка). Type II (false negative): не видим реальный эффект (недостаточный power). <a href="ab-testing.html">A/B Testing</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== U ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">U</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>Unit Economics</dt>
+              <dd>Экономика единицы продукта (одного игрока): LTV, CAC, LTV:CAC, Payback Period. Показывает, окупается ли привлечение на уровне когорты. <a href="metrics.html">Metrics Dictionary</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- ===== W ===== -->
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="accordion-chevron">&#9654;</span>
+            <span class="accordion-title">W</span>
+          </div>
+          <div class="accordion-body">
+            <dl class="glossary-list">
+              <dt>Wagering (Wagering Requirement)</dt>
+              <dd>Условие отыгрыша бонуса: сколько раз нужно поставить сумму бонуса, прежде чем можно вывести выигрыш. Пример: бонус $100 с вейджером x30 = нужно поставить $3000. <a href="data-model.html">Data Model</a></dd>
+
+              <dt>Whale</dt>
+              <dd>VIP-игрок с аномально высоким объёмом ставок и депозитов. Обычно top 1-2% игроков генерируют 20-30% GGR. Требуют персонального подхода и мониторинга. <a href="data-governance.html">Data Governance</a></dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- Cross-links -->
+        <div class="alert alert-tip">
+          Не нашли термин? Предложите добавить через <a href="https://github.com/anthropics/fantasy-igaming-data-department/issues" target="_blank" rel="noopener">GitHub Issues</a>.
+        </div>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOps / Cost Model — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Структура затрат data-функции: инфраструктура, SaaS, люди. Оптимизация и бюджетное планирование.">
+  <meta property="og:title" content="FinOps / Cost Model — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Структура затрат data-функции: инфраструктура, SaaS, люди. Оптимизация и бюджетное планирование.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>FinOps / Cost Model</h1>
+          <p class="page-header-desc">Сколько стоит data-функция Fantasy iGaming и как оптимизировать затраты. Инфраструктура, SaaS, люди — полная раскладка.</p>
+        </div>
+
+        <div class="alert alert-warning">
+          Все цифры — реалистичные оценки для компании масштаба Fantasy iGaming (~500K MAU, ~$5M NGR/мес). Фактические затраты зависят от региона, провайдера и условий контракта.
+        </div>
+
+        <!-- ================================ -->
+        <!-- Cost Structure -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Структура затрат</h2>
+
+          <p>Общий бюджет data-функции: <strong>~$165K/мес</strong> (~$2M/год). Это ~3.3% от NGR — в рамках индустриального бенчмарка (2-5%).</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Инфраструктура — ~$18K/мес</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Компонент</th><th>Конфигурация</th><th>$/мес</th><th>Заметки</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>ClickHouse cluster</strong></td>
+                      <td>3 ноды × 32 vCPU, 128GB RAM, 2TB NVMe + 3 ноды cold storage</td>
+                      <td>$8,500</td>
+                      <td>Self-hosted на Hetzner/OVH. Managed (ClickHouse Cloud) был бы ~$15K</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Kafka cluster</strong></td>
+                      <td>3 брокера, ~50K msg/sec peak</td>
+                      <td>$2,400</td>
+                      <td>Self-hosted. Confluent Cloud ~$5K+</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Airflow</strong></td>
+                      <td>Kubernetes, 2 workers × 8 vCPU, 16GB RAM</td>
+                      <td>$1,800</td>
+                      <td>Self-hosted. Astronomer ~$4K+</td>
+                    </tr>
+                    <tr>
+                      <td><strong>GCS (Data Lake)</strong></td>
+                      <td>~15TB raw + 5TB Parquet archives</td>
+                      <td>$400</td>
+                      <td>Cold storage tier. Negligible egress (internal only)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Kubernetes (GKE)</strong></td>
+                      <td>Node pool для ML workloads + serving</td>
+                      <td>$3,200</td>
+                      <td>GPU-ноды для обучения моделей (on-demand)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Networking / Monitoring</strong></td>
+                      <td>VPN, Grafana Cloud, PagerDuty</td>
+                      <td>$1,200</td>
+                      <td>Grafana self-hosted экономит ~$500</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="alert alert-tip">
+                Self-hosted стек экономит ~40% vs managed, но требует 1 Platform DE full-time. Trade-off окупается при нашем масштабе ($60K+ экономии/год > стоимость 1 FTE времени на ops).
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">SaaS & Лицензии — ~$7K/мес</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Инструмент</th><th>Тип</th><th>$/мес</th><th>Альтернатива</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Airbyte</strong></td>
+                      <td>Self-hosted (open-source)</td>
+                      <td>$0*</td>
+                      <td>Fivetran (~$3K/мес при нашем объёме коннекторов)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>dbt Core</strong></td>
+                      <td>Open-source</td>
+                      <td>$0*</td>
+                      <td>dbt Cloud ($5K+/мес)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Metabase</strong></td>
+                      <td>Self-hosted (open-source)</td>
+                      <td>$0*</td>
+                      <td>Tableau ($2K+/мес), Looker ($5K+/мес)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>MLflow</strong></td>
+                      <td>Self-hosted (open-source)</td>
+                      <td>$0*</td>
+                      <td>Weights & Biases ($1.5K/мес)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>DataHub</strong></td>
+                      <td>Self-hosted (open-source)</td>
+                      <td>$0*</td>
+                      <td>Atlan ($3K+/мес), Alation ($5K+/мес)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Census</strong></td>
+                      <td>SaaS</td>
+                      <td>$1,500</td>
+                      <td>Hightouch (~$1.2K), self-built (DE time)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Great Expectations</strong></td>
+                      <td>Open-source</td>
+                      <td>$0*</td>
+                      <td>Monte Carlo ($3K+/мес)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Feast</strong></td>
+                      <td>Open-source</td>
+                      <td>$0*</td>
+                      <td>Tecton ($2K+/мес)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Slack, Jira, Confluence</strong></td>
+                      <td>SaaS (company-wide)</td>
+                      <td>$2,800</td>
+                      <td>Пропорция на data team (20 из 300 чел.)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>IDE лицензии</strong></td>
+                      <td>DataGrip, PyCharm (JetBrains)</td>
+                      <td>$800</td>
+                      <td>VS Code (free)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Cloud services</strong></td>
+                      <td>Looker Studio, GA4 (marketing)</td>
+                      <td>$500</td>
+                      <td>Free tier covers most</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Adjust</strong></td>
+                      <td>SaaS (пропорция data)</td>
+                      <td>$1,400</td>
+                      <td>AppsFlyer (~$1.5K)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>* Self-hosted = $0 лицензия, но включено в стоимость инфраструктуры и Platform DE time.</p>
+
+              <div class="alert alert-info">
+                Open-source first strategy экономит ~$20K/мес vs full-SaaS стек. Но требует DE-компетенции в ops. Главный риск: bus factor на Platform DE.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Люди — ~$140K/мес</span>
+            </div>
+            <div class="accordion-body">
+              <p>Крупнейшая статья расходов — 85% бюджета. 20 FTE в 4 стримах.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Роль</th><th>Кол-во</th><th>Avg $/мес (gross)</th><th>Subtotal</th></tr></thead>
+                  <tbody>
+                    <tr><td>Director of Data</td><td>1</td><td>$12,000</td><td>$12,000</td></tr>
+                    <tr><td>Lead (DE, Analytics, DS, BI)</td><td>4</td><td>$9,000</td><td>$36,000</td></tr>
+                    <tr><td>Senior DE / Analyst / DS</td><td>5</td><td>$7,500</td><td>$37,500</td></tr>
+                    <tr><td>Middle DE / Analyst / DS / BI</td><td>7</td><td>$5,500</td><td>$38,500</td></tr>
+                    <tr><td>Junior Analyst / BI</td><td>3</td><td>$3,500</td><td>$10,500</td></tr>
+                  </tbody>
+                  <tfoot>
+                    <tr><td colspan="3"><strong>Total people cost</strong></td><td><strong>~$134,500</strong></td></tr>
+                    <tr><td colspan="3">+ Benefits, taxes (~15%)</td><td>~$5,500 (в рамках CIS рынка)</td></tr>
+                  </tfoot>
+                </table>
+              </div>
+
+              <div class="alert alert-info">
+                Зарплаты — рыночные для CIS (primary market). Для Europe / LatAm офисов множитель 1.3-2x. Подробнее о ролях: <a href="org-structure.html">Org Structure</a>.
+              </div>
+            </div>
+          </div>
+
+          <!-- Cost Summary -->
+          <div class="card">
+            <h3>Summary</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Категория</th><th>$/мес</th><th>% от бюджета</th><th>% от NGR</th></tr></thead>
+                <tbody>
+                  <tr><td>Люди</td><td>$140,000</td><td>85%</td><td>2.8%</td></tr>
+                  <tr><td>Инфраструктура</td><td>$18,000</td><td>11%</td><td>0.36%</td></tr>
+                  <tr><td>SaaS & Лицензии</td><td>$7,000</td><td>4%</td><td>0.14%</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr><td><strong>Total</strong></td><td><strong>$165,000</strong></td><td><strong>100%</strong></td><td><strong>3.3%</strong></td></tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Optimization -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Оптимизация затрат</h2>
+
+          <p>Экономия без потери качества — постоянный процесс. Основные рычаги:</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">ClickHouse: партиционирование и TTL</span>
+            </div>
+            <div class="accordion-body">
+              <p>Крупнейшая статья инфраструктуры. Два главных рычага:</p>
+
+              <h3>Партиционирование</h3>
+              <p>Все fact-таблицы партиционированы по месяцам. Запросы за последний месяц не сканируют исторические данные — экономия IO и CPU.</p>
+              <div class="code-block" data-lang="sql">
+                <pre><code>CREATE TABLE fct_bets (
+    bet_id String,
+    player_id String,
+    bet_amount Decimal(18,2),
+    placed_at DateTime
+) ENGINE = MergeTree()
+PARTITION BY toYYYYMM(placed_at)
+ORDER BY (player_id, placed_at);</code></pre>
+              </div>
+
+              <h3>TTL (Time-to-Live)</h3>
+              <p>Автоматическое перемещение старых данных на дешёвое хранилище:</p>
+              <div class="code-block" data-lang="sql">
+                <pre><code>ALTER TABLE fct_bets
+    MODIFY TTL
+        placed_at + INTERVAL 3 MONTH TO VOLUME 'hot',     -- NVMe SSD
+        placed_at + INTERVAL 12 MONTH TO VOLUME 'cold',   -- HDD
+        placed_at + INTERVAL 5 YEAR DELETE;                -- Archive to GCS first</code></pre>
+              </div>
+
+              <p><strong>Экономия:</strong> ~30% стоимости хранения (HDD в 5-8x дешевле NVMe).</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Materialized Views</span>
+            </div>
+            <div class="accordion-body">
+              <p>Часто используемые агрегаты вычисляются один раз при вставке, а не при каждом запросе:</p>
+              <div class="code-block" data-lang="sql">
+                <pre><code>CREATE MATERIALIZED VIEW mv_daily_ggr
+ENGINE = SummingMergeTree()
+PARTITION BY toYYYYMM(date)
+ORDER BY (date, geo, product)
+AS SELECT
+    toDate(placed_at) AS date,
+    geo,
+    product,
+    sum(bet_amount) AS total_bets,
+    sum(payout_amount) AS total_payouts,
+    sum(bet_amount) - sum(payout_amount) AS ggr
+FROM fct_bets
+GROUP BY date, geo, product;</code></pre>
+              </div>
+              <p><strong>Экономия:</strong> дашборды грузятся в 10-50x быстрее, CPU cluster использование -40% в пиковые часы.</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Query Optimization</span>
+            </div>
+            <div class="accordion-body">
+              <p>Top-3 частых проблем и их решения:</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Проблема</th><th>Симптом</th><th>Решение</th><th>Экономия</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td>SELECT * на больших таблицах</td>
+                      <td>Timeout, high memory</td>
+                      <td>Выбирать только нужные колонки</td>
+                      <td>~60% IO</td>
+                    </tr>
+                    <tr>
+                      <td>JOIN без предварительной фильтрации</td>
+                      <td>Slow query, OOM</td>
+                      <td>Фильтр по дате ДО join</td>
+                      <td>~80% CPU</td>
+                    </tr>
+                    <tr>
+                      <td>Отсутствие LIMIT на ad-hoc</td>
+                      <td>Огромный result set</td>
+                      <td>Default LIMIT 10000, query governor</td>
+                      <td>Prevents OOM</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="alert alert-tip">
+                Раз в квартал — «Query Review Day»: анализируем system.query_log, находим top-20 самых тяжёлых запросов, оптимизируем или кешируем.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Reserved Instances & Spot</span>
+            </div>
+            <div class="accordion-body">
+              <p>Для стабильных workloads — reserved instances (commitment 1 год):</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Workload</th><th>Тип</th><th>Экономия vs on-demand</th></tr></thead>
+                  <tbody>
+                    <tr><td>ClickHouse nodes (24/7)</td><td>Reserved 1yr</td><td>~30-40%</td></tr>
+                    <tr><td>Airflow workers (24/7)</td><td>Reserved 1yr</td><td>~30-40%</td></tr>
+                    <tr><td>ML training jobs (batch)</td><td>Spot / Preemptible</td><td>~60-70%</td></tr>
+                    <tr><td>dbt runs (batch, 2h/day)</td><td>On-demand (autoscale)</td><td>Pay only when running</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p><strong>Общая экономия от reserved + spot:</strong> ~$3K/мес ($36K/год).</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Budget Planning -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Бюджетное планирование</h2>
+
+          <p>Годовой бюджет data-функции утверждается CFO в Q4 предыдущего года. Структура:</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Годовой бюджет 2026</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Статья</th><th>$/год</th><th>% от total</th><th>Тренд vs 2025</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>Payroll</strong> (20 FTE)</td><td>$1,680,000</td><td>85%</td><td>+12% (3 new hires + salary review)</td></tr>
+                    <tr><td><strong>Infrastructure</strong></td><td>$216,000</td><td>11%</td><td>+8% (data growth ~2x/year)</td></tr>
+                    <tr><td><strong>SaaS & Licenses</strong></td><td>$84,000</td><td>4%</td><td>-5% (migrated 2 tools to self-hosted)</td></tr>
+                    <tr><td><strong>Training & Conferences</strong></td><td>$30,000</td><td>—</td><td>$1,500/person/year</td></tr>
+                    <tr><td><strong>Contingency</strong></td><td>$15,000</td><td>—</td><td>Emergency: unexpected infra spike, urgent hire</td></tr>
+                  </tbody>
+                  <tfoot>
+                    <tr><td><strong>Total</strong></td><td><strong>$2,025,000</strong></td><td></td><td></td></tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Как защитить бюджет перед CFO</span>
+            </div>
+            <div class="accordion-body">
+              <p>CFO не разбирается в ClickHouse и dbt. Говори на языке бизнеса:</p>
+
+              <h3>Фреймворк ROI</h3>
+              <ul class="list">
+                <li><strong>Revenue impact:</strong> «LTV-модель увеличила retention целевого сегмента на 4% → +$240K NGR/год»</li>
+                <li><strong>Cost avoidance:</strong> «Self-hosted ClickHouse vs BigQuery экономит $180K/год при нашем объёме»</li>
+                <li><strong>Efficiency:</strong> «Self-service BI сократил ad-hoc запросы на 60% → высвободили 1.5 FTE аналитиков на research»</li>
+                <li><strong>Risk mitigation:</strong> «DQ framework предотвращает инциденты типа wrong CEO report → репутационный и операционный риск»</li>
+              </ul>
+
+              <h3>Метрики для CFO</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Метрика</th><th>Значение</th><th>Бенчмарк</th></tr></thead>
+                  <tbody>
+                    <tr><td>Data cost / NGR</td><td>3.3%</td><td>2-5% (industry)</td></tr>
+                    <tr><td>Data cost / employee</td><td>$8,250/мес</td><td>Varies by region</td></tr>
+                    <tr><td>Infrastructure / total data cost</td><td>11%</td><td>10-25% (depends on self-hosted vs managed)</td></tr>
+                    <tr><td>Self-service adoption</td><td>80% ad-hoc</td><td>Reduces analyst bottleneck</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="alert alert-tip">
+                Лучший аргумент — конкретный кейс: «В Q2 модель churn prediction позволила удержать сегмент с LTV $500+ — estimated impact $180K. Стоимость DS-стрима за квартал — $120K. ROI > 1.5x.»
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Квартальный cost review</span>
+            </div>
+            <div class="accordion-body">
+              <p>Раз в квартал Director of Data проводит cost review:</p>
+              <ul class="list">
+                <li><strong>Actual vs Budget:</strong> отклонения > 10% — разбор причин</li>
+                <li><strong>Cost per query:</strong> тренд средней стоимости запроса в ClickHouse</li>
+                <li><strong>Unused resources:</strong> idle instances, unused SaaS seats, stale pipelines</li>
+                <li><strong>Growth forecast:</strong> проекция затрат на следующий квартал с учётом роста данных</li>
+              </ul>
+              <p>Результат — memo для CFO с рекомендациями (оптимизация, capacity planning, hiring needs).</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Cross-links -->
+        <div class="alert alert-info">
+          <strong>Связанные разделы:</strong>
+          <a href="data-architecture.html">Data Architecture</a> ·
+          <a href="org-structure.html">Org Structure</a> ·
+          <a href="sla.html">SLA</a> ·
+          <a href="roadmap.html">Roadmap</a>
+        </div>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>

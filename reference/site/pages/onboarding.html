@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onboarding — Fantasy iGaming Data Department</title>
+  <meta name="description" content="Гайд для новых сотрудников data-команды: от первого дня до самостоятельной работы за месяц.">
+  <meta property="og:title" content="Onboarding — Fantasy iGaming Data Department">
+  <meta property="og:description" content="Гайд для новых сотрудников data-команды: от первого дня до самостоятельной работы за месяц.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>Onboarding</h1>
+          <p class="page-header-desc">Путь нового сотрудника data-команды: от получения доступов до самостоятельных задач. Buddy, data tour, первый PR — за 30 дней.</p>
+        </div>
+
+        <div class="alert alert-info">
+          Этот гайд покрывает общий onboarding для всех ролей в data-команде. Специфика по стримам (DE, Analytics, DS, BI) — через buddy и лида.
+        </div>
+
+        <!-- ================================ -->
+        <!-- Day 1-3 -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>День 1–3: Доступы и знакомство</h2>
+
+          <p>Первые дни — административный setup и знакомство с командой. Цель: к концу дня 3 у тебя есть все доступы и понимание, кто чем занимается.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Доступы (Day 1)</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Система</th><th>Что получаешь</th><th>Кто выдаёт</th></tr></thead>
+                  <tbody>
+                    <tr><td>ClickHouse</td><td>Read-only аккаунт к DWH (staging + prod)</td><td>Platform DE</td></tr>
+                    <tr><td>Metabase</td><td>Viewer role, доступ ко всем дашбордам</td><td>BI Lead</td></tr>
+                    <tr><td>GitHub</td><td>Contributor в <code>data-dbt</code> и <code>data-pipelines</code> repos</td><td>DE Lead</td></tr>
+                    <tr><td>Airflow</td><td>Read-only UI для мониторинга DAGs</td><td>Platform DE</td></tr>
+                    <tr><td>Slack</td><td>Channels: #data-team, #data-alerts, #data-questions, #data-wins</td><td>HR / Lead</td></tr>
+                    <tr><td>Jira / Linear</td><td>Доступ к Data project board</td><td>Lead</td></tr>
+                    <tr><td>Confluence / Wiki</td><td>Data Knowledge Base space</td><td>Lead</td></tr>
+                    <tr><td>DataHub</td><td>Viewer role — каталог данных</td><td>Platform DE</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="alert alert-warning">
+                PII-данные (player email, phone, документы) доступны только после прохождения compliance-тренинга (обычно неделя 2). До этого — masked views.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Buddy (Day 1)</span>
+            </div>
+            <div class="accordion-body">
+              <p>Каждому новичку назначается buddy — опытный сотрудник из того же стрима (или смежного). Buddy — не руководитель, а навигатор.</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Что делает buddy</th><th>Чего buddy НЕ делает</th></tr></thead>
+                  <tbody>
+                    <tr><td>Отвечает на «глупые» вопросы без осуждения</td><td>Не оценивает performance</td></tr>
+                    <tr><td>Помогает разобраться в контексте задач</td><td>Не назначает задачи</td></tr>
+                    <tr><td>Code review первых PR</td><td>Не заменяет лида</td></tr>
+                    <tr><td>Обед/кофе в первую неделю</td><td>Не отвечает за retention</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Buddy назначается лидом стрима до выхода нового сотрудника. Длительность: 1 месяц, далее по желанию.</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Знакомство с командой (Day 1–2)</span>
+            </div>
+            <div class="accordion-body">
+              <ul class="list">
+                <li><strong>Day 1, 11:00</strong> — Welcome-встреча с лидом стрима (30 мин). Обзор команды, приоритетов, ожиданий.</li>
+                <li><strong>Day 1, 14:00</strong> — Знакомство с buddy. Совместный обед или кофе.</li>
+                <li><strong>Day 2, 10:00</strong> — Встреча с Director of Data (15 мин). Миссия data-функции, big picture.</li>
+                <li><strong>Day 2, 11:00</strong> — Круг знакомств: 15-минутные 1-on-1 с каждым лидом стрима.</li>
+                <li><strong>Day 2–3</strong> — Присутствие на ближайшем daily standup и sprint review как наблюдатель.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Обязательное чтение (Day 2–3)</span>
+            </div>
+            <div class="accordion-body">
+              <ul class="list">
+                <li><a href="metrics.html">Metrics Dictionary</a> — ключевые метрики бизнеса (NGR, GGR, LTV, Churn)</li>
+                <li><a href="event-taxonomy.html">Event Taxonomy</a> — naming convention, как устроены события</li>
+                <li><a href="data-governance.html">Data Governance</a> — ownership, доступы, DQ framework</li>
+                <li>Wiki: Data Dictionary — стандартные определения терминов</li>
+                <li>Wiki: Team Norms — code style, PR process, communication rules</li>
+              </ul>
+              <div class="alert alert-tip">
+                Не пытайся запомнить всё за 2 дня. Цель чтения — сформировать mental map: «знаю, что это существует и где найти». Детали придут с практикой.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Week 1 -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Неделя 1: Data Tour</h2>
+
+          <p>Главное событие первой недели — «Data Tour»: ты проходишь путь данных от события до дашборда. Это даёт целостное понимание архитектуры.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Data Tour: от события до дашборда</span>
+            </div>
+            <div class="accordion-body">
+              <p>Вместе с buddy проходишь end-to-end путь конкретной метрики (обычно NGR):</p>
+              <div class="timeline">
+                <div class="timeline-block">
+                  <div class="timeline-block-title">1. Источник</div>
+                  <div class="timeline-block-body">Betting Engine генерирует событие <code>player_bet_placed</code>. Смотрим формат в <a href="event-taxonomy.html">Event Taxonomy</a>.</div>
+                </div>
+                <div class="timeline-block">
+                  <div class="timeline-block-title">2. Ingestion</div>
+                  <div class="timeline-block-body">Событие попадает в Kafka → Airbyte загружает в ClickHouse raw layer. Смотрим Airflow UI — DAG <code>ingest_kafka_bets</code>.</div>
+                </div>
+                <div class="timeline-block">
+                  <div class="timeline-block-title">3. Transformation</div>
+                  <div class="timeline-block-body">dbt модели: <code>stg_betting__bets</code> → <code>int_bets_enriched</code> → <code>mart_daily_kpi</code>. Открываем код в GitHub, запускаем <code>dbt run --select mart_daily_kpi</code> на staging.</div>
+                </div>
+                <div class="timeline-block">
+                  <div class="timeline-block-title">4. Quality</div>
+                  <div class="timeline-block-body">dbt tests на mart_daily_kpi: uniqueness, not_null, referential integrity. Смотрим результаты в Airflow.</div>
+                </div>
+                <div class="timeline-block">
+                  <div class="timeline-block-title">5. Dashboard</div>
+                  <div class="timeline-block-body">Открываем Metabase → CEO Daily Pulse → видим NGR, который мы только что проследили от события до цифры. Подробнее в <a href="dashboards.html">Dashboards</a>.</div>
+                </div>
+              </div>
+              <p>Полная схема lineage: <a href="data-lineage.html">Data Lineage</a>.</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Архитектурный обзор</span>
+            </div>
+            <div class="accordion-body">
+              <p>С buddy или лидом DE проходишь <a href="data-architecture.html">Data Architecture</a>:</p>
+              <ul class="list">
+                <li>9 слоёв стека: что каждый делает, какой инструмент, почему выбран</li>
+                <li>Как слои связаны между собой</li>
+                <li>Где логи, мониторинг, алерты</li>
+              </ul>
+              <p>После обзора — самостоятельно пройдись по <a href="data-model.html">Data Model</a>: ERD, таблицы, поля.</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Первый SELECT</span>
+            </div>
+            <div class="accordion-body">
+              <p>К концу недели 1 ты должен самостоятельно написать запрос к DWH. Задание от buddy:</p>
+              <div class="code-block" data-lang="sql">
+                <pre><code><span class="cmt">-- Задание: посчитай основные метрики за последние 7 дней</span>
+<span class="kw">SELECT</span>
+    dt,
+    active_players,
+    turnover,
+    ggr,
+    ngr
+<span class="kw">FROM</span> mart_daily_kpi
+<span class="kw">WHERE</span> dt >= <span class="fn">today</span>() - <span class="num">7</span>
+<span class="kw">ORDER BY</span> dt <span class="kw">DESC</span>;</code></pre>
+              </div>
+              <p>Цель: убедиться, что доступы работают и ты понимаешь структуру mart-таблиц. Запусти запрос в DBeaver / DataGrip / ClickHouse client и посмотри, какие колонки есть в mart_daily_kpi.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Week 2 -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Неделя 2: Первые задачи</h2>
+
+          <p>Переходим от наблюдения к действию. Все задачи — под присмотром buddy с обязательным code review.</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Первый ad-hoc (под buddy)</span>
+            </div>
+            <div class="accordion-body">
+              <p>Buddy выбирает простой ad-hoc запрос из бэклога (обычно помеченный <code>good-first-issue</code>). Примеры:</p>
+              <ul class="list">
+                <li>«Покажи top-10 игр по GGR за последний месяц в LatAm»</li>
+                <li>«Посчитай retention D7 для когорты FTD прошлой недели»</li>
+                <li>«Сравни конверсию Reg→FTD по платформам (web vs mobile)»</li>
+              </ul>
+              <p>Результат оформляется в виде Metabase question или SQL + комментарий в Jira-тикете. Buddy ревьюит логику и SQL.</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Первый dbt PR</span>
+            </div>
+            <div class="accordion-body">
+              <p>Типовая первая задача в dbt — добавить тест или исправить модель. Buddy подбирает задачу:</p>
+
+              <div class="card">
+                <h3>Пример: добавить тест на уникальность</h3>
+                <div class="code-block" data-lang="yaml">
+                  <pre><code># models/staging/betting/_betting__models.yml
+models:
+  - name: stg_betting__bets
+    columns:
+      - name: bet_id
+        tests:
+          - unique
+          - not_null
+      - name: player_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_core__players')
+              field: player_id</code></pre>
+                </div>
+              </div>
+
+              <p>Процесс:</p>
+              <ul class="list">
+                <li>Fork / branch: <code>feat/add-bets-tests</code></li>
+                <li>Локальный <code>dbt test --select stg_betting__bets</code></li>
+                <li>PR → code review от buddy → merge</li>
+              </ul>
+              <p>Подробнее о процессе: <a href="dataops.html">DataOps</a> (CI/CD for data).</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Compliance-тренинг</span>
+            </div>
+            <div class="accordion-body">
+              <p>В течение недели 2 проходишь обязательный compliance-тренинг:</p>
+              <ul class="list">
+                <li><strong>Data Privacy:</strong> GDPR basics, что считается PII, как работает маскирование</li>
+                <li><strong>Responsible Gambling:</strong> self-exclusion, лимиты, обязанности оператора</li>
+                <li><strong>Information Security:</strong> пароли, VPN, обращение с данными</li>
+              </ul>
+              <p>После прохождения — получаешь доступ к PII-данным (если роль требует). Доступ выдаёт Head of Compliance.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Month 1 -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Месяц 1: Самостоятельная работа</h2>
+
+          <p>К концу первого месяца ты должен работать самостоятельно (buddy доступен, но инициатива — твоя).</p>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Ожидания по ролям</span>
+            </div>
+            <div class="accordion-body">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Роль</th><th>К концу месяца 1</th></tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="badge badge-blue">Data Engineer</span></td>
+                      <td>Самостоятельно дебажит failed DAGs, написал 1 новую stg-модель, участвует в on-call rotation (shadow)</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge badge-teal">Analyst</span></td>
+                      <td>Закрыл 2-3 ad-hoc задачи, создал 1 Metabase question, участвовал в sprint planning</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge badge-pink">Data Scientist</span></td>
+                      <td>Разобрался в Feature Store, воспроизвёл baseline модель (LTV или Churn) в Jupyter, начал EDA для новой задачи</td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge badge-amber">BI Developer</span></td>
+                      <td>Создал 1 дашборд по шаблону, разобрался в semantic layer, провёл 1 сессию data literacy</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Участие в процессах</span>
+            </div>
+            <div class="accordion-body">
+              <ul class="list">
+                <li><strong>Sprint planning</strong> — активное участие: берёшь задачи, оцениваешь сложность</li>
+                <li><strong>Sprint review</strong> — демонстрируешь свою работу команде</li>
+                <li><strong>Retro</strong> — делишься свежим взглядом (newbie perspective ценна!)</li>
+                <li><strong>Daily standup</strong> — полноценный участник: что сделал, что планирую, блокеры</li>
+              </ul>
+              <p>Подробнее о процессах: <a href="management.html">Management Practices</a>.</p>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Feedback-сессия с лидом</span>
+            </div>
+            <div class="accordion-body">
+              <p>В конце месяца 1 — обязательная 1-on-1 с лидом стрима (45 мин):</p>
+              <ul class="list">
+                <li><strong>Как прошёл onboarding:</strong> что было понятно, что нет, что можно улучшить</li>
+                <li><strong>Прогресс:</strong> обзор выполненных задач, quality code review, feedback от buddy</li>
+                <li><strong>Ожидания на месяц 2-3:</strong> конкретные цели и зоны роста</li>
+                <li><strong>Обратная связь от новичка:</strong> что удивило, что можно улучшить в процессах</li>
+              </ul>
+              <div class="alert alert-tip">
+                Feedback новичка — один из лучших источников улучшений. Свежий взгляд замечает то, к чему команда привыкла. Всё, что озвучено — фиксируется и разбирается.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Checklist -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Onboarding Checklist</h2>
+
+          <p>Интерактивный чеклист — отмечай выполненные пункты. Прогресс сохраняется в браузере.</p>
+
+          <div class="card" id="onboarding-checklist">
+            <h3>День 1–3</h3>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-access"> Получены все доступы (ClickHouse, Metabase, GitHub, Airflow, Slack, Jira)</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-buddy"> Назначен buddy, состоялась первая встреча</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-director"> Встреча с Director of Data</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-leads"> Знакомство с лидами стримов</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-reading"> Прочитаны: Metrics Dictionary, Event Taxonomy, Data Governance</label>
+
+            <h3>Неделя 1</h3>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-tour"> Data Tour пройден (от события до дашборда)</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-arch"> Архитектурный обзор с buddy/лидом DE</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-select"> Первый SELECT к DWH выполнен</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-standup"> Присутствие на daily standup</label>
+
+            <h3>Неделя 2</h3>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-adhoc"> Первый ad-hoc запрос (под buddy)</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-pr"> Первый dbt PR (тест или fix)</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-compliance"> Compliance-тренинг пройден</label>
+
+            <h3>Месяц 1</h3>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-independent"> Самостоятельная задача без buddy-ревью</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-sprint"> Участие в sprint planning + review</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-retro"> Участие в retro (поделился свежим взглядом)</label>
+            <label class="checklist-item"><input type="checkbox" data-key="ob-feedback"> Feedback-сессия с лидом стрима</label>
+          </div>
+
+          <p id="checklist-progress" class="checklist-progress"></p>
+        </section>
+
+        <!-- Cross-links -->
+        <div class="alert alert-info">
+          <strong>Связанные разделы:</strong>
+          <a href="data-architecture.html">Data Architecture</a> ·
+          <a href="data-model.html">Data Model</a> ·
+          <a href="data-lineage.html">Data Lineage</a> ·
+          <a href="metrics.html">Metrics Dictionary</a> ·
+          <a href="dataops.html">DataOps</a> ·
+          <a href="management.html">Management Practices</a>
+        </div>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+  <script>
+    // Onboarding checklist with localStorage persistence
+    (function() {
+      const STORAGE_KEY = 'fi-onboarding-checklist';
+
+      function loadState() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        } catch { return {}; }
+      }
+
+      function saveState(state) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      function updateProgress() {
+        const total = document.querySelectorAll('#onboarding-checklist input[type="checkbox"]').length;
+        const checked = document.querySelectorAll('#onboarding-checklist input[type="checkbox"]:checked').length;
+        const el = document.getElementById('checklist-progress');
+        if (el) {
+          const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+          el.textContent = checked + ' / ' + total + ' (' + pct + '%)';
+          if (pct === 100) el.textContent += ' — Onboarding complete!';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const state = loadState();
+        const checkboxes = document.querySelectorAll('#onboarding-checklist input[type="checkbox"]');
+
+        checkboxes.forEach(function(cb) {
+          const key = cb.getAttribute('data-key');
+          if (state[key]) cb.checked = true;
+
+          cb.addEventListener('change', function() {
+            const s = loadState();
+            s[key] = cb.checked;
+            saveState(s);
+            updateProgress();
+          });
+        });
+
+        updateProgress();
+      });
+    })();
+  </script>
+</body>
+</html>

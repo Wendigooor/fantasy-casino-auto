@@ -1,0 +1,12 @@
+{
+  "name": "devops",
+  "trigger_condition": "Task involves Docker, deployment, CI/CD, or infrastructure",
+  "description": "DevOps skills: Dockerfile creation, docker-compose config, CI/CD pipelines (GitHub Actions), environment management, health check configuration, deployment scripts, infrastructure as code (Terraform, etc.).",
+  "required_tools": "write_file, read_file, run_command",
+  "expected_output": "Working Docker configs, deployment scripts, CI pipelines",
+  "known_limitations": "Cannot deploy to external environments; Docker daemon must be running locally",
+  "review_status": "pending",
+  "version": "1",
+  "created_at": "2026-04-30T10:49:09Z",
+  "approved_at": null
+}

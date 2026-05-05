@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fantasy iGaming LTD — ТЗ v3</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#0e0e11;color:#c8c5be;padding:16px 16px 60px;-webkit-font-smoothing:antialiased}
+h1{font-size:22px;font-weight:600;color:#f0eee6;margin:0 0 2px;letter-spacing:-0.3px}
+.hero-sub{font-size:13px;color:#7a7870;margin:0 0 20px}
+
+.arch{margin:0 0 20px;padding:14px 16px;border-radius:12px;border:1px solid #1e1e24;background:#12111a}
+.arch-title{font-size:14px;font-weight:600;color:#f0eee6;margin:0 0 10px}
+.arch-tree{font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b8fd4;line-height:1.8;padding:10px 12px;background:#16161c;border-radius:8px;overflow-x:auto;white-space:pre}
+
+.sec{margin:0 0 8px;border-radius:12px;overflow:hidden;border:1px solid #1e1e24}
+.sec-h{padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.sec-h:active{opacity:.7}
+.sec-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sec-title{font-size:14px;font-weight:600;color:#f0eee6;flex:1}
+.sec-badge{font-size:10px;padding:2px 8px;border-radius:20px}
+.sec-phase{font-size:10px;padding:2px 8px;border-radius:20px;flex-shrink:0}
+.ph1{background:#1a2e1a;color:#6dbf6d}
+.ph2{background:#2e2a1a;color:#c9a84c}
+.ph3{background:#1a1e2e;color:#6b8fd4}
+.ph4{background:#2e1a2e;color:#b47dd4}
+.sec-chev{font-size:14px;color:#5a5850;transition:transform .2s}
+.sec-chev.open{transform:rotate(90deg)}
+.sec-body{display:none;padding:0 16px 14px}
+.sec-body.open{display:block}
+
+.block{padding:10px 0;border-bottom:1px solid #1a1a1f}
+.block:last-child{border-bottom:none}
+.block-name{font-size:13px;font-weight:500;color:#e8e5dc;margin:0 0 4px}
+.block-desc{font-size:12px;color:#8a8780;line-height:1.6;margin:0}
+.c{font-size:12px;color:#6a6860;line-height:1.6;margin:6px 0 0;padding:8px 10px;border-radius:8px;background:#16161c}
+.c b{color:#9a9890;font-weight:500}
+.note{font-size:11px;color:#5a5850;line-height:1.5;margin:6px 0 0;padding:8px 10px;border-radius:8px;border-left:3px solid #534AB7;background:#14141a}
+.file{font-family:'JetBrains Mono',monospace;font-size:10px;color:#4a4840;margin:6px 0 0}
+.divider{height:2px;background:linear-gradient(90deg,#1e1e24,#2a2a34,#1e1e24);margin:20px 0;border-radius:1px}
+</style>
+</head>
+<body>
+
+<h1>Fantasy iGaming LTD</h1>
+<p class="hero-sub">The Ultimate Data Function Reference — спецификация проекта</p>
+
+<!-- FILE STRUCTURE -->
+<div class="arch">
+<p class="arch-title">Файловая структура</p>
+<div class="arch-tree">fantasy-igaming.github.io/
+├── index.html                    ← интро + навигация
+├── css/style.css                 ← общие стили, тема, компоненты
+├── js/nav.js                     ← shared навигация, burger menu
+├── pages/
+│   ├── data-architecture.html    01
+│   ├── org-structure.html        02
+│   ├── data-model.html           03
+│   ├── event-taxonomy.html       04
+│   ├── metrics.html              05
+│   ├── data-governance.html      06
+│   ├── sla.html                  07
+│   ├── dataops.html              08
+│   ├── mlops.html                09
+│   ├── data-lineage.html         10
+│   ├── incident-response.html    11
+│   ├── dashboards.html           12
+│   ├── ab-testing.html           13
+│   ├── management.html           14
+│   ├── onboarding.html           15
+│   ├── finops.html               16
+│   └── roadmap.html              17
+└── assets/og-image.png</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ===== 00 INDEX ===== -->
+<div class="sec" style="background:#12111a">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#534AB7"></div>
+<span class="sec-title">00. Index / Интро</span>
+<span class="sec-phase ph1">phase 1</span>
+<span class="sec-chev open">&#9654;</span>
+</div>
+<div class="sec-body open">
+<div class="block">
+<p class="block-name">Hero</p>
+<p class="block-desc">Название, подзаголовок, 2-3 строки описания проекта, CTA на первую секцию.</p>
+</div>
+<div class="block">
+<p class="block-name">Company card</p>
+<div class="c">
+<b>Fantasy iGaming LTD</b><br>
+Продукт: Sportsbook + Online Casino<br>
+Рынки: 3 гео — СНГ (основной), LatAm (растущий), Европа (новый)<br>
+Масштаб: ~300 сотрудников, ~500K MAU, ~$5M NGR/мес<br>
+Стадия: scale-up (прошли PMF, масштабируются)<br>
+Data-команда: 20 человек, 4 стрима, 4 лида<br>
+Регуляция: лицензия Кюрасао + процесс получения MGA
+</div>
+</div>
+<div class="block">
+<p class="block-name">Section grid</p>
+<p class="block-desc">Карточки всех секций в сетке (2 col desktop, 1 col mobile). Номер + название + 1 строка + цвет категории. Клик → переход.</p>
+</div>
+<div class="block">
+<p class="block-name">Дисклеймер</p>
+<p class="block-desc">«Все данные вымышлены. Не best practice, не консалтинг. Стартовая точка для обсуждения. Видишь косяк — issue. Есть идея — PR.»</p>
+</div>
+<p class="file">index.html</p>
+</div>
+</div>
+
+<!-- ===== 01 DATA ARCHITECTURE ===== -->
+<div class="sec" style="background:#0f1412">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#1D9E75"></div>
+<span class="sec-title">01. Data Architecture</span>
+<span class="sec-phase ph1">phase 1</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Визуальная схема стека</p>
+<p class="block-desc">Интерактивная схема по слоям (как шпаргалка data-stack). Каждый слой раскрывается.</p>
+</div>
+<div class="block">
+<p class="block-name">Контент по каждому слою</p>
+<div class="c">
+<b>Sources:</b> PostgreSQL (продакшн), Kafka (ставки, события real-time), GA4+GTM (web), Adjust (mobile), CRM, external APIs (odds feeds, payment providers). По каждому: 2-3 предложения зачем, что из него приходит в DWH.<br><br>
+<b>Ingestion:</b> Airbyte (основной, self-hosted) + Debezium/CDC (real-time из продакшна через Kafka Connect). Альтернатива: Fivetran (managed, дороже). Пояснение: почему self-hosted, когда оправдан managed.<br><br>
+<b>Storage:</b> ClickHouse (основной — быстрая аналитика, популярен в СНГ/iGaming) + GCS data lake (холодные/сырые данные, Parquet). Альтернативы: BigQuery (serverless, дороже на объёме), Snowflake (западный стандарт). Trade-off: ClickHouse быстрее и дешевле, но нужна DE-команда для поддержки.<br><br>
+<b>Transformation:</b> dbt Core. Три слоя с примерами: staging (1:1 с источником, очистка) → intermediate (бизнес-логика, joins) → marts (витрины для BI/DS). Пример одной цепочки: stg_bets → int_bets_enriched → mart_daily_kpi. Альтернатива: Spark (для тяжёлых batch-задач).<br><br>
+<b>Orchestration:</b> Apache Airflow. Пример DAG: extract → load → dbt run → dbt test → alert. Объяснение: почему не cron (зависимости, retry, UI). Альтернативы: Dagster, Prefect.<br><br>
+<b>DQ & Governance:</b> dbt tests (первая линия) + Great Expectations (сложные проверки) + DataHub (catalog). Подробнее — в секции 06.<br><br>
+<b>BI:</b> Metabase (основной, self-service) + Looker Studio (маркетинг, бесплатный). Альтернативы: Tableau (мощный, дорогой), Power BI (MS-стек), Looker (semantic layer). Подробнее — в секции 12.<br><br>
+<b>ML:</b> Python/Jupyter (разработка) + MLflow (lifecycle) + Feast (feature store). Подробнее — в секции 09.<br><br>
+<b>Reverse ETL:</b> Census (DWH → CRM, рекламные платформы). Use case: churn score из модели → сегмент в CRM → персональный бонус.
+</div>
+</div>
+<div class="block">
+<p class="block-name">Формат карточки инструмента</p>
+<div class="c">Название → Что делает (1-2 предложения) → Почему выбрали (1 предложение) → Альтернатива и почему не она (1 предложение) → Ключевой trade-off</div>
+</div>
+<p class="file">pages/data-architecture.html</p>
+</div>
+</div>
+
+<!-- ===== 02 ORG STRUCTURE ===== -->
+<div class="sec" style="background:#0f1218">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#378ADD"></div>
+<span class="sec-title">02. Org Structure</span>
+<span class="sec-phase ph1">phase 1</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Орг-схема</p>
+<p class="block-desc">Визуальная диаграмма: Director → 4 лида → команды. Кликабельная — каждый узел раскрывает детали.</p>
+</div>
+<div class="block">
+<p class="block-name">4 стрима — детализация</p>
+<div class="c">
+<b>Data Engineering (5 чел):</b><br>
+Lead DE + 2 Data Engineers (пайплайны, DWH) + 1 Analytics Engineer (dbt-модели, DQ) + 1 Platform/DevOps (Airflow, ClickHouse, мониторинг)<br>
+Зона ответственности: ingestion, DWH, инфраструктура, data quality на уровне пайплайнов, on-call<br>
+Взаимодействует с: Backend (доступ к данным), DevOps (инфра), Analytics (требования к витринам)<br>
+Ключевые deliverables: пайплайны работают 24/7, данные свежие к 7:00, SLA uptime 99.5%<br><br>
+
+<b>Analytics (8 чел):</b><br>
+Lead Analyst + 3 Product Analysts (sports, casino, payments) + 2 Marketing Analysts (acquisition, retention/CRM) + 1 Financial Analyst (P&L, unit economics) + 1 BI Developer (дашборды, semantic layer)<br>
+Зона: отчётность, исследования, ad-hoc запросы, когортный анализ, воронки<br>
+Взаимодействует с: Product, Marketing, Finance, C-level<br>
+Ключевые deliverables: дашборды, еженедельные/ежемесячные отчёты, ad-hoc за 3 дня, исследования за 2 недели<br><br>
+
+<b>Data Science (4 чел):</b><br>
+Lead DS + 1 ML Engineer (деплой моделей, MLOps) + 1 DS (LTV prediction, churn, рекомендации) + 1 DS (fraud detection, risk scoring, anomaly detection)<br>
+Зона: predictive models, A/B тестирование (методология + анализ), experimentation platform<br>
+Взаимодействует с: Product (use cases), DE (данные, feature store), Risk/Compliance (fraud)<br>
+Ключевые deliverables: модели в проде, A/B отчёты, fraud scoring<br><br>
+
+<b>BI Engineering (3 чел):</b><br>
+Lead BI + 1 BI Developer (Metabase, сложные дашборды) + 1 Data Literacy Specialist (обучение бизнеса, self-service, документация)<br>
+Зона: semantic layer, стандартизация отчётности, self-service инструменты, data literacy программа<br>
+Взаимодействует с: все бизнес-функции (end users дашбордов)<br>
+Ключевые deliverables: self-service покрытие, обучение, стандартизированные шаблоны
+</div>
+</div>
+<div class="block">
+<p class="block-name">Дополнительно</p>
+<div class="c">
+<b>RACI-матрица:</b> кто Responsible / Accountable / Consulted / Informed по ключевым процессам (новый дашборд, новый пайплайн, новая модель, инцидент)<br><br>
+<b>Skill matrix:</b> таблица навыков по ролям — SQL, Python, dbt, BI, statistics, ML, communication, domain knowledge. Уровни: basic / proficient / expert.<br><br>
+<b>Career ladder:</b> Junior → Middle → Senior → Lead → Head/Director. Что ожидается на каждом уровне.
+</div>
+</div>
+<p class="file">pages/org-structure.html</p>
+</div>
+</div>
+
+<!-- ===== 03 DATA MODEL ===== -->
+<div class="sec" style="background:#14120e">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#D85A30"></div>
+<span class="sec-title">03. Data Model</span>
+<span class="sec-phase ph1">phase 1</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">ERD-диаграмма</p>
+<p class="block-desc">Mermaid.js erDiagram — связи между core entities. Кликабельная: клик на таблицу → описание полей.</p>
+</div>
+<div class="block">
+<p class="block-name">Core entities</p>
+<div class="c">
+<b>dim_players</b> (player_id, registered_at, geo, acquisition_channel, acquisition_campaign, device, platform, kyc_status, kyc_verified_at, vip_tier, segment, is_self_excluded, created_at, updated_at)<br><br>
+<b>dim_games</b> (game_id, provider, game_name, game_type [slot/table/live/crash], rtp_theoretical, category, is_active)<br><br>
+<b>dim_sports_events</b> (event_id, sport, league, home_team, away_team, start_time, status [pre/live/settled], result)<br><br>
+<b>fct_bets</b> (bet_id, player_id, product [casino/sports], game_id/event_id, bet_amount, payout_amount, bet_type [single/combo/system], odds, placed_at, settled_at, status [open/won/lost/void], is_bonus_bet, bonus_id)<br><br>
+<b>fct_deposits</b> (deposit_id, player_id, amount, currency, payment_method, status [pending/completed/failed], is_first_deposit, fee_amount, created_at)<br><br>
+<b>fct_withdrawals</b> (withdrawal_id, player_id, amount, currency, payment_method, status [pending/approved/rejected/completed], processing_time_hours, created_at)<br><br>
+<b>fct_sessions</b> (session_id, player_id, started_at, ended_at, duration_sec, platform [web/ios/android], device_type, pages_viewed, geo_ip)<br><br>
+<b>fct_bonuses</b> (bonus_id, player_id, bonus_type [welcome/reload/cashback/freebet/freespin], amount, wagering_requirement, wagered_amount, status [active/completed/expired/cancelled], issued_at, expires_at)<br><br>
+<b>fct_events_raw</b> (event_id, player_id, event_name, event_params JSON, timestamp, session_id, platform)
+</div>
+</div>
+<div class="block">
+<p class="block-name">dbt layers</p>
+<div class="c">
+<b>Staging (stg_):</b> 1:1 с источником. Очистка типов, переименование, дедупликация. Пример: stg_betting__bets, stg_payments__deposits<br><br>
+<b>Intermediate (int_):</b> бизнес-логика, joins, расчёты. Пример: int_bets_enriched (bet + player + game), int_daily_player_activity (агрегация активности за день)<br><br>
+<b>Marts (mart_):</b> финальные витрины для BI и DS. Пример: mart_daily_kpi, mart_player_lifetime, mart_cohort_analysis, mart_marketing_performance<br><br>
+Для каждого слоя: 1 конкретный пример SQL-модели (упрощённый, 10-15 строк)
+</div>
+</div>
+<p class="file">pages/data-model.html</p>
+</div>
+</div>
+
+<!-- ===== 04 EVENT TAXONOMY ===== -->
+<div class="sec" style="background:#13101a">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#888780"></div>
+<span class="sec-title">04. Event Taxonomy</span>
+<span class="sec-phase ph1">phase 1</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Naming convention</p>
+<div class="c">
+Формат: <b>{domain}_{object}_{action}</b><br><br>
+Domains: player, session, marketing, system<br>
+Objects: bet, deposit, withdrawal, bonus, session, page, registration, kyc<br>
+Actions: placed, completed, started, viewed, settled, issued, expired<br><br>
+Примеры: player_bet_placed, player_deposit_completed, session_page_viewed, player_registration_completed, player_kyc_verified, player_bonus_issued
+</div>
+</div>
+<div class="block">
+<p class="block-name">Event schema (стандартная структура)</p>
+<div class="c">
+Каждое событие содержит:<br>
+<b>Обязательные:</b> event_name, event_id (UUID), player_id, timestamp (ISO 8601), session_id, platform (web/ios/android)<br>
+<b>Контекстные (auto):</b> geo_ip, device_type, app_version, page_url<br>
+<b>Специфичные:</b> зависят от события (amount, game_id, method и т.д.)<br><br>
+Пример JSON для player_bet_placed и player_deposit_completed — полная структура
+</div>
+</div>
+<div class="block">
+<p class="block-name">Tracking plan</p>
+<div class="c">
+Таблица: event_name | trigger (когда срабатывает) | parameters (список) | source (frontend/backend/server) | owner (команда) | status (live/planned/deprecated)<br><br>
+10-15 ключевых событий с заполненными строками
+</div>
+</div>
+<div class="block">
+<p class="block-name">Процесс изменений</p>
+<p class="block-desc">Как добавить новое событие: request → review (analytics + DE) → spec → implementation → QA → deploy. Кто аппрувит, как версионируется.</p>
+</div>
+<p class="file">pages/event-taxonomy.html</p>
+</div>
+</div>
+
+<!-- ===== 05 METRICS ===== -->
+<div class="sec" style="background:#12111a">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#534AB7"></div>
+<span class="sec-title">05. Metrics Dictionary</span>
+<span class="sec-phase ph1">phase 1</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Источник</p>
+<p class="block-desc">CSV с ~50+ метриками. В MVP берём 15-20 ключевых (L1 Must), остальные — ссылкой на полный каталог (CSV/GitHub).</p>
+</div>
+<div class="block">
+<p class="block-name">Группы метрик</p>
+<div class="c">
+<b>Revenue (5):</b> Turnover/Handle, GGR, GGR Margin, NGR, NGR Margin<br>
+<b>Unit Economics (4):</b> LTV, LTV:CAC, CAC, Payback Period<br>
+<b>Players (4):</b> Active Players (DAU/WAU/MAU), FTD Count, Retention D1/D7/D30, Churn Rate<br>
+<b>Marketing (3):</b> CPA/CPD, ROAS, Conversion funnel (Visit → Reg → FTD)<br>
+<b>Product (2):</b> Revenue Concentration, Bonus Cost Ratio
+</div>
+</div>
+<div class="block">
+<p class="block-name">Формат карточки метрики</p>
+<div class="c">
+<b>Название</b> + категория<br>
+<b>Определение:</b> 1-2 предложения, человеческим языком<br>
+<b>Формула:</b> числитель / знаменатель<br>
+<b>Пример SQL:</b> 5-10 строк, запрос к mart-таблицам<br>
+<b>Бенчмарки:</b> EU / LatAm / SEA (из CSV)<br>
+<b>Alert thresholds:</b> red / yellow (из CSV)<br>
+<b>Owner:</b> Product / Marketing / Finance<br>
+<b>Ловушки:</b> 2-3 типичных ошибки при интерпретации (из CSV)<br>
+<b>Зависимости:</b> от каких других метрик зависит<br>
+<b>Разрезы:</b> гео, канал, продукт, сегмент
+</div>
+</div>
+<p class="file">pages/metrics.html</p>
+</div>
+</div>
+
+<!-- ===== 06 GOVERNANCE ===== -->
+<div class="sec" style="background:#0f1412">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#BA7517"></div>
+<span class="sec-title">06. Data Governance</span>
+<span class="sec-phase ph2">phase 2</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>Роли и ответственности:</b><br>
+Data Owners по доменам: Head of Product (betting data), CFO (finance), CMO (marketing), Head of Compliance (player PII). Для каждого: что именно «владеет», какие решения принимает.<br>
+Data Stewards: назначенный аналитик/DE на каждый домен. Пример: steward витрины mart_daily_kpi — кто это, что проверяет.<br>
+Governance Council: состав, частота встреч (quarterly), типичная повестка, пример решения.<br><br>
+
+<b>Data Catalog (DataHub):</b> пример карточки таблицы — название, описание, owner, steward, freshness, lineage, теги, популярность (кто запрашивает).<br><br>
+
+<b>Data Dictionary:</b> стандартизированные определения ключевых терминов. Active Player = сделал ставку за последние 30 дней. FTD = first-time depositor. Процесс: как предложить изменение определения, кто аппрувит.<br><br>
+
+<b>Access policies (RBAC):</b> матрица ролей: Analyst / DS / BI Dev / Lead / Director × домены данных (betting, finance, player PII, marketing). Row-level security пример: маркетинг видит когорты без PII.<br><br>
+
+<b>DQ framework:</b> 5 измерений с примером теста на каждый. Completeness: «% NULL в поле payment_method < 1%». Accuracy: «actual RTP vs theoretical ±2pp». Timeliness: «mart обновлён до 7:00 UTC». Consistency: «sum(fct_bets.amount) = mart_daily_kpi.turnover ±0.01%». Uniqueness: «0 дублей по bet_id».<br><br>
+
+<b>Data lifecycle:</b> retention policy. Горячие (3 мес, ClickHouse) → тёплые (1 год, ClickHouse cold storage) → холодные (5 лет, GCS Parquet). Регуляторные требования: данные ставок 5+ лет.
+</div>
+</div>
+<p class="file">pages/data-governance.html</p>
+</div>
+</div>
+
+<!-- ===== 07 SLA ===== -->
+<div class="sec" style="background:#0f1218">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#D4537E"></div>
+<span class="sec-title">07. SLA</span>
+<span class="sec-phase ph2">phase 2</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+Матрица-таблица: Provider → Consumer → Service → SLA metric → Target → Measurement → Escalation<br><br>
+<b>DE → Analytics:</b> данные в DWH к 7:00 UTC | полнота >99.5% | downtime критичных витрин <2ч/мес<br>
+<b>DE → DS:</b> feature store обновлён к 8:00 | training data available within 24h of request<br>
+<b>Analytics → Business:</b> ad-hoc 3 рабочих дня | исследование 2 недели | новый дашборд 1 спринт<br>
+<b>DS → Product:</b> новая модель от задачи до MVP 4-6 недель | переобучение ежемесячно | fraud scoring latency <100ms<br>
+<b>BI → All:</b> критичные дашборды uptime 99.5% | загрузка <5 сек | обновление данных ≤ 1ч после DWH<br>
+<b>Incident response:</b> P1 реакция 30 мин / фикс 4ч | P2 реакция 2ч / фикс 24ч | P3 реакция 1 день / фикс 1 спринт<br><br>
+Как измеряется, где трекается, что происходит при нарушении SLA.
+</div>
+</div>
+<p class="file">pages/sla.html</p>
+</div>
+</div>
+
+<!-- ===== 08 DATAOPS ===== -->
+<div class="sec" style="background:#14120e">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#E24B4A"></div>
+<span class="sec-title">08. DataOps</span>
+<span class="sec-phase ph2">phase 2</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>CI/CD для данных:</b> визуальная схема: feature branch → PR → dbt compile + test (CI) → code review → merge → dbt run (CD) → monitoring. Git-flow для dbt: main (prod), develop (staging), feature branches.<br><br>
+<b>Мониторинг:</b> что мониторится (freshness, volume, schema changes, query performance, cost). Куда алерты (Slack #data-alerts). Пример дашборда Data Health: таблица витрин × статус (green/yellow/red).<br><br>
+<b>On-call:</b> ротация DE (1 неделя). Runbook: типовые инциденты и как их чинить. Пример: «Airflow DAG failed → проверь логи → retry → если не помогло → escalate к Lead DE».<br><br>
+<b>Environments:</b> dev (локальный dbt) → staging (копия прода, подмножество данных) → prod. Как промоутить изменения.
+</div>
+</div>
+<p class="file">pages/dataops.html</p>
+</div>
+</div>
+
+<!-- ===== 09 MLOPS ===== -->
+<div class="sec" style="background:#13101a">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#639922"></div>
+<span class="sec-title">09. MLOps</span>
+<span class="sec-phase ph2">phase 2</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>ML lifecycle:</b> визуальная схема — Problem framing → Data prep → Training → Validation → Deploy → Monitor → Retrain<br><br>
+<b>Experiment tracking (MLflow):</b> пример записи: experiment name, run parameters, metrics (AUC, MAE), artifacts. Скриншот/мокап UI.<br><br>
+<b>Model registry:</b> версии модели: v1.0 (staging) → v1.1 (prod) → v0.9 (archived). Процесс: DS коммитит → Lead DS ревьюит → ML Engineer деплоит.<br><br>
+<b>Feature Store (Feast):</b> пример фичи: player_avg_bet_7d (среднее количество ставок за 7 дней). Откуда берётся, как обновляется, кто использует.<br><br>
+<b>Monitoring:</b> model drift (PSI — Population Stability Index), data drift (распределение входных фичей), performance metrics в проде vs baseline.<br><br>
+<b>Карточки моделей в проде (3 штуки):</b><br>
+1. LTV Prediction: задача, target, фичи (10 основных), алгоритм (LightGBM), метрики (MAE, MAPE), частота переобучения (monthly), SLA<br>
+2. Churn Prediction: аналогично, recall vs precision trade-off<br>
+3. Fraud Detection: real-time scoring, latency SLA <100ms, false positive rate
+</div>
+</div>
+<p class="file">pages/mlops.html</p>
+</div>
+</div>
+
+<!-- ===== 10 LINEAGE ===== -->
+<div class="sec" style="background:#160f0f">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#1D9E75"></div>
+<span class="sec-title">10. Data Lineage</span>
+<span class="sec-phase ph2">phase 2</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>Один полный пример end-to-end:</b> как считается NGR<br><br>
+Betting Engine (bet placed) → Kafka → Airbyte → ClickHouse raw → stg_bets (dbt staging) → int_bets_enriched (join с dim_players, dim_games) → int_daily_ggr (агрегация: sum bets - sum payouts) → mart_daily_kpi (GGR - bonus_cost - provider_fees - payment_fees = NGR) → Metabase dashboard (CEO daily pulse)<br><br>
+Визуальная схема (flowchart или sankey-style). На каждом шаге: что происходит с данными, какой инструмент, кто владеет, какие DQ-тесты.<br><br>
+<b>Второй пример (короче):</b> как работает churn prediction<br>
+fct_bets + fct_deposits + fct_sessions → Feature Store (player features) → ML model (LightGBM) → churn_score → Census → CRM → персональный бонус
+</div>
+</div>
+<p class="file">pages/data-lineage.html</p>
+</div>
+</div>
+
+<!-- ===== 11 INCIDENTS ===== -->
+<div class="sec" style="background:#101309">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#E24B4A"></div>
+<span class="sec-title">11. Incident Response</span>
+<span class="sec-phase ph2">phase 2</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>Severity levels:</b> P1 (критичная витрина/pipeline down, CEO report broken, fraud scoring offline) → P2 (некритичный дашборд stale, DQ test failed на некритичном поле) → P3 (minor DQ issue, documentation outdated)<br><br>
+<b>Response protocol:</b> визуальная схема: Detect (alert) → Acknowledge (assign owner, ETA) → Diagnose (root cause) → Fix → Communicate (stakeholders) → Post-mortem<br><br>
+<b>Post-mortem template:</b> заполненный пример. Title, Date, Severity, Duration, Impact (кто затронут, какие решения не могли принять), Timeline (minute-by-minute), Root cause, What went well, What went wrong, Action items (с owner и deadline)<br><br>
+<b>Пример инцидента:</b> «Понедельник 7:30. mart_daily_kpi не обновился. CEO пишет: цифры за выходные выглядят неправильно. Root cause: Airflow worker out of memory из-за spike в данных после финала Лиги Чемпионов. Fix: увеличили memory limit, добавили партиционирование. Preventive: алерт на OOM, автоскейлинг.»
+</div>
+</div>
+<p class="file">pages/incident-response.html</p>
+</div>
+</div>
+
+<!-- ===== 12 DASHBOARDS ===== -->
+<div class="sec" style="background:#15100d">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#378ADD"></div>
+<span class="sec-title">12. Dashboard Mockups</span>
+<span class="sec-phase ph3">phase 3</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">6 мокапов (HTML/SVG, интерактивные с фейковыми данными)</p>
+<div class="c">
+<b>1. CEO daily pulse:</b> 4 metric cards (NGR, GGR, Active Players, Deposits) + sparklines WoW + breakdown по гео + alert indicators<br><br>
+<b>2. Marketing performance:</b> воронка Visit→Reg→FTD (конверсии), CAC и LTV:CAC по каналам, ROAS тренд, топ-5 кампаний<br><br>
+<b>3. Casino product:</b> GGR по провайдерам (bar chart), RTP actual vs theoretical (scatter), топ-10 игр по GGR, retention по game type<br><br>
+<b>4. Sports product:</b> Handle и margin по лигам, pre-match vs live split, upcoming events calendar, margin trend<br><br>
+<b>5. Cohort analysis:</b> retention heatmap (когорта × день), cumulative NGR curves, LTV по когортам и каналам<br><br>
+<b>6. Data health:</b> таблица витрин × статус (green/yellow/red), freshness timeline, DQ score trend, open incidents
+</div>
+</div>
+<div class="block">
+<p class="block-name">Для каждого мокапа</p>
+<p class="block-desc">Описание: кто аудитория, какие решения принимают на основе этого дашборда, какие вопросы он отвечает, из каких mart-таблиц берутся данные.</p>
+</div>
+<p class="file">pages/dashboards.html</p>
+</div>
+</div>
+
+<!-- ===== 13 AB TESTING ===== -->
+<div class="sec" style="background:#111112">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#D4537E"></div>
+<span class="sec-title">13. A/B Testing Framework</span>
+<span class="sec-phase ph3">phase 3</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>HADI-цикл:</b> визуальная схема Hypothesis → Action → Data → Insight → (loop). Пояснение каждого шага.<br><br>
+<b>Бэклог гипотез:</b> таблица-шаблон: ID, гипотеза (формат: «если [изменение], то [метрика] [направление] на [MDE], потому что [обоснование]»), primary metric, MDE, ICE score, status (backlog/running/done), owner. 5-7 заполненных примеров для iGaming.<br><br>
+<b>Чеклист запуска теста:</b> 8 пунктов — гипотеза, метрики (primary/secondary/guardrail), sample size расчёт, рандомизация, длительность, стейкхолдер sign-off, no-peek commitment, rollback plan.<br><br>
+<b>Шаблон отчёта:</b> гипотеза → setup (sample size, duration, split) → результат (CI, p-value, effect size) → сегментация → рекомендация (roll out / iterate / kill) → learnings.<br><br>
+<b>Полный кейс:</b> тест упрощения формы депозита. Гипотеза → расчёт → запуск → результат → решение. С конкретными цифрами (фейковыми).
+</div>
+</div>
+<p class="file">pages/ab-testing.html</p>
+</div>
+</div>
+
+<!-- ===== 14 MANAGEMENT ===== -->
+<div class="sec" style="background:#12111a">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#BA7517"></div>
+<span class="sec-title">14. Management Practices</span>
+<span class="sec-phase ph3">phase 3</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>Sprint structure:</b> 2-недельные спринты. Визуальная timeline: Planning (пн, 1ч) → Daily standups (15 мин) → Mid-sprint check → Review (пт 2й недели, 1ч) → Retro (30 мин). 70% roadmap / 30% ad-hoc buffer.<br><br>
+<b>Meeting cadence:</b> визуальная сетка-календарь. Director ↔ Leads: weekly 1-on-1 (30 мин). Director ↔ C-level: bi-weekly (KPI, roadmap, blockers). All-hands data: monthly (результаты, планы, обучение). Governance Council: quarterly. Cross-functional (Product/Marketing/Finance): weekly.<br><br>
+<b>1-on-1 с лидом:</b> структура: People (кто горит/выгорает, найм) → Process (что буксует, bottlenecks) → Strategy (OKR progress, корректировки). 30 мин, лид инициирует повестку.<br><br>
+<b>OKR framework:</b> пример квартальных OKR для data-команды. Objective: «Обеспечить data-driven принятие решений». KR1: 100% критичных витрин обновляются с SLA. KR2: self-service покрытие 80% ad-hoc запросов. KR3: LTV-модель в проде с MAPE <20%.<br><br>
+<b>Backlog management:</b> как приходят запросы (Jira/Linear form), как приоритизируются (RICE), как коммуницируется статус (Slack bot + weekly digest).<br><br>
+<b>Knowledge management:</b> структура wiki — Architecture, Metrics, Processes, Runbooks, Onboarding. Правило: «если объяснил в Slack — запиши в wiki».
+</div>
+</div>
+<p class="file">pages/management.html</p>
+</div>
+</div>
+
+<!-- ===== 15 ONBOARDING ===== -->
+<div class="sec" style="background:#0f1412">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#1D9E75"></div>
+<span class="sec-title">15. Onboarding Guide</span>
+<span class="sec-phase ph3">phase 3</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>День 1-3:</b> доступы (DWH, BI, Git, Slack, Jira), buddy назначен, знакомство с командой, прочитать Data Dictionary и Event Taxonomy.<br><br>
+<b>Неделя 1:</b> «Data tour» — пройти путь от сырого события до дашборда (секция Lineage). Разобрать архитектуру (секция 01). Сделать первый SELECT к DWH.<br><br>
+<b>Неделя 2:</b> первый ad-hoc запрос под наблюдением buddy. Первый PR в dbt — добавить тест или исправить модель. Code review от лида.<br><br>
+<b>Месяц 1:</b> самостоятельный ad-hoc, первый дашборд/исследование, участие в sprint planning и retro. Feedback session с лидом.<br><br>
+<b>Интерактивный чеклист:</b> отмечаешь галочки — что прочитал, к чему получил доступ, какие задачи сделал.
+</div>
+</div>
+<p class="file">pages/onboarding.html</p>
+</div>
+</div>
+
+<!-- ===== 16 FINOPS ===== -->
+<div class="sec" style="background:#0f1218">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#D85A30"></div>
+<span class="sec-title">16. FinOps / Cost Model</span>
+<span class="sec-phase ph4">phase 4</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+<b>Структура расходов:</b> infrastructure (ClickHouse cluster ~$X/мес, GCS ~$X, Airflow ~$X, Kafka ~$X) + SaaS (Metabase, DataHub, Airbyte, MLflow — self-hosted vs managed trade-offs) + people (20 FTE × avg salary)<br><br>
+<b>Оптимизация:</b> партиционирование (снижение scan cost), materialized views (снижение query time), TTL policies (автоудаление старых данных), reserved instances, query optimization tips<br><br>
+<b>Бюджетное планирование:</b> пример годового бюджета data-направления: ФОТ, инфраструктура, софт, обучение, конференции. Как защищать перед CFO.
+</div>
+</div>
+<p class="file">pages/finops.html</p>
+</div>
+</div>
+
+<!-- ===== 17 ROADMAP ===== -->
+<div class="sec" style="background:#111112">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#888780"></div>
+<span class="sec-title">17. Annual Roadmap</span>
+<span class="sec-phase ph4">phase 4</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Контент</p>
+<div class="c">
+Визуальная timeline (горизонтальная, 4 квартала) с milestone'ами и зависимостями.<br><br>
+<b>Q1 — Stabilize:</b> DQ framework live, SLA определены, Data Dictionary v1, governance roles назначены, on-call ротация запущена<br><br>
+<b>Q2 — Self-service:</b> semantic layer, Metabase rollout для бизнеса, data literacy workshops (3 сессии), 80% ad-hoc через self-service<br><br>
+<b>Q3 — ML в прод:</b> LTV model deployed, churn prediction MVP, A/B testing framework operational, Feature Store live<br><br>
+<b>Q4 — Scale:</b> real-time аналитика (streaming marts), Reverse ETL → CRM, fraud model v2, data platform cost optimization (-20%)
+</div>
+</div>
+<p class="file">pages/roadmap.html</p>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SHARED COMPONENTS -->
+<div class="sec" style="background:#12111a">
+<div class="sec-h" onclick="tog(this)">
+<div class="sec-dot" style="background:#534AB7"></div>
+<span class="sec-title">Shared components & design system</span>
+<span class="sec-chev">&#9654;</span>
+</div>
+<div class="sec-body">
+<div class="block">
+<p class="block-name">Navigation</p>
+<div class="c">
+<b>Mobile:</b> burger → выезжающая панель, секции по группам (Core / Operations / Practice / Advanced)<br>
+<b>Desktop:</b> fixed sidebar 220px, текущая секция подсвечена<br>
+<b>Breadcrumbs:</b> Fantasy iGaming > Section Name<br>
+<b>Prev/Next:</b> внизу каждой страницы — переход к соседним секциям
+</div>
+</div>
+<div class="block">
+<p class="block-name">UI компоненты (переиспользуемые)</p>
+<div class="c">
+<b>Accordion</b> — раскрывающиеся блоки<br>
+<b>Tool card</b> — инструмент стека (название, описание, альтернатива, trade-off)<br>
+<b>Metric card</b> — метрика (формула, SQL, бенчмарки, ловушки)<br>
+<b>Person card</b> — роль в оргструктуре<br>
+<b>SLA row</b> — строка матрицы<br>
+<b>Timeline block</b> — элемент roadmap<br>
+<b>Code block</b> — SQL/Python с подсветкой<br>
+<b>Mermaid renderer</b> — ERD, flowcharts<br>
+<b>Alert box</b> — tip (зелёный) / warning (жёлтый) / info (синий)
+</div>
+</div>
+<div class="block">
+<p class="block-name">Design tokens</p>
+<div class="c">
+<b>Background:</b> #0e0e11 (body), #16161c (cards), #1e1e24 (borders)<br>
+<b>Text:</b> #f0eee6 (h), #c8c5be (body), #8a8780 (secondary), #5a5850 (muted)<br>
+<b>Font:</b> DM Sans (body) + JetBrains Mono (code)<br>
+<b>Radius:</b> 12px cards, 8px inner, 20px pills<br>
+<b>External deps:</b> Google Fonts + mermaid.js (CDN) — больше ничего<br>
+<b>Performance:</b> каждая страница < 100KB, Lighthouse > 95
+</div>
+</div>
+</div>
+</div>
+
+<script>
+function tog(el){
+var b=el.nextElementSibling;
+var c=el.querySelector('.sec-chev');
+b.classList.toggle('open');
+c.classList.toggle('open');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "fantasy-casino",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Fantasy Casino — AI-assisted development of a production-grade casino platform",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "db:migrate": "turbo run db:migrate --filter=api",
+    "db:seed": "turbo run db:seed --filter=api",
+    "docker:up": "docker compose -f infra/docker-compose.yml up -d",
+    "docker:down": "docker compose -f infra/docker-compose.yml down",
+    "docker:logs": "docker compose -f infra/docker-compose.yml logs -f",
+    "load:test": "turbo run load:test"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@11.12.1",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "turbo": "^2.5.0"
+  }
+}

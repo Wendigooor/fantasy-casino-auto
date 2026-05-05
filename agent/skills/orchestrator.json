@@ -1,0 +1,12 @@
+{
+  "name": "orchestrator",
+  "trigger_condition": "Task involves planning, execution, verification, or pipeline",
+  "description": "Orchestrator skills: task classification (priority/risk), plan drafting (LLM-assisted JSON plans), safe execution (sandbox, snapshots), verification (lint, tests, secrets check), diff preview, pipeline reporting, rollback coordination.",
+  "required_tools": "planner, executor, verifier, diff_preview, snapshots, quarantine",
+  "expected_output": "Safe, verified task execution with rollback capability",
+  "known_limitations": "Requires LLM endpoint for planning; pipeline runs sequentially \u2014 no parallel execution",
+  "review_status": "approved",
+  "version": "1",
+  "created_at": "2026-04-30T10:49:09Z",
+  "approved_at": "2026-04-30T10:49:09Z"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "data_engineering",
+  "trigger_condition": "Task involves analytics, clickhouse, dbt, metrics, or dashboards",
+  "description": "Data engineering skills: ClickHouse schema design, event emission, dbt models (staging, marts), metric definitions, dashboard queries, data lineage tracking, ETL/ELT pipelines, clickstream analysis.",
+  "required_tools": "write_file, read_file, run_command, edit_file",
+  "expected_output": "SQL/Python data pipelines, dbt models, ClickHouse schemas",
+  "known_limitations": "ClickHouse client may not be installed; dbt requires profile config; dashboard changes require Metabase access",
+  "review_status": "approved",
+  "version": "1",
+  "created_at": "2026-04-30T10:49:09Z",
+  "approved_at": "2026-04-30T10:49:09Z"
+}

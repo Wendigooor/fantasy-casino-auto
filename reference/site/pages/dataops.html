@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataOps — Fantasy iGaming Data Department</title>
+  <meta name="description" content="CI/CD для данных, мониторинг, Data Health dashboard, on-call ротация, среды разработки.">
+  <meta property="og:title" content="DataOps — Fantasy iGaming Data Department">
+  <meta property="og:description" content="CI/CD для данных, мониторинг, Data Health dashboard, on-call ротация, среды разработки.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="../assets/og-image.png">
+  <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <button class="burger" aria-label="Menu">
+    <div class="burger-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-overlay"></div>
+  <aside class="sidebar"></aside>
+
+  <div class="layout">
+    <main class="content">
+      <div class="content-inner">
+
+        <nav class="breadcrumbs"></nav>
+
+        <div class="page-header">
+          <h1>DataOps</h1>
+          <p class="page-header-desc">Как код данных попадает в production, как мониторится здоровье пайплайнов, кто дежурит и как устроены среды разработки.</p>
+        </div>
+
+        <!-- ================================ -->
+        <!-- CI/CD -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>CI/CD for Data</h2>
+          <p>Каждое изменение в dbt-моделях или пайплайнах проходит полный цикл: от feature branch до production.</p>
+
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">1. Feature Branch</div>
+              <div class="timeline-block-body">Разработчик создаёт ветку от <code>develop</code>. Именование: <code>feature/DE-123-add-player-segment</code>. Локальная разработка в dbt с <code>dbt run --select model_name</code>.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">2. Pull Request</div>
+              <div class="timeline-block-body">PR в <code>develop</code>. Автоматически запускается CI: <code>dbt compile</code> + <code>dbt test</code> на staging. Линтер SQL (sqlfluff). PR template: что изменено, почему, impact.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">3. Code Review</div>
+              <div class="timeline-block-body">Минимум 1 approve от Senior/Lead DE. Чеклист: соглашения по именованию, тесты покрывают новые поля, документация обновлена, нет ломающих изменений.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">4. Merge → Staging</div>
+              <div class="timeline-block-body">Merge в <code>develop</code>. Автоматический <code>dbt run</code> на staging. Проверка: данные в staging-дашборде корректны.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">5. Release → Production</div>
+              <div class="timeline-block-body">PR из <code>develop</code> в <code>main</code>. Release tag. <code>dbt run</code> на prod через Airflow. Мониторинг первые 24 часа: объём данных, DQ тесты, скорость запросов.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">6. Monitoring</div>
+              <div class="timeline-block-body">Grafana + Airflow SLA: свежесть данных, объём строк, время выполнения, DQ score. Алерты в Slack #data-alerts.</div>
+            </div>
+          </div>
+
+          <h3>Git-flow</h3>
+          <div class="code-block" data-lang="text">
+            <pre><code>main (prod)     ─────●──────────●───────●──────────
+                    ↑          ↑       ↑
+                    │          │   hotfix/DE-999
+                    │          │       │
+develop (staging) ──●──●──●──●─┘──●──●─┘──●──●────
+                    ↑  ↑  ↑       ↑  ↑
+feature branches    └──┘──┘       └──┘</code></pre>
+          </div>
+
+          <h3>Hotfix — когда надо вчера</h3>
+          <p>Критичный баг в prod (P1 incident, CEO dashboard сломан). Ждать полный цикл develop → staging → main нельзя.</p>
+
+          <div class="timeline">
+            <div class="timeline-block">
+              <div class="timeline-block-title">1. Branch от main</div>
+              <div class="timeline-block-body">Ветка создаётся от <code>main</code>, не от <code>develop</code>. Именование: <code>hotfix/DE-999-fix-ngr-calc</code>. Только fix, никаких попутных улучшений.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">2. Fix + тест локально</div>
+              <div class="timeline-block-body">Минимальное изменение. <code>dbt run --select affected_model</code> + <code>dbt test</code> локально. Убедиться что fix решает проблему и не ломает зависимые модели.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">3. Быстрый PR в main</div>
+              <div class="timeline-block-body">PR напрямую в <code>main</code>. Один approve от Lead DE (не два как в обычном flow). CI всё равно прогоняет <code>dbt compile</code> + <code>dbt test</code>.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">4. Smoke test на staging</div>
+              <div class="timeline-block-body">Deploy hotfix-ветки в staging. Проверка: fix работает, ничего не сломали. 15-30 минут.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">5. Merge → Production</div>
+              <div class="timeline-block-body">Merge в <code>main</code>. Airflow автоматически деплоит. Мониторинг: данные корректны, SLA восстановлен.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">6. Cherry-pick в develop</div>
+              <div class="timeline-block-body">Обязательно: <code>git cherry-pick</code> fix из main в develop. Иначе fix потеряется в следующем релизе и баг вернётся.</div>
+            </div>
+            <div class="timeline-block">
+              <div class="timeline-block-title">7. Post-mortem</div>
+              <div class="timeline-block-body">Раз понадобился hotfix — что-то упустили в обычном flow. Post-mortem обязателен: почему баг прошёл review, почему тесты не поймали, что добавить в CI.</div>
+            </div>
+          </div>
+
+          <div class="alert alert-warning">
+            Hotfix — исключение, не правило. Если хотфиксы стали частыми — это сигнал что CI/CD flow не работает: плохое покрытие тестами, слабое review, или слишком большие релизы. Норма: 0-1 hotfix в квартал.
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Monitoring -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Monitoring</h2>
+          <p>Что мониторится, где алерты, как выглядит Data Health dashboard.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>What</th><th>Tool</th><th>Alert Condition</th><th>Channel</th></tr></thead>
+              <tbody>
+                <tr><td>Data freshness</td><td>Airflow SLA sensor</td><td>Mart not updated by deadline</td><td>#data-alerts</td></tr>
+                <tr><td>Volume anomaly</td><td>Great Expectations</td><td>Row count deviates &gt;20% from avg</td><td>#data-alerts</td></tr>
+                <tr><td>Schema changes</td><td>dbt schema tests</td><td>New/removed columns in source</td><td>#data-alerts</td></tr>
+                <tr><td>Query performance</td><td>ClickHouse system.query_log</td><td>Query &gt;30s on critical mart</td><td>#de-performance</td></tr>
+                <tr><td>Infrastructure cost</td><td>GCP billing alerts</td><td>Daily cost &gt;120% of budget</td><td>#finops</td></tr>
+                <tr><td>DQ test failures</td><td>dbt test + CI</td><td>Any test failure in production</td><td>#data-alerts + PagerDuty (P1)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Data Health Dashboard</h3>
+          <p>Таблица marts × status. Обновляется каждые 15 минут. Доступен всем в Grafana.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Mart</th><th>Freshness</th><th>DQ Score</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td><code>mart_daily_kpi</code></td><td>06:45 UTC</td><td>99.2%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                <tr><td><code>mart_player_lifetime</code></td><td>06:52 UTC</td><td>98.8%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                <tr><td><code>mart_cohort_analysis</code></td><td>07:15 UTC</td><td>97.5%</td><td><span class="badge badge-teal">OK</span></td></tr>
+                <tr><td><code>mart_marketing_performance</code></td><td>07:30 UTC</td><td>95.1%</td><td><span class="badge badge-amber">WARN</span></td></tr>
+                <tr><td><code>mart_game_performance</code></td><td>08:45 UTC</td><td>91.3%</td><td><span class="badge badge-red">ALERT</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- On-call -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>On-call</h2>
+          <p>DE on-call ротация: 1 неделя. Все DE и Platform Engineer участвуют (4 человека в ротации, каждый дежурит раз в месяц).</p>
+
+          <h3>Runbook — типичные инциденты</h3>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Airflow DAG failed</span>
+              <span class="badge badge-red">P1/P2</span>
+            </div>
+            <div class="accordion-body">
+              <ol class="list">
+                <li>Открыть Airflow UI → найти failed task</li>
+                <li>Прочитать логи — определить root cause (OOM, timeout, source unavailable)</li>
+                <li>Retry задачи через UI (Clear → Run)</li>
+                <li>Если retry не помог → проверить source connectivity, ClickHouse health</li>
+                <li>Если не ясно → эскалация на Lead DE в Slack #data-incidents</li>
+                <li>После фикса: проверить данные в mart, уведомить потребителей</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">ClickHouse query timeout</span>
+              <span class="badge badge-amber">P2</span>
+            </div>
+            <div class="accordion-body">
+              <ol class="list">
+                <li>Проверить <code>system.query_log</code> — какой запрос тормозит</li>
+                <li>Проверить <code>system.merges</code> — не идёт ли heavy merge</li>
+                <li>Kill проблемный запрос если блокирует других</li>
+                <li>Если проблема в модели — оптимизировать (добавить WHERE, PREWHERE, partitioning)</li>
+                <li>Если системная — эскалация на Platform Engineer</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">Source data delayed / missing</span>
+              <span class="badge badge-amber">P2</span>
+            </div>
+            <div class="accordion-body">
+              <ol class="list">
+                <li>Проверить Airbyte sync status — последний успешный sync</li>
+                <li>Проверить source connectivity (может быть downtime у провайдера)</li>
+                <li>Если source down → уведомить потребителей о задержке, поставить ETA</li>
+                <li>Если Airbyte issue → restart sync, проверить логи коннектора</li>
+                <li>Если данные пришли частично → пометить в DQ dashboard, не давать уйти в mart</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="accordion">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span class="accordion-chevron">&#9654;</span>
+              <span class="accordion-title">DQ test failure in production</span>
+              <span class="badge badge-amber">P2/P3</span>
+            </div>
+            <div class="accordion-body">
+              <ol class="list">
+                <li>Определить severity: critical mart (P1) vs non-critical field (P3)</li>
+                <li>Проверить масштаб: сколько строк затронуто, с какого момента</li>
+                <li>Если данные уже в mart → откатить к последнему clean state если возможно</li>
+                <li>Root cause: изменение в source? Баг в dbt model? Schema drift?</li>
+                <li>Fix → re-run → verify → уведомить потребителей</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================ -->
+        <!-- Environments -->
+        <!-- ================================ -->
+        <section class="section">
+          <h2>Environments</h2>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Env</th><th>Purpose</th><th>Data</th><th>Access</th><th>Deploy</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-gray">dev</span></td>
+                  <td>Локальная разработка</td>
+                  <td>Subset prod data (1 month, anonymized)</td>
+                  <td>Каждый разработчик</td>
+                  <td><code>dbt run --target dev</code></td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-amber">staging</span></td>
+                  <td>Интеграционное тестирование</td>
+                  <td>Full prod copy (refreshed weekly)</td>
+                  <td>DE team + leads</td>
+                  <td>Auto on merge to <code>develop</code></td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-teal">prod</span></td>
+                  <td>Production</td>
+                  <td>Live data</td>
+                  <td>Airflow service account only</td>
+                  <td>Release PR <code>develop</code> → <code>main</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert alert-warning">
+            <strong>Promote-правило:</strong> никакие изменения не попадают в prod без прохождения staging. Даже hotfix: создать branch от <code>main</code>, протестировать на staging, merge в <code>main</code> + cherry-pick в <code>develop</code>.
+          </div>
+        </section>
+
+        <nav class="prev-next"></nav>
+
+        <footer class="footer">
+          <div class="footer-inner">
+            <span>&copy; 2026 Fantasy iGaming Data Department — Open-source reference</span>
+            <span>License: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a></span>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/nav.js"></script>
+</body>
+</html>
