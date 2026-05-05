@@ -11,3 +11,6 @@ coverage/
 !**/src/**/*.jsx
 screenshots/
 screenshots-pvp/
+
+# PUFF runtime state (generated, contains credentials)
+.puff/
