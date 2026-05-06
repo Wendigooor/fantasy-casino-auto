@@ -103,7 +103,7 @@ export function DuelPage() {
       <div className={`arena-status mt-2 mb-3 ${b.cls}`}>{b.text}</div>
 
       {/* VS Card */}
-      <div className="arena-card arena-glow p-5">
+      <div className="arena-card-glass arena-card-glass p-5">
         <div className="flex items-center justify-between">
           <div className="flex-1 text-center">
             <div className={`arena-avatar ${iWon&&isCreator?"arena-avatar-winner":iLost&&isCreator?"arena-avatar-loser":myTurn&&isCreator?"arena-avatar-turn":""}`}
@@ -145,14 +145,14 @@ export function DuelPage() {
 
       {/* Reels */}
       {(myReels||theirReels)&&<div className="grid grid-cols-2 gap-3 mt-3">
-        <div className={`arena-card p-4 text-center ${iWon?"border-gold/30":iLost?"opacity-50":""}`}>
+        <div className={`arena-card-glass p-4 text-center ${iWon?"border-gold/30":iLost?"opacity-50":""}`}>
           <div className="text-[9px] text-casino-muted uppercase tracking-wider mb-2">You</div>
           <div className="flex justify-center gap-1.5">
             {myReels?myReels.map((s:number,i:number)=><Reel key={i} symbol={s} spinning={false} win={iWon} />)
               :[0,1,2,3].map(i=><div key={i} className="arena-reel"><span className="arena-reel-spin opacity-30">🎰</span></div>)}
           </div>
         </div>
-        <div className={`arena-card p-4 text-center ${iLost?"border-gold/30":iWon?"opacity-50":""}`}>
+        <div className={`arena-card-glass p-4 text-center ${iLost?"border-gold/30":iWon?"opacity-50":""}`}>
           <div className="text-[9px] text-casino-muted uppercase tracking-wider mb-2">Opponent</div>
           <div className="flex justify-center gap-1.5">
             {theirReels?theirReels.map((s:number,i:number)=><Reel key={i} symbol={s} spinning={false} win={iLost} />)
@@ -162,7 +162,7 @@ export function DuelPage() {
       </div>}
 
       {/* Settlement */}
-      {duel.status==="settled"&&<div className="arena-card p-3 mt-3 text-center">
+      {duel.status==="settled"&&<div className="arena-card-glass p-3 mt-3 text-center">
         <div className="text-[9px] text-casino-muted uppercase tracking-wider mb-1">Payout</div>
         <div className="text-xl font-bold text-gold">{Number(duel.pot)-Number(duel.houseFee)} coins</div>
         <div className="text-[9px] text-casino-muted mt-0.5">House fee: {duel.houseFee} (5%)</div>

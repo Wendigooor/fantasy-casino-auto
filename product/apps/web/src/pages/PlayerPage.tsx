@@ -27,7 +27,7 @@ export function PlayerPage() {
   return (
     <div className="max-w-lg mx-auto animate-fade-in-up">
       {/* Header */}
-      <div className="arena-card p-6 text-center mb-4">
+      <div className="arena-card-glass p-6 text-center mb-4">
         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/30 to-gold/20 flex items-center justify-center text-2xl font-bold mx-auto mb-2 shadow-lg shadow-primary/10">
           {name.charAt(0).toUpperCase()}
         </div>
@@ -36,7 +36,7 @@ export function PlayerPage() {
       </div>
 
       {/* Stats */}
-      <div className="arena-card p-5 mb-4">
+      <div className="arena-card-glass p-5 mb-4">
         <h3 className="text-[11px] text-casino-muted uppercase tracking-wider font-semibold mb-4">DUEL RECORD</h3>
 
         <div className="flex justify-between items-center mb-4">
@@ -81,7 +81,7 @@ export function PlayerPage() {
       </div>
 
       {/* Recent */}
-      <div className="arena-card p-5">
+      <div className="arena-card-glass p-5">
         <h3 className="text-[11px] text-casino-muted uppercase tracking-wider font-semibold mb-3">RECENT DUELS</h3>
         {settled.length === 0 && <p className="text-xs text-casino-muted italic py-2">No duels played yet.</p>}
         <div className="space-y-1">

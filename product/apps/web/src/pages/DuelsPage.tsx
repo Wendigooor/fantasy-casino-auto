@@ -46,7 +46,7 @@ export function DuelsPage() {
       </div>
 
       {/* Create */}
-      <div className="arena-card arena-glow p-5 mb-5">
+      <div className="arena-card-glass arena-card-glass p-5 mb-5">
         <h3 className="text-[11px] text-casino-muted uppercase tracking-wider font-semibold mb-3">CREATE DUEL</h3>
         <div className="flex gap-3 items-end flex-wrap">
           <div>
@@ -82,9 +82,9 @@ export function DuelsPage() {
       {/* Open */}
       {tab==="open"&&<>
         {openLoading&&<p className="text-xs text-casino-muted py-2">Loading arena...</p>}
-        {!openLoading&&openDuels.length===0&&<div className="arena-card p-10 text-center"><div className="text-5xl mb-3">⚔️</div><p className="text-sm text-casino-muted">No open duels. Create one!</p></div>}
+        {!openLoading&&openDuels.length===0&&<div className="arena-card-glass p-10 text-center"><div className="text-5xl mb-3">⚔️</div><p className="text-sm text-casino-muted">No open duels. Create one!</p></div>}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {openDuels.map((d:any)=><Link key={d.id} to={`/duels/${d.id}`} className="arena-card arena-glow p-4 arena-link flex items-center gap-3 hover:border-primary/30">
+          {openDuels.map((d:any)=><Link key={d.id} to={`/duels/${d.id}`} className="arena-card-glass arena-card-glass p-4 arena-link flex items-center gap-3 hover:border-primary/30">
             <div className="w-10 h-10 rounded-full bg-[rgba(255,51,85,.12)] flex items-center justify-center text-sm font-bold shrink-0">{(d.creatorEmail as string)?.charAt(0).toUpperCase()}</div>
             <div className="flex-1 min-w-0"><div className="text-sm font-semibold truncate">{(d.creatorEmail as string)?.split("@")[0]}</div><div className="text-[9px] text-casino-muted">{d.gameId} &middot; {new Date(d.createdAt as string).toLocaleTimeString()}</div></div>
             <div className="text-right"><div className="text-sm font-bold text-gold">{d.betAmount}</div><div className="text-[9px] text-win uppercase">JOIN</div></div>
@@ -117,7 +117,7 @@ function DuelCard({duel,user}:{duel:any;user:any}) {
   const badge = duel.status==="open"?"arena-badge-open":duel.status==="active"?"arena-badge-active":won?"arena-badge-won":lost?"arena-badge-lost":"arena-badge-tie";
   const label = duel.status==="open"?"⚔️ Open":duel.status==="active"?"🎰 Active":won?"🏆 Won":lost?"💀 Lost":"🤝 Tie";
   return (
-    <Link to={`/duels/${duel.id}`} className="arena-card arena-glow p-3 arena-link hover:border-primary/30 flex items-center justify-between">
+    <Link to={`/duels/${duel.id}`} className="arena-card-glass arena-card-glass p-3 arena-link hover:border-primary/30 flex items-center justify-between">
       <div>
         <div className="flex items-center gap-2"><span className="text-sm font-bold text-gold">{duel.betAmount}</span><span className="text-[9px] text-casino-muted">{duel.gameId}</span></div>
         <div className="text-[9px] text-casino-muted">{new Date(duel.createdAt as string).toLocaleDateString()}</div>

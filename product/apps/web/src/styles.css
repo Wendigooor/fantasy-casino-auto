@@ -252,8 +252,13 @@
 @keyframes vsPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.3); } }
 @keyframes duelReveal { 0% { filter: blur(10px); opacity: 0; } 100% { filter: blur(0); opacity: 1; } }
 
-/* ── PVP ARENA ── Stake.com-inspired design ── */
+/* ── PVP ARENA ── Premium Redesign ── */
 
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 @keyframes neonPulse {
   0%, 100% { box-shadow: 0 0 5px rgba(255,51,85,.3), 0 0 20px rgba(255,51,85,.1); }
   50% { box-shadow: 0 0 15px rgba(255,51,85,.5), 0 0 40px rgba(255,51,85,.2); }
@@ -263,115 +268,166 @@
   50% { box-shadow: 0 0 20px rgba(255,176,32,.5), 0 0 50px rgba(255,176,32,.2); }
 }
 @keyframes slotBlur {
-  0% { transform: translateY(-60px); filter: blur(6px); opacity: 0; }
-  60% { transform: translateY(5px); filter: blur(2px); }
-  100% { transform: translateY(0); filter: blur(0); opacity: 1; }
+  0% { transform: translateY(-60px) scale(1.2); filter: blur(8px); opacity: 0; }
+  60% { transform: translateY(5px) scale(1); filter: blur(1px); opacity: .8; }
+  100% { transform: translateY(0) scale(1); filter: blur(0); opacity: 1; }
 }
-@keyframes arenaBg {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
-.arena-card {
-  @apply rounded-2xl transition-all duration-300;
-  background: linear-gradient(135deg, rgba(26,26,46,.95), rgba(19,19,31,.98));
-  border: 1px solid rgba(37,37,64,.6);
-  backdrop-filter: blur(20px);
+.arena-card-glass {
+  border-radius: 16px;
+  background: rgba(22,22,40,.6);
+  border: 1px solid rgba(40,40,70,.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: all .3s ease;
 }
-.arena-card:hover { border-color: rgba(255,51,85,.3); }
-
-.arena-glow {
-  position: relative;
+.arena-card-glass:hover {
+  border-color: rgba(255,51,85,.3);
+  box-shadow: 0 8px 40px rgba(255,51,85,.08);
 }
-.arena-glow::before {
-  content: ''; position: absolute; inset: -1px; border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255,51,85,.2), transparent 40%, rgba(255,176,32,.15), transparent 60%);
-  z-index: -1; opacity: 0; transition: opacity .4s;
-}
-.arena-glow:hover::before { opacity: 1; }
 
 .arena-status {
-  @apply text-center text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-align: center;
   transition: all .5s cubic-bezier(.4,0,.2,1);
+  animation: slideDown .3s ease;
 }
-.arena-status-open { background: linear-gradient(135deg, rgba(255,176,32,.12), rgba(255,176,32,.05)); color: var(--color-gold); animation: goldGlow 2s ease-in-out infinite; }
-.arena-status-active { background: linear-gradient(135deg, rgba(0,230,118,.12), rgba(0,230,118,.05)); color: var(--color-win); }
-.arena-status-victory { background: linear-gradient(135deg, rgba(255,176,32,.2), rgba(255,51,85,.1)); color: var(--color-gold); animation: goldGlow 1.5s ease-in-out infinite; text-shadow: 0 0 20px rgba(255,176,32,.4); }
-.arena-status-defeat { background: linear-gradient(135deg, rgba(255,56,96,.1), transparent); color: var(--color-lose); filter: grayscale(.4); }
+.arena-status-open {
+  background: linear-gradient(135deg, rgba(255,176,32,.12), rgba(255,176,32,.03));
+  color: var(--color-gold);
+  border: 1px solid rgba(255,176,32,.2);
+  animation: goldGlow 2s ease-in-out infinite;
+}
+.arena-status-active {
+  background: linear-gradient(135deg, rgba(0,230,118,.12), rgba(0,230,118,.03));
+  color: var(--color-win);
+  border: 1px solid rgba(0,230,118,.2);
+}
+.arena-status-victory {
+  background: linear-gradient(135deg, rgba(255,176,32,.2), rgba(255,51,85,.1));
+  color: var(--color-gold);
+  border: 1px solid rgba(255,176,32,.3);
+  animation: goldGlow 1.5s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(255,176,32,.5);
+}
+.arena-status-defeat {
+  background: linear-gradient(135deg, rgba(255,56,96,.08), transparent);
+  color: var(--color-lose);
+  border: 1px solid rgba(255,56,96,.15);
+  filter: grayscale(.3);
+}
 
 .arena-avatar {
-  @apply w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto;
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; margin: 0 auto;
   transition: all .3s cubic-bezier(.4,0,.2,1);
 }
-.arena-avatar-turn { animation: neonPulse 1.5s ease-in-out infinite; border: 2px solid var(--color-primary); }
+.arena-avatar-turn { border: 2px solid var(--color-primary); box-shadow: 0 0 20px rgba(255,51,85,.3); }
 .arena-avatar-winner { border: 2px solid var(--color-gold); box-shadow: 0 0 20px rgba(255,176,32,.3), inset 0 0 15px rgba(255,176,32,.1); }
 .arena-avatar-loser { filter: grayscale(.8) brightness(.5); transform: scale(.92); }
 
 .arena-vs {
-  @apply text-3xl font-black;
+  font-size: 28px; font-weight: 900;
   background: linear-gradient(135deg, var(--color-primary), var(--color-gold));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 15px rgba(255,51,85,.3));
+  background-clip: text;
+  filter: drop-shadow(0 0 18px rgba(255,51,85,.4));
   transition: all .4s;
+  position: relative;
 }
-.arena-vs-active { animation: vsPulse 1s ease-in-out infinite; filter: drop-shadow(0 0 25px rgba(255,51,85,.5)); }
+.arena-vs::after {
+  content: ''; position: absolute; width: 40px; height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,51,85,.15), transparent);
+  top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -1;
+}
+.arena-vs-active { animation: vsPulse 1s ease-in-out infinite; filter: drop-shadow(0 0 25px rgba(255,51,85,.6)); }
 
 .arena-reel {
-  @apply w-[72px] h-[72px] flex items-center justify-center text-3xl rounded-xl border-2 transition-all duration-300;
+  width: 72px; height: 72px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; border-radius: 12px;
+  border: 2px solid rgba(40,40,70,.5);
   background: linear-gradient(180deg, rgba(15,10,30,.9), rgba(26,26,46,.8));
-  border-color: rgba(37,37,64,.5);
+  transition: all .3s;
 }
 .arena-reel.win { border-color: var(--color-gold); box-shadow: 0 0 20px rgba(255,176,32,.2), inset 0 0 10px rgba(255,176,32,.1); }
 .arena-reel-spin { animation: slotBlur .4s cubic-bezier(.4,0,.2,1); }
 
 .arena-btn {
-  @apply w-full py-3 text-sm font-bold uppercase tracking-wider rounded-xl transition-all duration-200;
+  width: 100%; padding: 12px 0;
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  border-radius: 12px; border: none; cursor: pointer;
   background: linear-gradient(135deg, var(--color-primary), #ff1744);
-  border: none; color: #fff;
+  color: #fff; transition: all .2s;
 }
-.arena-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(255,51,85,.3); }
+.arena-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(255,51,85,.35); }
 .arena-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
-.arena-btn-secondary {
-  @apply w-full py-3 text-sm font-bold uppercase tracking-wider rounded-xl transition-all duration-200;
-  background: linear-gradient(135deg, rgba(255,51,85,.15), rgba(255,176,32,.1));
-  border: 1px solid rgba(255,51,85,.3); color: var(--color-casino-text);
-}
-.arena-btn-secondary:hover { border-color: var(--color-primary); box-shadow: 0 0 20px rgba(255,51,85,.1); }
-
-.arena-input {
-  @apply px-3 py-2.5 rounded-lg text-sm transition-all duration-200 outline-none;
-  background: rgba(19,19,31,.8); border: 1px solid rgba(37,37,64,.6);
-  color: var(--color-casino-text);
-}
-.arena-input:focus { border-color: var(--color-primary); box-shadow: 0 0 15px rgba(255,51,85,.1); }
-
-.arena-tab {
-  @apply px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider cursor-pointer transition-all duration-200;
-  background: transparent; color: var(--color-casino-muted); border: 1px solid transparent;
-}
-.arena-tab:hover { color: var(--color-casino-text); border-color: rgba(255,51,85,.2); }
-.arena-tab.active { background: rgba(255,51,85,.1); color: var(--color-primary); border-color: rgba(255,51,85,.3); }
 
 .arena-badge {
-  @apply text-[10px] font-bold uppercase px-2 py-0.5 rounded-full;
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 999px;
 }
-.arena-badge-open { background: rgba(255,176,32,.15); color: var(--color-gold); }
-.arena-badge-active { background: rgba(0,230,118,.15); color: var(--color-win); }
-.arena-badge-won { background: rgba(255,176,32,.2); color: var(--color-gold); }
-.arena-badge-lost { background: rgba(255,56,96,.15); color: var(--color-lose); }
-.arena-badge-tie { background: rgba(107,107,128,.15); color: var(--color-casino-muted); }
+.arena-badge-open { background: rgba(255,176,32,.15); color: var(--color-gold); border: 1px solid rgba(255,176,32,.2); }
+.arena-badge-active { background: rgba(0,230,118,.15); color: var(--color-win); border: 1px solid rgba(0,230,118,.2); }
+.arena-badge-won { background: rgba(255,176,32,.2); color: var(--color-gold); border: 1px solid rgba(255,176,32,.3); }
+.arena-badge-lost { background: rgba(255,56,96,.15); color: var(--color-lose); border: 1px solid rgba(255,56,96,.2); }
+.arena-badge-tie { background: rgba(107,107,128,.15); color: var(--color-casino-muted); border: 1px solid rgba(107,107,128,.2); }
 
-.arena-link {
-  @apply no-underline transition-all duration-200;
-  color: var(--color-casino-text);
+.arena-tab {
+  padding: 8px 16px; border-radius: 8px;
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .06em;
+  cursor: pointer; transition: all .2s;
+  background: transparent; color: var(--color-casino-muted);
+  border: 1px solid transparent;
 }
+.arena-tab:hover { color: var(--color-casino-text); border-color: rgba(255,51,85,.15); }
+.arena-tab.active { background: rgba(255,51,85,.08); color: var(--color-primary); border-color: rgba(255,51,85,.25); }
+
+.arena-link { text-decoration: none; color: var(--color-casino-text); transition: color .2s; }
 .arena-link:hover { color: var(--color-primary); }
 
 .arena-divider {
   height: 1px; border: none;
-  background: linear-gradient(90deg, transparent, rgba(255,51,85,.2), rgba(255,176,32,.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,51,85,.15), rgba(255,176,32,.15), transparent);
+  margin: 12px 0;
 }
 
-.stat-value { @apply text-xl font-bold; }
-.stat-label { @apply text-[9px] text-casino-muted uppercase tracking-wider mt-0.5; }
+.arena-input {
+  padding: 8px 12px; border-radius: 8px; font-size: 13px; outline: none;
+  transition: all .2s;
+  background: rgba(19,19,31,.7); border: 1px solid rgba(40,40,70,.4);
+  color: var(--color-casino-text);
+}
+.arena-input:focus { border-color: var(--color-primary); box-shadow: 0 0 12px rgba(255,51,85,.1); }
+
+.arena-card-solid {
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(26,26,46,.95), rgba(19,19,31,.95));
+  border: 1px solid rgba(40,40,70,.5);
+  transition: all .3s ease;
+}
+
+.stat-value { font-size: 20px; font-weight: 700; }
+.stat-label { font-size: 9px; color: var(--color-casino-muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; }
+
+.arena-progress {
+  height: 8px; background: rgba(19,19,31,.5);
+  border-radius: 999px; overflow: hidden;
+  border: 1px solid rgba(40,40,70,.2);
+}
+.arena-progress-fill {
+  height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-gold));
+  transition: width 1s ease;
+}

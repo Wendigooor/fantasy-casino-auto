@@ -37,7 +37,7 @@ export function LeaderboardPage() {
 
       {/* Duel Leaderboard */}
       {tab === "duels" && duelLb?.leaderboard?.map((entry: Record<string, unknown>, i: number) => (
-        <div key={i} className="arena-card p-3 flex items-center gap-3 mb-2 hover:border-primary/30 transition-all">
+        <div key={i} className="arena-card-glass p-3 flex items-center gap-3 mb-2 hover:border-primary/30 transition-all">
           <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-gradient-to-br from-gold to-primary text-white" : "bg-[rgba(19,19,31,.6)] text-casino-muted"}`}>{i + 1}</span>
           <span className="flex-1 font-semibold text-sm">{(entry.email as string)?.split("@")[0] || `Player ${i + 1}`}</span>
           <div className="text-right">
