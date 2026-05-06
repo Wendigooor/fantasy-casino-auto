@@ -25,7 +25,7 @@ export function LeaderboardPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in-up">
+    <div className="max-w-2xl mx-auto animate-fade-in-up" data-page="leaderboard">
       <Link to="/" className="text-xs text-casino-muted hover:text-casino-text no-underline">&larr; Lobby</Link>
       <h2 className="mt-1">Leaderboard</h2>
       <div className="flex gap-2 mb-4">

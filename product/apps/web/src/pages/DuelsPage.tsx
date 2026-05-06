@@ -39,7 +39,7 @@ export function DuelsPage() {
   const settledDuels = myDuels.filter((d: any) => d.status === "settled" || d.status === "cancelled");
 
   return (
-    <div className="w-full max-w-3xl mx-auto animate-fade-in-up">
+    <div className="w-full max-w-3xl mx-auto animate-fade-in-up" data-page="duels">
       <div className="flex items-center justify-between mb-4">
         <h2 className="!mb-0">⚔️ PvP Arena</h2>
         <span className="text-[10px] text-casino-muted bg-[rgba(107,107,128,.1)] px-2.5 py-1 rounded-full border border-[rgba(107,107,128,.15)]">{activeDuels.length} active</span>

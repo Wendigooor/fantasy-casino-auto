@@ -96,14 +96,14 @@ export function DuelPage() {
   const theirReels = theirSpin ? JSON.parse(theirSpin as string).reels : null;
 
   return (
-    <div className="max-w-lg mx-auto animate-fade-in-up">
+    <div className="max-w-lg mx-auto animate-fade-in-up" data-page="duel" data-state={duel.status}>
       <Confetti active={justSettled && iWon} />
       <Link to="/duels" className="arena-link text-xs">&larr; Arena</Link>
 
       <div className={`arena-status mt-2 mb-3 ${b.cls}`}>{b.text}</div>
 
       {/* VS Card */}
-      <div className="arena-card-glass arena-card-glass p-5">
+      <div className="arena-card-glass p-5">
         <div className="flex items-center justify-between">
           <div className="flex-1 text-center">
             <div className={`arena-avatar ${iWon&&isCreator?"arena-avatar-winner":iLost&&isCreator?"arena-avatar-loser":myTurn&&isCreator?"arena-avatar-turn":""}`}

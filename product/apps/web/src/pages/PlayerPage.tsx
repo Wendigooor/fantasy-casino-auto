@@ -25,7 +25,7 @@ export function PlayerPage() {
   const name = email.split("@")[0];
 
   return (
-    <div className="max-w-lg mx-auto animate-fade-in-up">
+    <div className="max-w-lg mx-auto animate-fade-in-up" data-page="player">
       {/* Header */}
       <div className="arena-card-glass p-6 text-center mb-4">
         <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/30 to-gold/20 flex items-center justify-center text-2xl font-bold mx-auto mb-2 shadow-lg shadow-primary/10">
