@@ -56,7 +56,7 @@ export function WalletPage() {
   }, [qc, wallet]);
 
   return (
-    <div className="max-w-[700px] mx-auto animate-fade-in-up">
+    <div className="max-w-[700px] mx-auto animate-fade-in-up" data-page="wallet" data-ready={wallet && ledger ? "true" : "false"}>
       <ToastContainer toasts={toasts} />
       <h2>Wallet</h2>
       {wl && <div className="skeleton h-24 rounded-2xl mb-4" />}

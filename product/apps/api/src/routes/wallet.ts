@@ -104,7 +104,18 @@ export async function walletRoutes(app: FastifyInstance) {
         parseInt(query.limit || "50", 10),
         parseInt(query.offset || "0", 10)
       );
-      return { entries };
+      return {
+      entries: entries.map((r: any) => ({
+        id: r.id,
+        type: r.type,
+        amount: r.amount,
+        balanceAfter: r.balance_after,
+        currency: r.currency,
+        description: r.description,
+        referenceId: r.reference_id,
+        createdAt: r.created_at,
+      })),
+    };
     } catch (err: unknown) {
       if (err instanceof Error && err.message === "Not authenticated") {
         return reply.unauthorized("Not authenticated");

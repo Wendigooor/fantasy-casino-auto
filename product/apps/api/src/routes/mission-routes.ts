@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
+import { broadcastUser } from "./sse.js";
 
 async function uid(r: FastifyRequest) {
   return (r.user as { id: string }).id;
@@ -21,6 +22,14 @@ async function calcProgress(pg: any, userId: string, objectiveType: string, targ
     }
     case "duel_won": {
       const r = await pg.query("SELECT COUNT(*) as c FROM duels WHERE winner_id = $1", [userId]);
+      return Math.min(parseInt(r.rows[0].c), target);
+    }
+    case "bonus_claimed": {
+      const r = await pg.query("SELECT COUNT(*) as c FROM ledger_entries WHERE user_id = $1 AND type = 'bonus_credit'", [userId]);
+      return Math.min(parseInt(r.rows[0].c), target);
+    }
+    case "reward_claimed": {
+      const r = await pg.query("SELECT COUNT(*) as c FROM player_missions WHERE user_id = $1 AND status = 'claimed'", [userId]);
       return Math.min(parseInt(r.rows[0].c), target);
     }
     default:
@@ -91,13 +100,51 @@ export async function missionRoutes(app: FastifyInstance) {
       });
     }
 
+    // Build groups
+    const groups = [
+      {
+        id: "daily-rush",
+        title: "Daily Rush",
+        progress: result.filter(m => m.status === "completed" || m.status === "claimed").length,
+        target: 3,
+        completionReward: { type: "coins", amount: 500 },
+        missions: result.filter(m => m.category === "onboarding" || m.category === "daily"),
+      },
+      {
+        id: "pvp-challenge",
+        title: "PvP Challenge",
+        progress: result.filter(m => m.code === "duel_challenger").some(m => m.status !== "active") ? 1 : 0,
+        target: 1,
+        completionReward: { type: "coins", amount: 250 },
+        missions: result.filter(m => m.category === "pvp"),
+      },
+    ];
+
+    // Find next best action
+    const nextActive = result.find(m => m.status === "active");
+    const nextBestAction = nextActive ? { label: nextActive.cta.label, href: nextActive.cta.href } : { label: "Play Now", href: "/" };
+
+    // Total reward pool
+    const rewardPool = result.reduce((s, m) => s + m.reward.amount, 0);
+    const totalEarned = result.filter(m => m.status === "claimed").reduce((s, m) => s + m.reward.amount, 0);
+
     return {
+      campaign: {
+        id: "quest-rush",
+        title: "Quest Rush",
+        subtitle: "Complete missions before the timer ends.",
+        endsAt: new Date(Date.now() + 86400000).toISOString(), // 24h from now
+        rewardPool,
+      },
+      groups,
       missions: result,
       summary: {
         active: activeCount,
         completed: completedCount,
         claimed: claimedCount,
         totalClaimable: result.filter((m) => m.status === "completed").reduce((s, m) => s + m.reward.amount, 0),
+        totalEarned,
+        nextBestAction,
       },
     };
   });
@@ -175,6 +222,11 @@ export async function missionRoutes(app: FastifyInstance) {
       }
 
       await client.query("COMMIT");
+
+      // Broadcast wallet update via SSE
+      if (wallet) {
+        broadcastUser(userId, "wallet_update", { balance: Number(wallet.balance), currency: wallet.currency });
+      }
 
       return {
         missionId,
