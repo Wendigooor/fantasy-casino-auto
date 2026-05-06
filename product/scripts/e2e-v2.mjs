@@ -121,12 +121,14 @@ async function main() {
 
   // Screenshot 6: Player profile
   console.log("[6] Profile");
-  ({ page } = await screenshot("login", tokA));
-  await page.goto(`${WEB}/player`, { waitUntil: "networkidle" });
-  await page.waitForTimeout(2000);
-  await page.screenshot({ path: join(SHOTS, "06-profile.png"), fullPage: true });
-  console.log(`  ${(await page.locator("body").innerText()).slice(0,60)}`);
-  await page.close();
+  const profilePage = await ctx.newPage();
+  await profilePage.goto(`${WEB}/login`, { waitUntil: "domcontentloaded" });
+  await profilePage.evaluate((t) => { localStorage.setItem("token", t); }, tokA);
+  await profilePage.goto(`${WEB}/player`, { waitUntil: "networkidle" });
+  await profilePage.waitForTimeout(3000);
+  await profilePage.screenshot({ path: join(SHOTS, "06-profile.png"), fullPage: true });
+  console.log(`  ${(await profilePage.locator("body").innerText()).slice(0,60)}`);
+  await profilePage.close();
 
   await browser.close();
   api.kill(); web.kill();
