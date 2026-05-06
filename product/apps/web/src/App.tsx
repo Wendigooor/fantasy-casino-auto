@@ -11,6 +11,7 @@ import { AdminPage } from "./pages/AdminPage";
 import { RoulettePage } from "./pages/RoulettePage";
 import { DuelsPage } from "./pages/DuelsPage";
 import { DuelPage } from "./pages/DuelPage";
+import { MissionsPage } from "./pages/MissionsPage";
 import { PlayerPage } from "./pages/PlayerPage";
 import { LeaderboardPage } from "./pages/LeaderboardPage";
 import { AchievementsPage } from "./pages/AchievementsPage";
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/duels/:id" element={<AuthGuard><DuelPage /></AuthGuard>} />
         <Route path="/leaderboard" element={<AuthGuard><LeaderboardPage /></AuthGuard>} />
         <Route path="/achievements" element={<AuthGuard><AchievementsPage /></AuthGuard>} />
+        <Route path="/missions" element={<AuthGuard><MissionsPage /></AuthGuard>} />
         <Route path="/player" element={<AuthGuard><PlayerPage /></AuthGuard>} />
         <Route path="/wallet" element={<AuthGuard><WalletPage /></AuthGuard>} />
         <Route path="/bonus" element={<AuthGuard><BonusPage /></AuthGuard>} />
