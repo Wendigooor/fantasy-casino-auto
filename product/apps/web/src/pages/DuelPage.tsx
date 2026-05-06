@@ -92,8 +92,8 @@ export function DuelPage() {
     return {text:duel.status,cls:""};
   };
   const b = banner();
-  const myReels = mySpin ? JSON.parse(mySpin as string).reels : null;
-  const theirReels = theirSpin ? JSON.parse(theirSpin as string).reels : null;
+  const myReels = mySpin ? (typeof mySpin === 'string' ? JSON.parse(mySpin) : mySpin).reels : null;
+  const theirReels = theirSpin ? (typeof theirSpin === 'string' ? JSON.parse(theirSpin) : theirSpin).reels : null;
 
   return (
     <div className="max-w-lg mx-auto animate-fade-in-up" data-page="duel" data-state={duel.status}>
