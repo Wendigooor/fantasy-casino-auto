@@ -82,7 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Link to="/" className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent no-underline">Casino</Link>
           {show && (
             <nav className="flex gap-1">
-              {[{ to: "/", label: "Lobby" }, { to: "/missions", label: "🎯 Missions" }, { to: "/duels", label: "⚔️ Duels" }, { to: "/wallet", label: "Wallet" }, { to: "/bonus", label: "Bonuses" }].map(l => (
+              {[{ to: "/", label: "Lobby" }, { to: "/tournaments", label: "🏁 Tournaments" }, { to: "/missions", label: "🎯 Missions" }, { to: "/duels", label: "⚔️ Duels" }, { to: "/wallet", label: "Wallet" }, { to: "/bonus", label: "Bonuses" }].map(l => (
                 <Link key={l.to} to={l.to} className="px-3 py-1.5 text-xs font-medium text-casino-muted hover:text-casino-text hover:bg-casino-card rounded-lg transition-colors no-underline">{l.label}</Link>
               ))}
             </nav>

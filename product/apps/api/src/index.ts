@@ -34,6 +34,7 @@ import { duelRoutes, initDuelService } from "./routes/duel-routes.js";
 import { leaderboardRoutes } from "./routes/leaderboard-routes.js";
 import { achievementRoutes } from "./routes/achievement-routes.js";
 import { missionRoutes } from "./routes/mission-routes.js";
+import { tournamentRoutes } from "./routes/tournament-routes.js";
 import { GameService } from "./services/game.js";
 
 const isTest = process.env.NODE_ENV === "test";
@@ -82,6 +83,7 @@ async function protectedRoutes(app: FastifyInstance) {
   await leaderboardRoutes(app);
   await achievementRoutes(app);
   await missionRoutes(app);
+  await tournamentRoutes(app);
 }
 
 export async function createApp(): Promise<FastifyInstance> {
