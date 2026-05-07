@@ -89,6 +89,25 @@ export async function tournamentRoutes(app: FastifyInstance) {
         boost.status = "ready";
       }
 
+      // If boost is active, calculate bonus points from spins since activation
+      if (boost.status === "active") {
+        const sinceAct = boostRow.activated_at || tourney.starts_at;
+        const spinsSinceAct = await app.pg.query(
+          `SELECT COUNT(*) as c FROM game_rounds WHERE user_id = $1 AND created_at >= $2`,
+          [userId, sinceAct]
+        );
+        const count = parseInt(spinsSinceAct.rows[0].c);
+        const bonus = Math.min(count * 50, Number(boostRow.spins_remaining) * 50);
+        boost.bonusPoints = bonus;
+        boost.spinsRemaining = Math.max(0, Number(boostRow.spins_remaining) - count);
+
+        // Update DB
+        await app.pg.query(
+          `UPDATE tournament_boosts SET bonus_points = $1, spins_remaining = $2, updated_at = NOW() WHERE id = $3`,
+          [bonus, boost.spinsRemaining, boostRow.id]
+        );
+      }
+
       userScore += boost.bonusPoints;
     }
 
