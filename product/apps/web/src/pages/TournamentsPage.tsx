@@ -41,10 +41,19 @@ export function TournamentsPage() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["tournament"] }),
   });
 
+  const boostM = useMutation({
+    mutationFn: (tid: string) =>
+      fetch(`${API}/api/v1/tournaments/${tid}/boost/activate`, {
+        method: "POST", headers: { ...auth(), "Content-Type": "application/json" }, body: "{}",
+      }).then(r => r.json()),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["tournament"] }),
+  });
+
   const tournament = data?.tournament;
   const me = data?.me || {};
-  const leaderboard: any[] = data?.leaderboard || [];
-  const prizes: any[] = data?.prizes || [];
+  const boost = data?.boost || { status: "locked", quests: [], questsCompleted: 0, questsTotal: 4 };
+  const leaderboard = data?.leaderboard || [];
+  const prizes = data?.prizes || [];
   const top3 = leaderboard.slice(0, 3);
   const isJoined = me?.joined;
   const userRank = me?.rank;
@@ -54,8 +63,10 @@ export function TournamentsPage() {
   let dataState = "not-joined";
   if (isJoined && userPoints === 0) dataState = "joined";
   else if (isJoined && userPoints > 0) dataState = "scored";
-  if (rankImproved) dataState = "rank-improved";
-  if (me?.prizeEligible) dataState = "prize-eligible";
+  if (boost?.status === "locked" && isJoined) dataState = "boost-locked";
+  if (boost?.status === "ready") dataState = "boost-ready";
+  if (boost?.status === "active") dataState = "boost-active";
+  if (boost?.status === "consumed") dataState = "boost-consumed";
 
   const ready = !isLoading && !!data;
 
@@ -106,6 +117,36 @@ export function TournamentsPage() {
           )}
         </div>
       </div>
+
+      {/* Sprint Pass Boost Panel */}
+      {isJoined && (
+        <div className="arena-card-glass-premium p-4 mb-5" data-testid="sprint-pass-panel">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xs uppercase tracking-wider font-semibold !mb-0">⚡ Sprint Pass</h3>
+            <span className="text-[9px] text-casino-muted bg-[rgba(107,107,128,.1)] px-2 py-0.5 rounded-full" data-testid="boost-status">{boost.status === "active" ? "🔥 ACTIVE" : boost.status === "ready" ? "🎁 READY" : boost.status === "consumed" ? "✓ CONSUMED" : "🔒 LOCKED"}</span>
+          </div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex-1 arena-progress"><div className="arena-progress-fill" style={{ width: `${(boost.questsCompleted / boost.questsTotal) * 100}%` }} /></div>
+            <span className="text-[10px] text-casino-muted shrink-0">{boost.questsCompleted}/{boost.questsTotal}</span>
+          </div>
+          {boost.bonusPoints > 0 && <div className="text-[10px] text-gold font-bold mb-1" data-testid="boost-points">⚡ +{boost.bonusPoints} boost points</div>}
+          <div className="space-y-1.5">
+            {boost.quests?.map((q: any) => (
+              <div key={q.code} className="flex items-center gap-2 text-[10px]" data-testid={`event-quest-${q.code}`}>
+                <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[7px] font-bold shrink-0 ${q.status === "completed" ? "bg-win text-white" : "bg-[rgba(19,19,31,.6)] text-casino-muted"}`}>{q.status === "completed" ? "✓" : q.progress > 0 ? "◐" : "○"}</span>
+                <span className="flex-1 text-casino-text">{q.title}</span>
+                <span className={q.status === "completed" ? "text-win" : "text-casino-muted"}>{q.progress}/{q.target}</span>
+              </div>
+            ))}
+          </div>
+          {boost.status === "ready" && (
+            <button className="arena-btn !w-auto !px-6 !py-2 !text-[10px] mt-3" onClick={() => boostM.mutate(tournament.id)} disabled={boostM.isPending} data-testid="boost-activate">
+              {boostM.isPending ? "ACTIVATING..." : "⚡ ACTIVATE BOOST"}
+            </button>
+          )}
+          {boost.status === "active" && <div className="text-[9px] text-gold mt-2">🔥 Boost active — {boost.spinsRemaining} spins remaining</div>}
+        </div>
+      )}
 
       {/* Player Rank Card */}
       {isJoined && (

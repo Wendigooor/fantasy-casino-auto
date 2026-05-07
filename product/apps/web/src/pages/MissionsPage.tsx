@@ -204,6 +204,16 @@ export function MissionsPage() {
         </div>
       </div>
 
+      {/* Tournament Quest Promo */}
+      <a href="/tournaments" className="arena-card-glass-premium p-4 mb-5 flex items-center justify-between no-underline hover:border-primary/30 transition-all">
+        <div>
+          <div className="text-[10px] text-primary uppercase tracking-wider font-semibold mb-0.5">🏁 Live Event</div>
+          <h3 className="text-sm font-bold !mb-0 text-casino-text">High Roller Sprint</h3>
+          <p className="text-[10px] text-casino-muted mt-0.5">Complete tournament quests to unlock score boost</p>
+        </div>
+        <span className="arena-btn !w-auto !px-4 !py-1.5 !text-[10px] !inline-flex">Join →</span>
+      </a>
+
       {/* Empty state */}
       {allMissions.length === 0 && (
         <div className="arena-empty"><div className="arena-empty-icon">📋</div><p className="arena-empty-text">No missions available.</p></div>
