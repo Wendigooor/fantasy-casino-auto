@@ -1,0 +1,6 @@
+# ATM project config — Fantasy Casino
+evidence_dir: ./agent/atm/runs/<run-id>/evidence
+build_command: cd product/apps/web && npx vite build
+typecheck_command: cd product && npx tsc --noEmit
+e2e_command: node scripts/e2e-<run-id>.mjs
+profiles_dir: ./agent/atm/profiles
