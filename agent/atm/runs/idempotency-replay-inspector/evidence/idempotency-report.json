@@ -1,0 +1,34 @@
+{
+  "run": "idempotency-replay-inspector",
+  "assertions": {
+    "firstRequestSucceeded": true,
+    "balanceNotDoubleApplied": true,
+    "secondRequestReplayed": true,
+    "ledgerNotDuplicated": true,
+    "inspectorReturnedKey": true,
+    "noUnhandledErrors": true
+  },
+  "before": {
+    "balance": 100000,
+    "ledgerEntries": 0
+  },
+  "afterFirst": {
+    "balance": 99900,
+    "ledgerEntries": 0
+  },
+  "afterSecond": {
+    "balance": 99900,
+    "ledgerEntries": 0
+  },
+  "inspector": {
+    "key": "smoke-1778229278203-dedup",
+    "status": "safe_replay",
+    "userId": "bb73c462-d308-4318-8b88-cf6ad41f7135",
+    "action": "spin",
+    "records": 1,
+    "ledgerEntries": 0,
+    "balanceDelta": 0,
+    "warnings": [],
+    "checkedAt": "2026-05-08T08:34:38.498Z"
+  }
+}

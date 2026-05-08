@@ -37,6 +37,7 @@ import { lightningRoutes } from "./routes/lightning-routes.js";
 import { missionRoutes } from "./routes/mission-routes.js";
 import { tournamentRoutes } from "./routes/tournament-routes.js";
 import { reconciliationRoutes } from "./routes/reconciliation-routes.js";
+import { idempotencyRoutes } from "./routes/idempotency-routes.js";
 import { GameService } from "./services/game.js";
 
 const isTest = process.env.NODE_ENV === "test";
@@ -88,6 +89,7 @@ async function protectedRoutes(app: FastifyInstance) {
   await missionRoutes(app);
   await tournamentRoutes(app);
   await reconciliationRoutes(app);
+  await idempotencyRoutes(app);
 }
 
 export async function createApp(): Promise<FastifyInstance> {

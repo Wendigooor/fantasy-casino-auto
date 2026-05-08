@@ -1,0 +1,170 @@
+{
+  "run": {
+    "id": "idempotency-replay-inspector",
+    "profile": "tiny-technical",
+    "contract": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/idempotency-replay-inspector/contract.md",
+    "status": "active",
+    "verdict": null
+  },
+  "gates": [
+    {
+      "id": "gate.build",
+      "title": "Relevant build passes",
+      "severity": "critical",
+      "kind": "command",
+      "status": "passed"
+    },
+    {
+      "id": "gate.discovery",
+      "title": "Idempotency schema and write paths inspected",
+      "severity": "critical",
+      "kind": "manual",
+      "status": "passed"
+    },
+    {
+      "id": "gate.evidence.package",
+      "title": "Evidence package complete",
+      "severity": "critical",
+      "kind": "file_exists",
+      "status": "pending"
+    },
+    {
+      "id": "gate.evidence.report",
+      "title": "Idempotency JSON report exists",
+      "severity": "critical",
+      "kind": "file_exists",
+      "status": "pending"
+    },
+    {
+      "id": "gate.implementation",
+      "title": "Inspector implementation exists",
+      "severity": "critical",
+      "kind": "file_exists_or_note",
+      "status": "passed"
+    },
+    {
+      "id": "gate.smoke",
+      "title": "Idempotency replay smoke passes",
+      "severity": "critical",
+      "kind": "command",
+      "status": "passed"
+    }
+  ],
+  "events": [
+    {
+      "id": 145,
+      "gate_id": "gate.discovery",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T08:34:36.581627Z"
+    },
+    {
+      "id": 146,
+      "gate_id": "gate.discovery",
+      "type": "passed",
+      "payload": {
+        "evidence": null,
+        "note": "Schema: idempotency_keys(key, user_id, action, result, created_at). Spin endpoint uses idempotency key via gameService."
+      },
+      "at": "2026-05-08T08:34:36.582726Z"
+    },
+    {
+      "id": 147,
+      "gate_id": "gate.implementation",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T08:34:36.583777Z"
+    },
+    {
+      "id": 148,
+      "gate_id": "gate.implementation",
+      "type": "passed",
+      "payload": {
+        "evidence": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/api/src/services/idempotency-inspector.ts",
+        "note": null
+      },
+      "at": "2026-05-08T08:34:36.584645Z"
+    },
+    {
+      "id": 149,
+      "gate_id": "gate.build",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T08:34:36.585683Z"
+    },
+    {
+      "id": 150,
+      "gate_id": "gate.build",
+      "type": "run_started",
+      "payload": {
+        "command": "cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web && npx vite build"
+      },
+      "at": "2026-05-08T08:34:36.586303Z"
+    },
+    {
+      "id": 151,
+      "gate_id": "gate.build",
+      "type": "passed",
+      "payload": {
+        "exit_code": 0,
+        "duration_ms": 1556
+      },
+      "at": "2026-05-08T08:34:38.144091Z"
+    },
+    {
+      "id": 152,
+      "gate_id": "gate.smoke",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T08:34:38.145430Z"
+    },
+    {
+      "id": 153,
+      "gate_id": "gate.smoke",
+      "type": "run_started",
+      "payload": {
+        "command": "cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product && ATM_EVIDENCE_DIR=/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/idempotency-replay-inspector/evidence node scripts/idempotency-replay-smoke.mjs"
+      },
+      "at": "2026-05-08T08:34:38.146049Z"
+    },
+    {
+      "id": 154,
+      "gate_id": "gate.smoke",
+      "type": "passed",
+      "payload": {
+        "exit_code": 0,
+        "duration_ms": 377
+      },
+      "at": "2026-05-08T08:34:38.525127Z"
+    }
+  ],
+  "evidence": [
+    {
+      "gate_id": "gate.discovery",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.implementation",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/api/src/services/idempotency-inspector.ts",
+      "sha256": "3263a58c45b2bf477b5f48f8986257c6d36d416c50a767b2decac0d5ba4f96c2"
+    }
+  ],
+  "commands": [
+    {
+      "gate_id": "gate.build",
+      "command": "cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web && npx vite build",
+      "exit_code": 0,
+      "duration_ms": 1556
+    },
+    {
+      "gate_id": "gate.smoke",
+      "command": "cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product && ATM_EVIDENCE_DIR=/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/idempotency-replay-inspector/evidence node scripts/idempotency-replay-smoke.mjs",
+      "exit_code": 0,
+      "duration_ms": 377
+    }
+  ],
+  "verdict": null
+}
