@@ -18,28 +18,36 @@ gates:
       - agent/atm/runs/<run-id>/evidence/reviewer-quality-score.md
       - agent/atm/runs/<run-id>/evidence/reviewer-fix-contract.md
 
+  - id: review.self.fix_response
+    title: Reviewer blocking findings fixed or explicitly accepted
+    severity: critical
+    kind: file_exists_or_note
+    paths:
+      - agent/atm/runs/<run-id>/evidence/reviewer-fix-response.md
+    note: If reviewer-verdict is requires_fix, this file must exist with either fixes applied or accepted-risk evidence.
+
   - id: gate.build
     title: API build passes
     severity: critical
     kind: command
-    command: cd product/apps/api && npm run build
+    command: sh -lc 'cd product/apps/api && npm run build'
   - id: gate.smoke
     title: Idempotency replay smoke passes
     severity: critical
     kind: command
-    command: cd product && node scripts/idempotency-replay-smoke.mjs
+    command: sh -lc 'cd product && node scripts/<run-id>-smoke.mjs'
   - id: gate.evidence.report
     title: Idempotency JSON report exists
     severity: critical
     kind: file_exists
     paths:
-      - agent/atm/runs/idempotency-replay-inspector/evidence/idempotency-report.json
+      - agent/atm/runs/<run-id>/evidence/<run-id>-report.json
   - id: gate.evidence.package
     title: Evidence package complete
     severity: critical
     kind: file_exists
     paths:
-      - agent/atm/runs/idempotency-replay-inspector/evidence/summary.md
-      - agent/atm/runs/idempotency-replay-inspector/evidence/idempotency-report.json
-      - agent/atm/runs/idempotency-replay-inspector/evidence/changed-files.md
-      - agent/atm/runs/idempotency-replay-inspector/evidence/atm-export.json
+      - agent/atm/runs/<run-id>/evidence/summary.md
+      - agent/atm/runs/<run-id>/evidence/<run-id>-report.json
+      - agent/atm/runs/<run-id>/evidence/changed-files.md
+      - agent/atm/runs/<run-id>/evidence/atm-export.json
