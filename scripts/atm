@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# ATM wrapper for Fantasy Casino project
+# Usage: ./scripts/atm <command> [args...]
+set -e
+DIR="$(cd "$(dirname "$0")/.." && pwd)"
+ATM_HOME="$DIR/agent/atm"
+export ATM_PROJECT_ROOT="$DIR"
+export ATM_DB_DIR="$ATM_HOME/.atm"
+export ATM_DB_PATH="$ATM_HOME/.atm/state.db"
+
+# Find ATM source
+if [ -d "/Users/iharzvezdzin/Documents/projects/agent-task-manager" ]; then
+    exec python3 /Users/iharzvezdzin/Documents/projects/agent-task-manager/src/gate_agent.py "$@"
+elif command -v atm &>/dev/null; then
+    exec atm "$@"
+else
+    echo "ERROR: agent-task-manager not found. Install at ~/agent-task-manager or add to PATH."
+    exit 1
+fi
