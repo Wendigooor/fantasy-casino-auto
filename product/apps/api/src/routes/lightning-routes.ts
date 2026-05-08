@@ -55,4 +55,11 @@ export async function lightningRoutes(app: FastifyInstance) {
     await app.pg.query("INSERT INTO lightning_round_entries (round_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [roundId, userId]);
     return { joined: true, roundId };
   });
+
+  // POST /api/v1/lightning/seed — create active round for demo
+  app.post("/lightning/seed", async () => {
+    await app.pg.query("UPDATE lightning_rounds SET status = 'ended' WHERE status = 'active'");
+    const r = await app.pg.query("INSERT INTO lightning_rounds (status, ends_at) VALUES ('active', NOW() + INTERVAL '15 minutes') RETURNING id");
+    return { seeded: true, roundId: r.rows[0].id };
+  });
 }
