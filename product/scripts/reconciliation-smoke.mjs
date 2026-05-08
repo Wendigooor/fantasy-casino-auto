@@ -42,7 +42,7 @@ async function main() {
   });
   const healthy = await healthyRes.json();
   report.healthyScenario = { passed: healthy.status !== "drift_detected" && healthy.status !== "error", status: healthy.status, drift: healthy.drift };
-  report.assertions["healthyBalanced"] = healthy.status !== "drift_detected" && healthy.status !== "error";
+  report.assertions["noDriftDetected"] = healthy.status !== "drift_detected" && healthy.status !== "error";
   console.log("Healthy:", healthy.status, "drift:", healthy.drift);
 
   // 4. Corrupt wallet balance directly (introduce drift)
@@ -66,7 +66,7 @@ async function main() {
   writeFileSync(`${EVIDENCE_DIR}/reconciliation-report.json`, JSON.stringify(report, null, 2));
   console.log("Report written to", EVIDENCE_DIR);
 
-  if (!report.assertions["healthyBalanced"]) throw new Error("Healthy scenario not balanced");
+  if (!report.assertions["noDriftDetected"]) throw new Error("Healthy scenario not balanced");
   if (!report.assertions["corruptionDetected"]) throw new Error("Corrupted scenario not detected");
   console.log("ALL PASSED");
 }
