@@ -1,11 +1,32 @@
 #!/usr/bin/env python3
-"""Wrapper that delegates to agent-task-manager review-bundle-generator."""
+"""Wrapper that finds ATM's review-bundle-generator and delegates to it."""
+
 import sys, os, subprocess
 
-atm_script = os.path.expanduser("~/projects/agent-task-manager/scripts/review-bundle-generator.py")
-if not os.path.exists(atm_script):
-    print(f"ERROR: ATM review-bundle-generator not found at {atm_script}")
-    print("Install agent-task-manager or clone to ~/projects/agent-task-manager")
+search_paths = [
+    os.environ.get("ATM_HOME", ""),
+    os.path.expanduser("~/Documents/projects/agent-task-manager"),
+    os.path.expanduser("~/projects/agent-task-manager"),
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "agent-task-manager"),
+]
+
+atm_script = None
+for base in search_paths:
+    if not base:
+        continue
+    candidate = os.path.join(base, "scripts", "review-bundle-generator.py")
+    if os.path.exists(candidate):
+        atm_script = candidate
+        break
+
+if not atm_script:
+    print(
+        "ERROR: ATM review-bundle-generator not found.\n"
+        "Install agent-task-manager to one of:\n"
+        + "\n".join(f"  - {p}" for p in search_paths if p) + "\n"
+        "Or set ATM_HOME environment variable.",
+        file=sys.stderr,
+    )
     sys.exit(1)
 
 cmd = [sys.executable, atm_script] + sys.argv[1:]

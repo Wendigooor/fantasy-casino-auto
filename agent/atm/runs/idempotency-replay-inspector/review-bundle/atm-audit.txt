@@ -1,0 +1,11 @@
+{
+  "run_id": "idempotency-replay-inspector",
+  "verdict": "demo_done",
+  "gate_count": 6,
+  "passed_gates": 6,
+  "critical_issues": 0,
+  "major_issues": 0,
+  "pass": true,
+  "issues": [],
+  "warnings": []
+}
