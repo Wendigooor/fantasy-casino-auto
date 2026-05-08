@@ -21,14 +21,14 @@
     "ledgerEntries": 0
   },
   "inspector": {
-    "key": "smoke-1778229278203-dedup",
+    "key": "smoke-1778229397806-dedup",
     "status": "safe_replay",
-    "userId": "bb73c462-d308-4318-8b88-cf6ad41f7135",
+    "userId": "f9c44070-a4f4-48d0-b51a-3c44335cfe89",
     "action": "spin",
     "records": 1,
     "ledgerEntries": 0,
     "balanceDelta": 0,
     "warnings": [],
-    "checkedAt": "2026-05-08T08:34:38.498Z"
+    "checkedAt": "2026-05-08T08:36:38.126Z"
   }
 }
