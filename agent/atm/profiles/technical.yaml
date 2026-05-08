@@ -1,0 +1,53 @@
+gates:
+  - id: gate.discovery.schema
+    title: Wallet, ledger, game round schemas inspected
+    severity: critical
+    kind: manual
+  - id: gate.contract.invariants
+    title: Reconciliation invariants documented before implementation
+    severity: critical
+    kind: manual
+  - id: gate.implementation.service
+    title: Reconciliation service implemented
+    severity: critical
+    kind: file_exists
+    paths:
+      - product/apps/api/src/services/reconciliation.ts
+  - id: gate.implementation.route
+    title: Protected reconciliation API route implemented
+    severity: critical
+    kind: manual
+  - id: gate.implementation.migration
+    title: Migration added or explicitly justified as unnecessary
+    severity: critical
+    kind: file_exists_or_note
+  - id: gate.build.production
+    title: Production build passes
+    severity: critical
+    kind: command
+    command: cd product/apps/web && npx vite build
+  - id: gate.typecheck
+    title: Typecheck passes
+    severity: critical
+    kind: command
+    command: npm run typecheck
+  - id: gate.tests.smoke
+    title: Reconciliation smoke script passes
+    severity: critical
+    kind: command
+    command: node scripts/reconciliation-smoke.mjs
+  - id: gate.evidence.report
+    title: Reconciliation JSON report exists
+    severity: critical
+    kind: file_exists
+    paths:
+      - agent/atm/runs/wallet-ledger-reconciliation/evidence/reconciliation-report.json
+  - id: gate.evidence.package
+    title: Technical evidence package complete
+    severity: critical
+    kind: file_exists
+    paths:
+      - agent/atm/runs/wallet-ledger-reconciliation/evidence/summary.md
+      - agent/atm/runs/wallet-ledger-reconciliation/evidence/reconciliation-report.json
+      - agent/atm/runs/wallet-ledger-reconciliation/evidence/changed-files.md
+      - agent/atm/runs/wallet-ledger-reconciliation/evidence/atm-export.json

@@ -1,0 +1,229 @@
+{
+  "run": {
+    "id": "wallet-ledger-reconciliation",
+    "profile": "technical",
+    "contract": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/wallet-ledger-reconciliation/contract.md",
+    "status": "active",
+    "verdict": "technical_partial"
+  },
+  "gates": [
+    {
+      "id": "gate.build.production",
+      "title": "Production build passes",
+      "severity": "critical",
+      "kind": "command",
+      "status": "passed"
+    },
+    {
+      "id": "gate.contract.invariants",
+      "title": "Reconciliation invariants documented before implementation",
+      "severity": "critical",
+      "kind": "manual",
+      "status": "passed"
+    },
+    {
+      "id": "gate.discovery.schema",
+      "title": "Wallet, ledger, game round schemas inspected",
+      "severity": "critical",
+      "kind": "manual",
+      "status": "passed"
+    },
+    {
+      "id": "gate.evidence.package",
+      "title": "Technical evidence package complete",
+      "severity": "critical",
+      "kind": "file_exists",
+      "status": "pending"
+    },
+    {
+      "id": "gate.evidence.report",
+      "title": "Reconciliation JSON report exists",
+      "severity": "critical",
+      "kind": "file_exists",
+      "status": "pending"
+    },
+    {
+      "id": "gate.implementation.migration",
+      "title": "Migration added or explicitly justified as unnecessary",
+      "severity": "critical",
+      "kind": "file_exists_or_note",
+      "status": "passed"
+    },
+    {
+      "id": "gate.implementation.route",
+      "title": "Protected reconciliation API route implemented",
+      "severity": "critical",
+      "kind": "manual",
+      "status": "passed"
+    },
+    {
+      "id": "gate.implementation.service",
+      "title": "Reconciliation service implemented",
+      "severity": "critical",
+      "kind": "file_exists",
+      "status": "in_progress"
+    },
+    {
+      "id": "gate.tests.smoke",
+      "title": "Reconciliation smoke script passes",
+      "severity": "critical",
+      "kind": "command",
+      "status": "pending"
+    },
+    {
+      "id": "gate.typecheck",
+      "title": "Typecheck passes",
+      "severity": "critical",
+      "kind": "command",
+      "status": "pending"
+    }
+  ],
+  "events": [
+    {
+      "id": 111,
+      "gate_id": "gate.discovery.schema",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T07:49:10.087453Z"
+    },
+    {
+      "id": 112,
+      "gate_id": "gate.discovery.schema",
+      "type": "passed",
+      "payload": {
+        "evidence": null,
+        "note": "Schemas: wallets(bigint), ledger_entries(type+amount), game_rounds(bet_amount+win_amount). Amounts in cents."
+      },
+      "at": "2026-05-08T07:49:10.088283Z"
+    },
+    {
+      "id": 113,
+      "gate_id": "gate.contract.invariants",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T07:49:10.089563Z"
+    },
+    {
+      "id": 114,
+      "gate_id": "gate.contract.invariants",
+      "type": "passed",
+      "payload": {
+        "evidence": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/wallet-ledger-reconciliation/evidence/invariants.md",
+        "note": null
+      },
+      "at": "2026-05-08T07:49:10.090467Z"
+    },
+    {
+      "id": 115,
+      "gate_id": "gate.implementation.service",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T07:49:10.091600Z"
+    },
+    {
+      "id": 116,
+      "gate_id": "gate.implementation.route",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T07:49:10.092640Z"
+    },
+    {
+      "id": 117,
+      "gate_id": "gate.implementation.route",
+      "type": "passed",
+      "payload": {
+        "evidence": null,
+        "note": "GET /api/v1/reconciliation/wallet/:userId \u2014 protected, self-only or admin"
+      },
+      "at": "2026-05-08T07:49:10.093313Z"
+    },
+    {
+      "id": 118,
+      "gate_id": "gate.implementation.migration",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T07:49:10.094355Z"
+    },
+    {
+      "id": 119,
+      "gate_id": "gate.implementation.migration",
+      "type": "passed",
+      "payload": {
+        "evidence": null,
+        "note": "No schema changes needed. Existing tables have all required columns."
+      },
+      "at": "2026-05-08T07:49:10.095117Z"
+    },
+    {
+      "id": 120,
+      "gate_id": "gate.build.production",
+      "type": "started",
+      "payload": null,
+      "at": "2026-05-08T07:49:10.096138Z"
+    },
+    {
+      "id": 121,
+      "gate_id": "gate.build.production",
+      "type": "run_started",
+      "payload": {
+        "command": "cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web && npx vite build"
+      },
+      "at": "2026-05-08T07:49:10.097143Z"
+    },
+    {
+      "id": 122,
+      "gate_id": "gate.build.production",
+      "type": "passed",
+      "payload": {
+        "exit_code": 0,
+        "duration_ms": 1464
+      },
+      "at": "2026-05-08T07:49:11.563306Z"
+    }
+  ],
+  "evidence": [
+    {
+      "gate_id": "gate.discovery.schema",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.contract.invariants",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/wallet-ledger-reconciliation/evidence/invariants.md",
+      "sha256": "37f342eef805296fd3b8ecbd63b9a1f9c4db04e3c007919dd9362a56fc9077e6"
+    },
+    {
+      "gate_id": "gate.implementation.route",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.implementation.migration",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    }
+  ],
+  "commands": [
+    {
+      "gate_id": "gate.build.production",
+      "command": "cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web && npx vite build",
+      "exit_code": 0,
+      "duration_ms": 1464
+    }
+  ],
+  "verdict": {
+    "verdict": "technical_partial",
+    "reason": {
+      "reason": "4 critical gate(s) still pending",
+      "critical_failed": 0,
+      "critical_pending": 4,
+      "major_failed": 0,
+      "all_passed": 5,
+      "total": 10
+    }
+  }
+}

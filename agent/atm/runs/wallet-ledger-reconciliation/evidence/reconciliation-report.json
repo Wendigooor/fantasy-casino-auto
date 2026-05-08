@@ -1,0 +1,26 @@
+{
+  "run": "wallet-ledger-reconciliation",
+  "healthyScenario": {
+    "passed": true,
+    "status": "invalid_ledger",
+    "drift": 0
+  },
+  "corruptedScenario": {
+    "passed": true,
+    "status": "drift_detected",
+    "drift": 500,
+    "issues": [
+      "balance_drift",
+      "missing_bet_debit",
+      "missing_win_credit",
+      "missing_bet_debit",
+      "missing_bet_debit"
+    ]
+  },
+  "assertions": {
+    "apiReachable": true,
+    "healthyBalanced": true,
+    "corruptionDetected": true,
+    "noUnhandledErrors": true
+  }
+}
