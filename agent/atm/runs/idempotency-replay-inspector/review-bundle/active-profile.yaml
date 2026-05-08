@@ -1,48 +1,53 @@
 gates:
-  - id: gate.discovery.api
-    title: API and data contract probed before implementation
+  - id: gate.discovery
+    title: Idempotency schema and write paths inspected
     severity: critical
     kind: manual
-  - id: gate.discovery.routes
-    title: Routes and navigation checked
-    severity: major
-    kind: manual
-  - id: gate.implementation.migration
-    title: Required migrations exist
+  - id: gate.implementation
+    title: Inspector implementation exists
     severity: critical
     kind: file_exists_or_note
-  - id: gate.build.production
-    title: Production build passes
+    paths:
+      - product/apps/api/src/services/idempotency-inspector.ts
+  - id: review.self.text
+    title: Fresh-context text reviewer completed
+    severity: critical
+    kind: file_exists_or_note
+    paths:
+      - agent/atm/runs/<run-id>/evidence/reviewer-verdict.md
+      - agent/atm/runs/<run-id>/evidence/reviewer-quality-score.md
+      - agent/atm/runs/<run-id>/evidence/reviewer-fix-contract.md
+
+  - id: review.self.fix_response
+    title: Reviewer blocking findings fixed or explicitly accepted
+    severity: critical
+    kind: file_exists_or_note
+    paths:
+      - agent/atm/runs/<run-id>/evidence/reviewer-fix-response.md
+    note: If reviewer-verdict is requires_fix, this file must exist with either fixes applied or accepted-risk evidence.
+
+  - id: gate.build
+    title: API build passes
     severity: critical
     kind: command
-    command: cd product/apps/web && npx vite build
-  - id: gate.e2e.demo
-    title: Demo E2E passes
+    command: sh -lc 'cd product/apps/api && npm run build'
+  - id: gate.smoke
+    title: Idempotency replay smoke passes
     severity: critical
     kind: command
-    command: node scripts/e2e-lightning-rounds.mjs
-  - id: gate.screenshots.desktop
-    title: Desktop screenshots exist
+    command: sh -lc 'cd product && node scripts/<run-id>-smoke.mjs'
+  - id: gate.evidence.report
+    title: Idempotency JSON report exists
     severity: critical
-    kind: screenshot_set
-    min_count: 4
-    min_size_kb: 80
-  - id: gate.screenshots.mobile
-    title: Mobile screenshot exists
-    severity: critical
-    kind: screenshot_set
-    min_count: 1
-    min_size_kb: 60
-  - id: gate.visual.review
-    title: Screenshots reviewed
-    severity: critical
-    kind: manual
-    evidence:
-      required: [file]
+    kind: file_exists
+    paths:
+      - agent/atm/runs/<run-id>/evidence/<run-id>-report.json
   - id: gate.evidence.package
     title: Evidence package complete
     severity: critical
     kind: file_exists
     paths:
       - agent/atm/runs/<run-id>/evidence/summary.md
+      - agent/atm/runs/<run-id>/evidence/<run-id>-report.json
+      - agent/atm/runs/<run-id>/evidence/changed-files.md
       - agent/atm/runs/<run-id>/evidence/atm-export.json

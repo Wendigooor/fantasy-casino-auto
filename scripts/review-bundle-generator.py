@@ -19,7 +19,7 @@ Output:
   - known-limitations.md
 """
 
-import sys, os, json, shutil, subprocess, argparse, glob
+import sys, os, json, shutil, subprocess, argparse, glob, datetime, sqlite3
 
 def build_bundle(run_id: str, project_root: str):
     rdir = os.path.join(project_root, "agent", "atm", "runs", run_id)
@@ -49,51 +49,53 @@ def build_bundle(run_id: str, project_root: str):
     copy_if_exists("changed-files.md", os.path.join(ev, "changed-files.md"))
     # ATM export
     copy_if_exists("atm-export.json", os.path.join(ev, "atm-export.json"))
-    # Profile — find from atm-export or guess
+    # Profile — resolve from live ATM DB
     profile_src = None
-    profile_yaml = os.path.join(ev, "atm-export.json")
-    if os.path.exists(profile_yaml):
-        with open(profile_yaml) as f:
-            export = json.load(f)
-        profile_name = export.get("profile", "")
-        if profile_name:
-            candidates = [
-                os.path.join(project_root, "agent", "atm", "profiles", profile_name + ".yaml"),
-                os.path.join(project_root, "agent", "atm", "profiles", profile_name + ".yml"),
-            ]
-            for c in candidates:
-                if os.path.exists(c):
-                    profile_src = c
-                    break
+    profile_name = None
+    try:
+        db_path = os.environ.get("ATM_DB_PATH") or os.path.join(project_root, "agent", "atm", ".atm", "state.db")
+        if os.path.exists(db_path):
+            import sqlite3
+            conn = sqlite3.connect(db_path)
+            row = conn.execute("SELECT profile FROM runs WHERE id = ?", [run_id]).fetchone()
+            conn.close()
+            if row and row[0]:
+                profile_name = row[0]
+    except Exception:
+        pass
+
+    if profile_name:
+        for ext in (".yaml", ".yml"):
+            c = os.path.join(project_root, "agent", "atm", "profiles", profile_name + ext)
+            if os.path.exists(c):
+                profile_src = c
+                break
+
     if profile_src:
         shutil.copy2(profile_src, os.path.join(bundle, "active-profile.yaml"))
-        manifest["active-profile.yaml"] = "✅"
+        manifest["active-profile.yaml"] = f"✅ ({profile_name})"
     else:
-        # Try to find any profile yaml
-        yamls = glob.glob(os.path.join(project_root, "agent", "atm", "profiles", "*.yaml"))
-        if yamls:
-            shutil.copy2(yamls[0], os.path.join(bundle, "active-profile.yaml"))
-            manifest["active-profile.yaml"] = "📄 (best guess)"
-        else:
-            manifest["active-profile.yaml"] = "❌ MISSING"
+        manifest["active-profile.yaml"] = "❌ CANNOT RESOLVE — aborting"
+        print(f"ERROR: Cannot resolve active profile for run '{run_id}'. Bundle generation failed.")
+        sys.exit(1)
 
-    # Audit output
-    audit_txt = os.path.join(ev, "atm-audit.txt")
-    if not os.path.exists(audit_txt):
-        # Try running audit
-        try:
-            sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-            from gateboard import cmd_audit
-            a = cmd_audit(run_id)
+    # Audit output — run via subprocess
+    audit_txt = os.path.join(bundle, "atm-audit.txt")
+    try:
+        proc = subprocess.run(
+            [sys.executable, os.path.join(os.path.dirname(__file__), "..", "src", "gate_agent.py"), "audit", "--id", run_id, "--json"],
+            capture_output=True, text=True, timeout=30,
+            cwd=project_root,
+            env={**os.environ, "ATM_PROJECT_ROOT": project_root, "ATM_DB_DIR": os.path.join(project_root, "agent", "atm", ".atm")}
+        )
+        if proc.returncode == 0:
             with open(audit_txt, "w") as f:
-                f.write(json.dumps(a, indent=2))
-        except Exception:
-            pass
-    if os.path.exists(audit_txt):
-        shutil.copy2(audit_txt, os.path.join(bundle, "atm-audit.txt"))
-        manifest["atm-audit.txt"] = "✅"
-    else:
-        manifest["atm-audit.txt"] = "❌"
+                f.write(proc.stdout)
+            manifest["atm-audit.txt"] = "✅"
+        else:
+            manifest["atm-audit.txt"] = "❌ (audit command failed)"
+    except Exception as e:
+        manifest["atm-audit.txt"] = f"❌ ({e})"
 
     # Changed source files — read from changed-files.md
     changed_md = os.path.join(ev, "changed-files.md")
@@ -171,6 +173,27 @@ def build_bundle(run_id: str, project_root: str):
             manifest["known-limitations.md"] = "📄 (auto-generated placeholder)"
     else:
         manifest["known-limitations.md"] = "❌ MISSING"
+
+    # Freshness check
+    freshness_issues = []
+    try:
+        last_commit = subprocess.run(
+            ["git", "log", "-1", "--format=%ct"],
+            capture_output=True, text=True, timeout=10, cwd=project_root
+        )
+        if last_commit.returncode == 0 and last_commit.stdout.strip():
+            commit_ts = int(last_commit.stdout.strip())
+            commit_dt = datetime.datetime.fromtimestamp(commit_ts)
+            bundle_dt = datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(bundle, "REVIEW_BUNDLE_MANIFEST.md")))
+            if bundle_dt < commit_dt:
+                freshness_issues.append(f"Bundle generated {bundle_dt.isoformat()} before last commit {commit_dt.isoformat()}")
+    except Exception:
+        freshness_issues.append("Could not verify freshness (git unavailable)")
+
+    if freshness_issues:
+        manifest["freshness"] = "❌ " + "; ".join(freshness_issues)
+    else:
+        manifest["freshness"] = "✅ bundle is fresh (after latest commit)"
 
     # Write manifest
     manifest_lines = []
