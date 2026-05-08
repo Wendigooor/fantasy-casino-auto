@@ -33,6 +33,7 @@ import { DuelService } from "./services/duel.js";
 import { duelRoutes, initDuelService } from "./routes/duel-routes.js";
 import { leaderboardRoutes } from "./routes/leaderboard-routes.js";
 import { achievementRoutes } from "./routes/achievement-routes.js";
+import { lightningRoutes } from "./routes/lightning-routes.js";
 import { missionRoutes } from "./routes/mission-routes.js";
 import { tournamentRoutes } from "./routes/tournament-routes.js";
 import { GameService } from "./services/game.js";
@@ -82,6 +83,7 @@ async function protectedRoutes(app: FastifyInstance) {
   await duelRoutes(app);
   await leaderboardRoutes(app);
   await achievementRoutes(app);
+  await lightningRoutes(app);
   await missionRoutes(app);
   await tournamentRoutes(app);
 }
