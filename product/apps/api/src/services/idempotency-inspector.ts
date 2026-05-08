@@ -38,8 +38,7 @@ export async function inspectKey(pg: any, key: string): Promise<IdempotencyInspe
   }
 
   // Check wallet balance
-  const walletR = await pg.query("SELECT balance FROM wallets WHERE user_id = $1", [userId]);
-  const balance = walletR.rows.length > 0 ? Number(walletR.rows[0].balance) : 0;
+  const ledgerTotal = ledgerR.rows.length;
 
   // Detect if replay caused duplicate balance change (balance > expected)
   // This is a simplified check; full reconciliation would need the full ledger

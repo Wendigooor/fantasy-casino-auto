@@ -1,0 +1,36 @@
+gates:
+  - id: gate.discovery
+    title: Idempotency schema and write paths inspected
+    severity: critical
+    kind: manual
+  - id: gate.implementation
+    title: Inspector implementation exists
+    severity: critical
+    kind: file_exists_or_note
+    paths:
+      - product/apps/api/src/services/idempotency-inspector.ts
+  - id: gate.build
+    title: Relevant build passes
+    severity: critical
+    kind: command
+    command: cd product/apps/api && npm run build
+  - id: gate.smoke
+    title: Idempotency replay smoke passes
+    severity: critical
+    kind: command
+    command: cd product && node scripts/idempotency-replay-smoke.mjs
+  - id: gate.evidence.report
+    title: Idempotency JSON report exists
+    severity: critical
+    kind: file_exists
+    paths:
+      - agent/atm/runs/idempotency-replay-inspector/evidence/idempotency-report.json
+  - id: gate.evidence.package
+    title: Evidence package complete
+    severity: critical
+    kind: file_exists
+    paths:
+      - agent/atm/runs/idempotency-replay-inspector/evidence/summary.md
+      - agent/atm/runs/idempotency-replay-inspector/evidence/idempotency-report.json
+      - agent/atm/runs/idempotency-replay-inspector/evidence/changed-files.md
+      - agent/atm/runs/idempotency-replay-inspector/evidence/atm-export.json
