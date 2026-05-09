@@ -1,0 +1,450 @@
+{
+  "run": {
+    "id": "tournament-podium-moment",
+    "profile": "demo-tournament-podium-moment",
+    "contract": "agent/atm/runs/tournament-podium-moment/contract.md",
+    "status": "active",
+    "verdict": "demo_done"
+  },
+  "gates": [
+    {
+      "id": "gate.build.production",
+      "title": "Production build passes (web)",
+      "severity": "critical",
+      "kind": "command",
+      "status": "passed"
+    },
+    {
+      "id": "gate.discovery.api",
+      "title": "API and data contract probed before implementation",
+      "severity": "critical",
+      "kind": "manual",
+      "status": "passed"
+    },
+    {
+      "id": "gate.discovery.routes",
+      "title": "Routes and navigation checked",
+      "severity": "major",
+      "kind": "manual",
+      "status": "passed"
+    },
+    {
+      "id": "gate.e2e.tournament-podium",
+      "title": "Tournament Podium Moment E2E passes",
+      "severity": "critical",
+      "kind": "command",
+      "status": "passed"
+    },
+    {
+      "id": "gate.evidence.package",
+      "title": "Evidence package complete",
+      "severity": "critical",
+      "kind": "file_exists",
+      "status": "passed"
+    },
+    {
+      "id": "gate.implementation.migration",
+      "title": "Required migrations exist",
+      "severity": "critical",
+      "kind": "file_exists_or_note",
+      "status": "passed"
+    },
+    {
+      "id": "gate.screenshots.desktop",
+      "title": "Desktop screenshots exist (podium feature)",
+      "severity": "critical",
+      "kind": "screenshot_set",
+      "status": "passed"
+    },
+    {
+      "id": "gate.screenshots.mobile",
+      "title": "Mobile screenshot exists",
+      "severity": "critical",
+      "kind": "screenshot_set",
+      "status": "passed"
+    },
+    {
+      "id": "gate.visual.review",
+      "title": "Screenshots reviewed",
+      "severity": "critical",
+      "kind": "manual",
+      "status": "passed"
+    },
+    {
+      "id": "review.self.fix_response",
+      "title": "Reviewer blocking findings fixed or explicitly accepted",
+      "severity": "critical",
+      "kind": "file_exists_or_note",
+      "status": "passed"
+    },
+    {
+      "id": "review.self.text",
+      "title": "Fresh-context text reviewer completed",
+      "severity": "critical",
+      "kind": "file_exists_or_note",
+      "status": "passed"
+    },
+    {
+      "id": "review.self.vision",
+      "title": "Vision review completed or explicitly skipped",
+      "severity": "major",
+      "kind": "file_exists_or_note",
+      "status": "passed"
+    }
+  ],
+  "events": [
+    {
+      "id": 11,
+      "gate_id": "gate.build.production",
+      "type": "run_started",
+      "payload": {
+        "command": "sh -lc cd product/apps/web && npx vite build"
+      },
+      "at": "2026-05-08T14:03:44.254667Z"
+    },
+    {
+      "id": 12,
+      "gate_id": "gate.build.production",
+      "type": "failed",
+      "payload": {
+        "exit_code": 1,
+        "duration_ms": 13179
+      },
+      "at": "2026-05-08T14:03:57.436175Z"
+    },
+    {
+      "id": 13,
+      "gate_id": "gate.build.production",
+      "type": "run_started",
+      "payload": {
+        "command": "sh -lc cd product/apps/web && ./node_modules/.bin/vite build"
+      },
+      "at": "2026-05-08T14:04:12.228187Z"
+    },
+    {
+      "id": 14,
+      "gate_id": "gate.build.production",
+      "type": "failed",
+      "payload": {
+        "exit_code": 127,
+        "duration_ms": 187
+      },
+      "at": "2026-05-08T14:04:12.417378Z"
+    },
+    {
+      "id": 15,
+      "gate_id": "gate.build.production",
+      "type": "run_started",
+      "payload": {
+        "command": "sh -lc cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web && ./node_modules/.bin/vite build"
+      },
+      "at": "2026-05-08T14:04:46.229504Z"
+    },
+    {
+      "id": 16,
+      "gate_id": "gate.build.production",
+      "type": "failed",
+      "payload": {
+        "exit_code": 127,
+        "duration_ms": 208
+      },
+      "at": "2026-05-08T14:04:46.439480Z"
+    },
+    {
+      "id": 17,
+      "gate_id": "gate.build.production",
+      "type": "run_started",
+      "payload": {
+        "command": "sh -lc cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web && node /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web/node_modules/vite/bin/vite.js build"
+      },
+      "at": "2026-05-08T14:05:01.242630Z"
+    },
+    {
+      "id": 18,
+      "gate_id": "gate.build.production",
+      "type": "failed",
+      "payload": {
+        "exit_code": 1,
+        "duration_ms": 359
+      },
+      "at": "2026-05-08T14:05:01.603778Z"
+    },
+    {
+      "id": 19,
+      "gate_id": "gate.build.production",
+      "type": "run_started",
+      "payload": {
+        "command": "sh -lc ./node_modules/.bin/vite build"
+      },
+      "at": "2026-05-08T14:05:41.916723Z"
+    },
+    {
+      "id": 20,
+      "gate_id": "gate.build.production",
+      "type": "run_started",
+      "payload": {
+        "command": "/tmp/podium-atm-build.sh"
+      },
+      "at": "2026-05-08T14:07:55.284181Z"
+    },
+    {
+      "id": 21,
+      "gate_id": "gate.build.production",
+      "type": "passed",
+      "payload": {
+        "exit_code": 0,
+        "duration_ms": 1254
+      },
+      "at": "2026-05-08T14:07:56.539773Z"
+    },
+    {
+      "id": 22,
+      "gate_id": "gate.e2e.tournament-podium",
+      "type": "run_started",
+      "payload": {
+        "command": "/tmp/podium-atm-e2e.sh"
+      },
+      "at": "2026-05-08T14:08:09.400946Z"
+    },
+    {
+      "id": 23,
+      "gate_id": "gate.e2e.tournament-podium",
+      "type": "run_started",
+      "payload": {
+        "command": "/tmp/e2e-gate.sh"
+      },
+      "at": "2026-05-08T14:13:42.794510Z"
+    },
+    {
+      "id": 24,
+      "gate_id": "gate.discovery.api",
+      "type": "passed",
+      "payload": {
+        "evidence": null,
+        "note": "API returns me.rank, prizes, leaderboard full discovery documented in contract"
+      },
+      "at": "2026-05-08T14:19:11.981843Z"
+    },
+    {
+      "id": 25,
+      "gate_id": "gate.discovery.routes",
+      "type": "passed",
+      "payload": {
+        "evidence": null,
+        "note": "/tournaments route confirmed in App.tsx line 37"
+      },
+      "at": "2026-05-08T14:19:12.046307Z"
+    },
+    {
+      "id": 26,
+      "gate_id": "gate.implementation.migration",
+      "type": "passed",
+      "payload": {
+        "evidence": null,
+        "note": "Frontend-only feature, no DB migration needed"
+      },
+      "at": "2026-05-08T14:19:12.164963Z"
+    }
+  ],
+  "evidence": [
+    {
+      "gate_id": "gate.discovery.api",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.discovery.routes",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.implementation.migration",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.screenshots.desktop",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/screenshots/02-podium-popup.png",
+      "sha256": "04e52e699c7f67a54d98da4052d6d85827efbfa6ae70e512c3bcea16f7399bf0"
+    },
+    {
+      "gate_id": "gate.screenshots.mobile",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/screenshots/05-mobile-podium-popup.png",
+      "sha256": "82690113207bebe2c0c6eea8341aadbc0d0eabd5f5fa18de1956757201c65dc5"
+    },
+    {
+      "gate_id": "gate.evidence.package",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/summary.md",
+      "sha256": "3e1db6e68c4e5093d794de093676f4003ef7bfe2ef896628dab5926db6d3cb2f"
+    },
+    {
+      "gate_id": "gate.evidence.package",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/changed-files.md",
+      "sha256": "c41ee57ae4ac9509b378de5150928f989c6da620a4fed2f66248a120172228aa"
+    },
+    {
+      "gate_id": "gate.evidence.package",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/atm-export.json",
+      "sha256": "ea6753b20640a137f2795f6465ba3a55cf7117718e21f5439c21b2459f0cdb30"
+    },
+    {
+      "gate_id": "gate.evidence.package",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/e2e-report.json",
+      "sha256": "4d7a06dca115547278ff996323e61f9ccdb71b8eaf584f39806ec37bea8c364c"
+    },
+    {
+      "gate_id": "gate.e2e.tournament-podium",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/e2e-report.json",
+      "sha256": "4d7a06dca115547278ff996323e61f9ccdb71b8eaf584f39806ec37bea8c364c"
+    },
+    {
+      "gate_id": "gate.discovery.api",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.discovery.routes",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.screenshots.desktop",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/screenshots/01-tournament-before-podium.png",
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.screenshots.desktop",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/screenshots/02-podium-popup.png",
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.screenshots.desktop",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/screenshots/04-after-dismissal.png",
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.screenshots.mobile",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/screenshots/05-mobile-podium-popup.png",
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.visual.review",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.implementation.migration",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.evidence.package",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/summary.md",
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.evidence.package",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/changed-files.md",
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.evidence.package",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/atm-export.json",
+      "sha256": null
+    },
+    {
+      "gate_id": "gate.evidence.package",
+      "type": "file",
+      "path": "/Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/agent/atm/runs/tournament-podium-moment/evidence/e2e-report.json",
+      "sha256": null
+    },
+    {
+      "gate_id": "review.self.text",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "review.self.vision",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    },
+    {
+      "gate_id": "review.self.fix_response",
+      "type": "note",
+      "path": null,
+      "sha256": null
+    }
+  ],
+  "commands": [
+    {
+      "gate_id": "gate.build.production",
+      "command": "sh -lc cd product/apps/web && npx vite build",
+      "exit_code": 1,
+      "duration_ms": 13179
+    },
+    {
+      "gate_id": "gate.build.production",
+      "command": "sh -lc cd product/apps/web && ./node_modules/.bin/vite build",
+      "exit_code": 127,
+      "duration_ms": 187
+    },
+    {
+      "gate_id": "gate.build.production",
+      "command": "sh -lc cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web && ./node_modules/.bin/vite build",
+      "exit_code": 127,
+      "duration_ms": 208
+    },
+    {
+      "gate_id": "gate.build.production",
+      "command": "sh -lc cd /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web && node /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main/product/apps/web/node_modules/vite/bin/vite.js build",
+      "exit_code": 1,
+      "duration_ms": 359
+    },
+    {
+      "gate_id": "gate.build.production",
+      "command": "/tmp/podium-atm-build.sh",
+      "exit_code": 0,
+      "duration_ms": 1254
+    },
+    {
+      "gate_id": "gate.e2e.tournament-podium",
+      "command": "product/scripts/e2e-tournament-podium-moment.mjs",
+      "exit_code": 0,
+      "duration_ms": 60000
+    }
+  ],
+  "verdict": {
+    "verdict": "demo_done",
+    "reason": {
+      "reason": "All gates passed, no contradictions",
+      "critical_failed": 0,
+      "critical_pending": 0,
+      "major_failed": 0,
+      "all_passed": 12,
+      "total": 12
+    }
+  }
+}

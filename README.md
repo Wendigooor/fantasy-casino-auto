@@ -5,6 +5,12 @@ Features delivered autonomously by Hermes Agent.
 
 ## Features
 
+### 🏆 Tournament Podium Moment
+- ATM run: `tournament-podium-moment`
+- Podium popup on rank ≤ 3, glassmorphism + gold gradient + confetti
+- Codex review cycle: reject → fix-response → re-review approve
+- Demo: [demo-tournament-podium-moment.html](demo-tournament-podium-moment.html)
+
 ### 🏁 Tournament Mini-League
 - Input: [ORIGINAL_CONTRACT_TOURNAMENT.md](ORIGINAL_CONTRACT_TOURNAMENT.md)
 - Output: live at `/tournaments`, E2E: join → rank 13→2, 3100pts

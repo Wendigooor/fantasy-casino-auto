@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Tournament Podium Moment — Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0a12;
+      --surface: #111122;
+      --card: rgba(22,22,40,.95);
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --accent: #ff3355;
+      --gold: #ffb020;
+      --win: #00e676;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+    .hero {
+      text-align: center; padding: 60px 20px 10px; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 600px 300px at 50% 0%, rgba(255,51,85,.08), transparent),
+                  radial-gradient(ellipse 400px 400px at 80% 100%, rgba(255,176,32,.05), transparent);
+      pointer-events: none;
+    }
+    .hero h1 { font-size: 48px; font-weight: 900; background: linear-gradient(135deg, var(--accent), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--muted); margin-top: 8px; font-size: 14px; }
+    .hero-badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(0,230,118,.12);
+      color: var(--win);
+      border: 1px solid rgba(0,230,118,.2);
+    }
+
+    .stats {
+      display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+      padding: 24px 20px; max-width: 800px; margin: 0 auto;
+    }
+    .stat { text-align: center; }
+    .stat-value { font-size: 24px; font-weight: 700; }
+    .stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
+
+    .section-title {
+      max-width: 860px; margin: 40px auto 20px; padding: 0 20px;
+      font-size: 20px; font-weight: 700;
+    }
+
+    .shots { max-width: 900px; margin: 0 auto; padding: 0 20px 40px; }
+    .shot {
+      display: flex; gap: 24px; margin-bottom: 32px; align-items: flex-start;
+      background: var(--card); border-radius: 16px; padding: 20px;
+      border: 1px solid rgba(40,40,70,.4);
+    }
+    .shot-img { width: 360px; border-radius: 10px; border: 1px solid rgba(40,40,70,.3); flex-shrink: 0; }
+    .shot-body { flex: 1; }
+    .shot-body h3 { font-size: 16px; margin-bottom: 6px; }
+    .shot-body p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .shot-body .meta { font-size: 10px; color: #4a4a60; margin-top: 4px; }
+    .shot-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+    .badge {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 999px; letter-spacing: .03em;
+    }
+    .badge-green { background: rgba(0,230,118,.15); color: var(--win); border: 1px solid rgba(0,230,118,.2); }
+    .badge-red { background: rgba(255,56,96,.15); color: #ff3860; border: 1px solid rgba(255,56,96,.2); }
+    .badge-gold { background: rgba(255,176,32,.15); color: var(--gold); border: 1px solid rgba(255,176,32,.2); }
+    .badge-blue { background: rgba(56,189,248,.15); color: #38bdf8; border: 1px solid rgba(56,189,248,.2); }
+    .badge-purple { background: rgba(168,85,247,.15); color: #a855f7; border: 1px solid rgba(168,85,247,.2); }
+
+    @media (max-width: 700px) { .shot { flex-direction: column; } .shot-img { width: 100%; } }
+
+    .review-cycle {
+      max-width: 860px; margin: 0 auto 40px; padding: 0 20px;
+    }
+    .review-step {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 14px 18px; margin-bottom: 8px;
+      background: var(--card); border-radius: 12px;
+      border: 1px solid rgba(40,40,70,.3);
+    }
+    .review-step-icon { font-size: 20px; width: 32px; flex-shrink: 0; }
+    .review-step-body { flex: 1; }
+    .review-step-body h4 { font-size: 13px; margin-bottom: 2px; }
+    .review-step-body p { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    .verdict-banner {
+      text-align: center; padding: 30px 20px 50px;
+    }
+    .verdict-banner h2 { font-size: 32px; font-weight: 900; }
+    .verdict-banner p { color: var(--muted); margin-top: 6px; font-size: 13px; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🏆 Tournament Podium Moment</h1>
+  <p>Feature demo · tournament-podium-moment</p>
+  <div class="hero-badge">review_passed ✅</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">760ms</div><div class="stat-label">Build</div></div>
+  <div class="stat"><div class="stat-value">101</div><div class="stat-label">Modules</div></div>
+  <div class="stat"><div class="stat-value">19→1</div><div class="stat-label">Rank</div></div>
+  <div class="stat"><div class="stat-value">5</div><div class="stat-label">Screenshots</div></div>
+  <div class="stat"><div class="stat-value">12/12</div><div class="stat-label">Gates</div></div>
+  <div class="stat"><div class="stat-value">✅</div><div class="stat-label">E2E</div></div>
+</div>
+
+<div class="section-title">📸 Screenshots</div>
+<div class="shots">
+
+  <div class="shot">
+    <img class="shot-img" src="agent/atm/runs/tournament-podium-moment/evidence/screenshots/01-tournament-before-podium.png" alt="Tournament before podium">
+    <div class="shot-body">
+      <h3>1. Tournament Page — Pre-Podium 🎯</h3>
+      <p>Участник в топ-3 до появления модалки. Виден турнирный хаб с лидербордом, ранги, очки и управление бустами. Страница готова к отображению Podium Moment.</p>
+      <div class="meta">562KB · 1440×900 · data-page="tournaments" data-ready="true"</div>
+      <div class="shot-badges">
+        <span class="badge badge-blue">discovery</span>
+        <span class="badge badge-green">ready</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shot">
+    <img class="shot-img" src="agent/atm/runs/tournament-podium-moment/evidence/screenshots/02-podium-popup.png" alt="Podium popup visible">
+    <div class="shot-body">
+      <h3>2. Podium Popup — Desktop 👑</h3>
+      <p>Модальное окно Podium Moment отображается с золотым градиентным медальоном, рангом #1, меткой "Gold Podium", бейджем призовой зоны, очками и кнопкой Keep Playing. Конфетти анимировано.</p>
+      <div class="meta">559KB · 1440×900 · data-testid="podium-moment-modal" data-rank="1"</div>
+      <div class="shot-badges">
+        <span class="badge badge-gold">premium</span>
+        <span class="badge badge-green">glassmorphism</span>
+        <span class="badge badge-purple">confetti</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shot">
+    <img class="shot-img" src="agent/atm/runs/tournament-podium-moment/evidence/screenshots/03-podium-popup-closeup.png" alt="Podium popup closeup">
+    <div class="shot-body">
+      <h3>3. Modal Closeup 🔍</h3>
+      <p>Детальный вид модалки: корона 👑, ранг #1, текст "Gold Podium" с градиентной заливкой, бейдж "You are in the prize zone", очки (8,748), приз +2500. Стеклянный фон с backdrop-filter blur.</p>
+      <div class="meta">354KB · clip: podiumBox+40px</div>
+      <div class="shot-badges">
+        <span class="badge badge-gold">#1</span>
+        <span class="badge badge-blue">prize zone</span>
+        <span class="badge badge-green">CTA</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shot">
+    <img class="shot-img" src="agent/atm/runs/tournament-podium-moment/evidence/screenshots/04-after-dismissal.png" alt="After dismissal">
+    <div class="shot-body">
+      <h3>4. After Dismissal 🚪</h3>
+      <p>Модалка закрыта, пользователь остаётся на странице турнира. data-podium-moment="dismissed". Podium не появляется повторно для того же ранга — sessionStorage блокирует повторный показ.</p>
+      <div class="meta">1316KB · 1440×900 · data-podium-moment="dismissed"</div>
+      <div class="shot-badges">
+        <span class="badge badge-green">dismissed</span>
+        <span class="badge badge-blue">sessionStorage</span>
+        <span class="badge badge-purple">non-reappear</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shot">
+    <img class="shot-img" src="agent/atm/runs/tournament-podium-moment/evidence/screenshots/05-mobile-podium-popup.png" alt="Mobile podium popup">
+    <div class="shot-body">
+      <h3>5. Mobile — Podium Popup 📱</h3>
+      <p>Мобильный вид (390×844). Модалка центрирована, читаема, с корректными отступами. Все данные отображаются: ранг, медаль, очки, CTA. Адаптивная вёрстка через max-width: 90vw.</p>
+      <div class="meta">361KB · 390×844 · mobile viewport</div>
+      <div class="shot-badges">
+        <span class="badge badge-blue">responsive</span>
+        <span class="badge badge-green">mobile</span>
+        <span class="badge badge-gold">90vw</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="section-title">🔄 Review Cycle</div>
+<div class="review-cycle">
+
+  <div class="review-step">
+    <div class="review-step-icon">🔴</div>
+    <div class="review-step-body">
+      <h4>Codex Review #1 — REJECT</h4>
+      <p>4 source files missing from bundle, ATM audit technical_partial, CORS console error, evidence incomplete.</p>
+    </div>
+  </div>
+
+  <div class="review-step">
+    <div class="review-step-icon">📝</div>
+    <div class="review-step-body">
+      <h4>Fix Response</h4>
+      <p>Bundle generator fixed (backtick strip, profile path, duplicate masking). ATM audit re-run → 12/12 passed. CORS documented in known-limitations.md.</p>
+    </div>
+  </div>
+
+  <div class="review-step">
+    <div class="review-step-icon">🔴</div>
+    <div class="review-step-body">
+      <h4>Codex Review #2 — REJECT</h4>
+      <p>Bundle complete but evidence files not visible. Reviewer-outputs not included in bundle scope.</p>
+    </div>
+  </div>
+
+  <div class="review-step">
+    <div class="review-step-icon">🔧</div>
+    <div class="review-step-body">
+      <h4>Bundle Generator: reviewer-outputs/ added</h4>
+      <p>All reviewer artifacts (verdicts, fix-responses, vision reviews) now included in bundle. 24/24 files present.</p>
+    </div>
+  </div>
+
+  <div class="review-step">
+    <div class="review-step-icon">✅</div>
+    <div class="review-step-body">
+      <h4>Codex Re-Review #3 — APPROVE</h4>
+      <p>All previous rejection reasons resolved. Bundle complete, audit passes, no new blocking issues.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="section-title">📦 Evidence Package</div>
+<div class="shots">
+
+  <div class="shot" style="border-color: rgba(255,176,32,.2);">
+    <div class="shot-body">
+      <h3>Review Artifacts</h3>
+      <p style="font-size: 12px; line-height: 2;">
+        📄 <strong>summary.md</strong> — что сделано<br>
+        📄 <strong>changed-files.md</strong> — 3 new, 1 modified<br>
+        📊 <strong>e2e-report.json</strong> — rank 19→1, podium ✅, dismissal ✅<br>
+        🧠 <strong>reviewer-verdict.md</strong> — DeepSeek: approve_technical_done<br>
+        🔍 <strong>codex-reviewer-verdict-3.md</strong> — Codex re-review: approve_technical_done<br>
+        📸 <strong>vision-review.md</strong> — DeepSeek: skipped (text-only)<br>
+        👁️ <strong>codex-vision-review.md</strong> — Codex: 5/5 screenshots analyzed<br>
+        🔧 <strong>reviewer-fix-response.md</strong> + <strong>codex-reviewer-fix-response.md</strong><br>
+        🏷️ <strong>atm-export.json</strong> — 12 gates, all passed<br>
+        📋 <strong>atm-audit.txt</strong> — demo_done, PASS ✅
+      </p>
+      <div class="shot-badges">
+        <span class="badge badge-green">full trace</span>
+        <span class="badge badge-gold">cross-model</span>
+        <span class="badge badge-purple">review lifecycle</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shot" style="border-color: rgba(0,230,118,.2);">
+    <div class="shot-body">
+      <h3>Codex Review Comparison</h3>
+      <p style="font-size: 12px; line-height: 1.8;">
+        <strong>Review #1:</strong> REJECT — bundle incomplete, audit technical_partial, CORS error<br>
+        <strong>Review #2:</strong> REJECT — evidence not in bundle, process issue<br>
+        <strong>Review #3:</strong> <span style="color: var(--win);">APPROVE</span> — all resolved, 0 blocking findings<br><br>
+        <strong>ATM complete-review:</strong> review_passed → <strong style="color: var(--win);">DONE ✅</strong>
+      </p>
+      <div class="shot-badges">
+        <span class="badge badge-green">anti-false-done</span>
+        <span class="badge badge-blue">v0.7.1</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="verdict-banner">
+  <h2 style="color: var(--win);">✅ review_passed</h2>
+  <p>Codex re-review approve_technical_done · ATM audit PASS · complete-review DONE</p>
+  <p style="margin-top: 20px; font-size: 11px; color: var(--muted);">
+    Hermes + PUFF · ATM v0.7.1 · Codex CLI gpt-5.4-mini · 2026-05-08
+  </p>
+</div>
+
+</body>
+</html>

@@ -1,3 +1,5 @@
+# Run-specific profile for tournament-podium-moment
+# Not reusing Lightning E2E — dedicated tournament E2E + podium gates
 gates:
   - id: gate.discovery.api
     title: API and data contract probed before implementation
@@ -12,17 +14,17 @@ gates:
     severity: critical
     kind: file_exists_or_note
   - id: gate.build.production
-    title: Production build passes
+    title: Production build passes (web)
     severity: critical
     kind: command
     command: cd product/apps/web && npx vite build
-  - id: gate.e2e.demo
-    title: Demo E2E passes
+  - id: gate.e2e.tournament-podium
+    title: Tournament Podium Moment E2E passes
     severity: critical
     kind: command
-    command: node scripts/e2e-lightning-rounds.mjs
+    command: node product/scripts/e2e-tournament-podium-moment.mjs
   - id: gate.screenshots.desktop
-    title: Desktop screenshots exist
+    title: Desktop screenshots exist (podium feature)
     severity: critical
     kind: screenshot_set
     min_count: 4
@@ -46,6 +48,20 @@ gates:
     paths:
       - agent/atm/runs/<run-id>/evidence/summary.md
       - agent/atm/runs/<run-id>/evidence/atm-export.json
+  - id: review.self.text
+    title: Fresh-context text reviewer completed
+    severity: critical
+    kind: file_exists_or_note
+    paths:
+      - agent/atm/runs/<run-id>/evidence/reviewer-verdict.md
+      - agent/atm/runs/<run-id>/evidence/reviewer-quality-score.md
+      - agent/atm/runs/<run-id>/evidence/reviewer-fix-contract.md
+  - id: review.self.vision
+    title: Vision review completed or explicitly skipped
+    severity: major
+    kind: file_exists_or_note
+    paths:
+      - agent/atm/runs/<run-id>/evidence/vision-review.md
   - id: review.codex.text
     title: Codex fresh-context text review completed (blocking)
     severity: critical
@@ -58,3 +74,9 @@ gates:
     kind: file_exists
     paths:
       - agent/atm/runs/<run-id>/evidence/codex-vision-review.md
+  - id: review.self.fix_response
+    title: Reviewer blocking findings fixed or explicitly accepted
+    severity: critical
+    kind: file_exists_or_note
+    paths:
+      - agent/atm/runs/<run-id>/evidence/reviewer-fix-response.md

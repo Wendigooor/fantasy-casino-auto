@@ -1,0 +1,39 @@
+{
+  "run": "tournament-podium-moment",
+  "status": "passed",
+  "startedAt": "2026-05-08T14:03:09.955Z",
+  "assertions": {
+    "joined-tournament": true,
+    "rank-is-1-2-or-3": true,
+    "points-increased": true,
+    "no-invalid-date": true,
+    "no-undefined": true,
+    "no-nan": true,
+    "rank-text-visible": true,
+    "prize-zone-text-visible": true
+  },
+  "screenshots": [
+    "01-tournament-before-podium.png",
+    "02-podium-popup.png",
+    "03-podium-popup-closeup.png",
+    "04-after-dismissal.png",
+    "05-mobile-podium-popup.png"
+  ],
+  "initialRank": 19,
+  "finalRank": 1,
+  "pageErrors": [],
+  "consoleErrors": [
+    "Access to fetch at 'http://localhost:3001/api/v1/sse' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+    "Failed to load resource: net::ERR_FAILED"
+  ],
+  "notes": [
+    "Tournament: High Roller Sprint"
+  ],
+  "podium": {
+    "appeared": true,
+    "rank": 1,
+    "dismissed": true,
+    "reappearedAfterDismiss": false
+  },
+  "finishedAt": "2026-05-08T14:03:25.156Z"
+}
