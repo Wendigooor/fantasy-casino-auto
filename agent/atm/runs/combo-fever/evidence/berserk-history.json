@@ -18,5 +18,25 @@
     "blocker": null,
     "next_action": "done",
     "status": "demo_done"
+  },
+  {
+    "evidence_count": 13,
+    "screenshot_count": 7,
+    "review_mtime": "1778421043.336506",
+    "gate_status": "gate.build.production:passed,gate.discovery.api:passed,gate.discovery.routes:passed,gate.e2e.demo:passed,gate.evidence.package:passed,gate.implementation.migration:passed,gate.screenshots.desktop:pass",
+    "timestamp": "2026-05-14T14:36:44.640494Z",
+    "blocker": "audit_failed",
+    "next_action": "run_audit",
+    "status": "audit_failed"
+  },
+  {
+    "evidence_count": 13,
+    "screenshot_count": 7,
+    "review_mtime": "1778421043.336506",
+    "gate_status": "gate.build.production:passed,gate.discovery.api:passed,gate.discovery.routes:passed,gate.e2e.demo:passed,gate.evidence.package:passed,gate.implementation.migration:passed,gate.screenshots.desktop:pass",
+    "timestamp": "2026-05-14T14:36:57.199082Z",
+    "blocker": null,
+    "next_action": "done",
+    "status": "technical_demo_done"
   }
 ]

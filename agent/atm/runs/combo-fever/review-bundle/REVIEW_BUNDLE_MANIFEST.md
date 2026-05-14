@@ -1,11 +1,11 @@
 # Review Bundle Manifest: combo-fever
 
-Generated: 2026-05-10T16:17:09.538283
+Generated: 2026-05-14T16:36:57.188255
 Project root: /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-casino-auto-main
 
 ## Files
 
-- ✅ active-profile.yaml
+- 📄 active-profile.yaml
 - ✅ atm-audit.txt
 - ✅ atm-export.json
 - ✅ changed-files.md
@@ -19,5 +19,5 @@ Project root: /Users/iharzvezdzin/Documents/projects/hermes/test/puff/fantasy-ca
 - ✅ source/index.ts
 - ✅ summary.md
 
-**12/13 files present.**
+**11/13 files present.**
 Missing files noted as missing_evidence. Do not assume missing files are correct.

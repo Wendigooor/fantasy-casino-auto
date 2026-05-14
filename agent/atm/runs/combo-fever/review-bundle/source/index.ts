@@ -39,6 +39,7 @@ import { tournamentRoutes } from "./routes/tournament-routes.js";
 import { reconciliationRoutes } from "./routes/reconciliation-routes.js";
 import { idempotencyRoutes } from "./routes/idempotency-routes.js";
 import { comboRoutes } from "./routes/combo.js";
+import { diceBonusRoutes, initDiceService } from "./routes/bonus-dice.js";
 import { GameService } from "./services/game.js";
 
 const isTest = process.env.NODE_ENV === "test";
@@ -92,6 +93,7 @@ async function protectedRoutes(app: FastifyInstance) {
   await reconciliationRoutes(app);
   await idempotencyRoutes(app);
   await comboRoutes(app);
+  await diceBonusRoutes(app);
 }
 
 export async function createApp(): Promise<FastifyInstance> {
@@ -119,7 +121,7 @@ export async function createApp(): Promise<FastifyInstance> {
     reply.header("x-request-id", request.id);
     reply.header("x-content-type-options", "nosniff");
     reply.header("x-frame-options", "DENY");
-    reply.header("content-security-policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; font-src 'self'");
+    reply.header("content-security-policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:3001 ws://localhost:3000; img-src 'self' data:; font-src 'self'");
   });
   app.addHook("onResponse", async (_request, reply) => {
     recordLatency(reply.elapsedTime);
@@ -175,6 +177,7 @@ export async function createApp(): Promise<FastifyInstance> {
   initKycService(pool);
   initRiskService(pool);
   initEventService(pool);
+  initDiceService(pool);
   new Analytics(pool);
 
   // Public: game catalog (no auth)
