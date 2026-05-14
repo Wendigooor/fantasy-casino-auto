@@ -1,0 +1,11 @@
+{
+  "run_id": "combo-fever",
+  "verdict": "failed",
+  "gate_count": 11,
+  "passed_gates": 7,
+  "critical_issues": 0,
+  "major_issues": 0,
+  "pass": true,
+  "issues": [],
+  "warnings": []
+}

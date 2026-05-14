@@ -1,0 +1,13 @@
+{
+  "run_id": "combo-fever",
+  "timestamp": "2026-05-14T14:33:51.508396+00:00",
+  "feature": "Combo Fever \u2014 Progressive Win Streak Multiplier",
+  "files": [
+    "combo.ts (route)",
+    "combo.ts (service)",
+    "ComboFeverMeter.tsx",
+    "e2e-report.json",
+    "reviewer-verdict.md",
+    "visual-review.md"
+  ]
+}

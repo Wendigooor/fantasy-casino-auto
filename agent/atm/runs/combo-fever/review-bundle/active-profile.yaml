@@ -1,0 +1,60 @@
+gates:
+  - id: gate.discovery.api
+    title: API and data contract probed before implementation
+    severity: critical
+    kind: manual
+  - id: gate.discovery.routes
+    title: Routes and navigation checked
+    severity: major
+    kind: manual
+  - id: gate.implementation.migration
+    title: Required migrations exist
+    severity: critical
+    kind: file_exists_or_note
+  - id: gate.build.production
+    title: Production build passes
+    severity: critical
+    kind: command
+    command: cd product/apps/web && npx vite build
+  - id: gate.e2e.demo
+    title: Demo E2E passes
+    severity: critical
+    kind: command
+    command: node scripts/e2e-lightning-rounds.mjs
+  - id: gate.screenshots.desktop
+    title: Desktop screenshots exist
+    severity: critical
+    kind: screenshot_set
+    min_count: 4
+    min_size_kb: 80
+  - id: gate.screenshots.mobile
+    title: Mobile screenshot exists
+    severity: critical
+    kind: screenshot_set
+    min_count: 1
+    min_size_kb: 60
+  - id: gate.visual.review
+    title: Screenshots reviewed
+    severity: critical
+    kind: manual
+    evidence:
+      required: [file]
+  - id: gate.evidence.package
+    title: Evidence package complete
+    severity: critical
+    kind: file_exists
+    paths:
+      - agent/atm/runs/<run-id>/evidence/summary.md
+      - agent/atm/runs/<run-id>/evidence/atm-export.json
+  - id: review.codex.text
+    title: Codex fresh-context text review completed (blocking)
+    severity: critical
+    kind: file_exists
+    paths:
+      - agent/atm/runs/<run-id>/evidence/codex-reviewer-verdict.md
+  - id: review.codex.vision
+    title: Codex vision review completed for demo screenshots (blocking)
+    severity: critical
+    kind: file_exists
+    paths:
+      - agent/atm/runs/<run-id>/evidence/codex-vision-review.md

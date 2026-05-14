@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSound } from "../hooks/useSound";
+import { ComboFeverMeter } from "../components/ComboFeverMeter";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 const SYMBOLS = ["🍒", "🍋", "🍊", "🍇", "🔔", "💎", "7️⃣"];
@@ -31,6 +32,7 @@ export function GamePage() {
     mutationFn: spinApi,
     onSuccess: (d) => {
       qc.invalidateQueries({ queryKey: ["roundHistory"] }); qc.invalidateQueries({ queryKey: ["wallet"] });
+      qc.invalidateQueries({ queryKey: ["comboFever"] });
       setSpin(d);
       setMsg((d.winAmount as number) > 0 ? `+${d.winAmount} — You won!` : "No win this time");
       if ((d.winAmount as number) > 0) { setConfetti(true); setShowBanner(true); play("win"); setTimeout(() => setShowBanner(false), 3000); }
@@ -50,6 +52,7 @@ export function GamePage() {
           <p>Nice win!</p>
         </div>
       )}
+      <ComboFeverMeter />
       <Link to="/" className="text-xs text-casino-muted hover:text-casino-text no-underline">&larr; Lobby</Link>
       <div className="flex items-center gap-2 mt-1 mb-4">
         <h2 className="!mb-0">{title}</h2>

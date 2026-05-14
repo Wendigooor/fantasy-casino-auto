@@ -8,6 +8,7 @@ import { Analytics } from "../services/analytics.js";
 import { broadcastUser } from "./sse.js";
 import { incMetric } from "./metrics.js";
 import { spinSchema, validate } from "../validation/schemas.js";
+import { recordComboAfterSpin } from "./combo.js";
 
 let gameService: GameService | null = null;
 
@@ -83,6 +84,8 @@ export async function gameRoutes(app: FastifyInstance) {
         Analytics.get().trackSpin(userId, gameId, betAmount, result.winAmount);
         incMetric("spins_total");
         broadcastUser(userId, "spin_result", result);
+        // Track combo streak after spin
+        recordComboAfterSpin(pool, userId, result.winAmount).catch(() => {});
         return result;
       } catch (err: unknown) {
         if (err instanceof Error && err.message === "Not authenticated") {

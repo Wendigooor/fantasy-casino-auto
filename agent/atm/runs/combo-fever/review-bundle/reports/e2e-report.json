@@ -1,0 +1,17 @@
+{
+  "run": "combo-fever",
+  "timestamp": "2026-05-10T13:46:45.486Z",
+  "assertions": {
+    "fresh-zero": true,
+    "streak-1": true,
+    "streak-2-or-more": true,
+    "combo-seeded-api": true,
+    "meter-visible": true
+  },
+  "pageErrors": [],
+  "screenshots": [
+    "01-combo-idle.png",
+    "02-combo-streak-seeded.png",
+    "03-combo-mobile.png"
+  ]
+}
